@@ -1,0 +1,140 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary: #FA6400;
+  --secondary: #FA6400;
+  --accent: #FF8F4D;
+  --wealth: #FA6400;
+  --bg-neutral: #FEF7F4;
+  --text-main: #2D2D2D;
+  --text-secondary: #757575;
+  --border-subtle: rgba(250, 100, 0, 0.1);
+  --glass: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --input-bg: #FFF8F6;
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-wealth: var(--wealth);
+  --color-bg-neutral: var(--bg-neutral);
+  --color-text-main: var(--text-main);
+  --color-text-secondary: var(--text-secondary);
+  --color-border-subtle: var(--border-subtle);
+  --color-input-bg: var(--input-bg);
+
+  --shadow-premium: 0 10px 40px -10px rgba(250, 100, 0, 0.15), 0 4px 6px -4px rgba(250, 100, 0, 0.05);
+  --shadow-glass: 0 8px 32px 0 rgba(250, 100, 0, 0.1);
+
+  --font-display: 'Outfit', sans-serif;
+  --font-sans: 'Outfit', sans-serif;
+}
+
+/* Base Styles */
+body {
+  background-color: #F4F7F6;
+  color: var(--text-main);
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Premium Glassmorphism */
+.glass-panel {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+.premium-card {
+  background: white;
+  border-radius: 24px;
+  box-shadow: var(--shadow-premium);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.premium-card:active {
+  transform: scale(0.98);
+}
+
+/* Global Transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-duration: 200ms;
+}
+
+/* Header Gradient Home-VIP */
+.header-gradient-mixture {
+  background: linear-gradient(135deg, #FF6B00 0%, #FA6400 100%);
+  position: relative;
+  z-index: 10;
+}
+
+.text-glow {
+  text-shadow: 0 0 15px rgba(0, 200, 83, 0.3);
+}
+
+/* Marquee Otimizado */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+/* Scrollbar Otimizado */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Micro-interactions */
+.tap-highlight-none {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hover-lift {
+  transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}

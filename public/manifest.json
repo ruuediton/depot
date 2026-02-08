@@ -1,0 +1,29 @@
+{
+    "name": "BP Commerce",
+    "short_name": "BP Commerce",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "description": "Plataforma de inclusão financeira digital e comércio eletrônico da BP Angola.",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/bp_logo.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/bp_logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": [
+        "finance",
+        "shopping"
+    ],
+    "lang": "pt-AO"
+}
