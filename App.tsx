@@ -14,7 +14,7 @@ import { useAuthActions } from './hooks/useAuthActions';
 import { useLoading } from './contexts/LoadingContext';
 
 const App: React.FC = () => {
-  const { withLoading, showWarning } = useLoading();
+  const { withLoading, showWarning, showError, showSuccess } = useLoading();
   const { performFullLogout } = useAuthActions();
 
   const [currentPage, setCurrentPage] = useState<string>(() => localStorage.getItem('currentPage') || 'register');
@@ -24,6 +24,16 @@ const App: React.FC = () => {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [showTaskPopup, setShowTaskPopup] = useState(false);
   const [navigationData, setNavigationData] = useState<any>(null);
+
+  const handleShowToast = useCallback((message: string, type: 'success' | 'error' | 'warning' | 'info') => {
+    switch (type) {
+      case 'success': showSuccess(message); break;
+      case 'error': showError(message); break;
+      case 'warning': showWarning(message); break;
+      case 'info': showSuccess(message); break;
+      default: showSuccess(message);
+    }
+  }, [showSuccess, showError, showWarning]);
 
 
 
@@ -146,6 +156,7 @@ const App: React.FC = () => {
       onLogout={() => setShowLogoutModal(true)}
       balance={profile?.balance || 0}
       data={navigationData}
+      showToast={handleShowToast}
     />;
   };
 
