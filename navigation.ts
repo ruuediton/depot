@@ -17,6 +17,7 @@ export const PAGE_TITLES: Record<string, string> = {
   'security-verify': 'Segurança',
   'deposit-usdt-history': 'Histórico USDT',
   'subordinate-list': 'Equipe',
+  'tasks': 'Minhas Tarefas',
 };
 
 export const DEFAULT_APP_TITLE = 'The Home Depot';
@@ -47,4 +48,5 @@ export const PAGES_CONFIG = {
   SubordinateList: lazy(() => import('./pages/SubordinateList')),
   InvitePage: lazy(() => import('./pages/InvitePage')),
   GuiaIndicacao: lazy(() => import('./components/GuiaIndicacao')),
+  Tasks: lazy(() => import('./pages/Tasks')),
 };

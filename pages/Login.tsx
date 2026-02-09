@@ -65,65 +65,77 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
   };
 
   return (
-    <div className="bg-bg-neutral min-h-screen font-sans text-text-main flex flex-col items-center pb-12 antialiased relative">
-      {/* Immersive Header - Orange Theme with Pattern */}
-      <div className="w-full relative h-[280px] header-gradient-mixture overflow-hidden flex flex-col items-center justify-center">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
-          backgroundImage: 'radial-gradient(circle, #ffffff 1.5px, transparent 1.5px)',
-          backgroundSize: '24px 24px'
+    <div className="bg-[#F5F5F5] min-h-screen font-sans text-text-main flex flex-col antialiased relative">
+      {/* Header laranja com padrão de bolinhas */}
+      <div className="w-full relative overflow-hidden flex flex-col items-center justify-start pt-6 pb-20" style={{
+        background: 'linear-gradient(180deg, #FF7A1F 0%, #FF6B00 100%)'
+      }}>
+        {/* Padrão de bolinhas */}
+        <div className="absolute inset-0 opacity-15 pointer-events-none" style={{
+          backgroundImage: 'radial-gradient(circle, #ffffff 2px, transparent 2px)',
+          backgroundSize: '32px 32px'
         }}></div>
 
-        {/* Top bar icons */}
-        <div className="absolute top-6 left-6 flex items-center gap-4 z-20">
-          <button className="flex items-center justify-center size-10 rounded-full bg-black/10 text-white backdrop-blur-sm active:scale-95 transition-all">
-            <span className="material-symbols-outlined text-[20px]">headset_mic</span>
+        {/* Ícone headset - canto superior esquerdo */}
+        <div className="absolute top-5 left-5 z-20">
+          <button className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white backdrop-blur-sm active:scale-95 transition-all">
+            <span className="material-symbols-outlined text-[22px]">headset_mic</span>
           </button>
         </div>
 
-        <div className="absolute top-6 right-6 z-20">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/10 text-white backdrop-blur-sm text-[12px] font-bold active:scale-95 transition-all">
+        {/* Seletor de idioma - canto superior direito */}
+        <div className="absolute top-5 right-5 z-20">
+          <button className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/20 text-white backdrop-blur-sm text-[13px] font-semibold active:scale-95 transition-all">
             <span className="material-symbols-outlined text-[18px]">language</span>
             Português
-            <span className="material-symbols-outlined text-[14px]">expand_more</span>
+            <span className="material-symbols-outlined text-[16px]">expand_more</span>
           </button>
         </div>
 
-        {/* Logo and Brand */}
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="w-24 h-24 bg-white p-2 rounded-xl flex items-center justify-center shadow-2xl mb-4 border-2 border-primary/20">
-            <div className="flex flex-col items-center leading-none text-primary">
-              <span className="text-[10px] font-black italic tracking-tighter">THE</span>
-              <span className="text-[18px] font-black tracking-tightest">HOME</span>
-              <span className="text-[14px] font-black italic tracking-tighter">DEPOT</span>
-            </div>
+        {/* Logo THE HOME DEPOT */}
+        <div className="relative z-10 flex flex-col items-center mt-8">
+          <div className="mb-5">
+            <svg width="160" height="80" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="160" height="80" fill="white" rx="8" />
+              <text x="80" y="25" fontFamily="Arial Black, sans-serif" fontSize="14" fontWeight="900" fill="#FF6B00" textAnchor="middle" fontStyle="italic">THE</text>
+              <text x="80" y="48" fontFamily="Arial Black, sans-serif" fontSize="28" fontWeight="900" fill="#FF6B00" textAnchor="middle" letterSpacing="-1">HOME</text>
+              <text x="80" y="68" fontFamily="Arial Black, sans-serif" fontSize="20" fontWeight="900" fill="#FF6B00" textAnchor="middle" fontStyle="italic">DEPOT</text>
+            </svg>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-widest uppercase drop-shadow-md">THE HOME-VIP</h1>
+          <h1 className="text-[26px] font-black text-white tracking-[0.15em] uppercase drop-shadow-lg">THE HOME-VIP</h1>
         </div>
       </div>
 
-      {/* Main Login Card */}
-      <div className="w-full px-4 -mt-10 relative z-30">
-        <div className="bg-white rounded-[32px] overflow-hidden shadow-premium">
-          {/* Tab Header */}
-          <div className="flex">
-            <div className="bg-white px-8 py-4 rounded-tr-[32px] relative">
-              <span className="text-primary font-black text-[15px]">Acessar minha conta</span>
+      {/* Card de login com curva decorativa */}
+      <div className="w-full px-5 -mt-12 relative z-30">
+        <div className="bg-white rounded-t-[40px] overflow-hidden shadow-xl relative">
+          {/* Curva decorativa superior */}
+          <div className="absolute top-0 left-0 right-0 h-8 flex items-center justify-center">
+            <div className="flex gap-3">
+              <div className="w-16 h-16 rounded-full bg-[#F5E6D3] -mt-8"></div>
+              <div className="w-20 h-20 rounded-full bg-[#F5E6D3] -mt-10"></div>
+              <div className="w-16 h-16 rounded-full bg-[#F5E6D3] -mt-8"></div>
             </div>
-            <div className="flex-1 bg-transparent"></div>
           </div>
 
-          {/* Form Content */}
-          <form className="p-8 pt-4 flex flex-col gap-6" onSubmit={handleLogin}>
-            {/* Phone Input Group */}
-            <div className="space-y-2">
-              <label className="text-[14px] font-bold text-text-main ml-1">Número de telefone</label>
-              <div className="bg-input-bg rounded-[16px] h-[58px] flex items-center px-4 gap-3 focus-within:ring-2 ring-primary/20 transition-all border border-primary/5">
-                <span className="text-text-main font-bold text-[14px]">+244</span>
+          {/* Tab "Login do telefone" */}
+          <div className="flex justify-end pt-10 pr-6">
+            <div className="bg-white px-6 py-2.5 rounded-t-2xl relative">
+              <span className="text-[#1A1A1A] font-semibold text-[15px]">Login do telefone</span>
+            </div>
+          </div>
+
+          {/* Formulário */}
+          <form className="px-6 pt-6 pb-8 flex flex-col gap-5" onSubmit={handleLogin}>
+            {/* Campo Número de telefone */}
+            <div className="space-y-2.5">
+              <label className="text-[14px] font-semibold text-[#1A1A1A] block">Número de telefone</label>
+              <div className="bg-[#F5E6D3] rounded-xl h-[52px] flex items-center px-4 gap-3 border border-[#E8D4BD]">
+                <span className="text-[#1A1A1A] font-semibold text-[15px]">+1</span>
                 <input
                   type="tel"
                   placeholder="Número de telefone"
-                  className="bg-transparent flex-1 h-full outline-none text-text-main font-semibold placeholder:text-text-secondary/40 text-[15px]"
+                  className="bg-transparent flex-1 h-full outline-none text-[#1A1A1A] font-medium placeholder:text-[#999999] text-[15px]"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   required
@@ -131,19 +143,19 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
               </div>
             </div>
 
-            {/* Password Input Group */}
-            <div className="space-y-2">
-              <label className="text-[14px] font-bold text-text-main ml-1">Senha</label>
-              <div className="bg-input-bg rounded-[16px] h-[58px] flex items-center px-4 gap-3 focus-within:ring-2 ring-primary/20 transition-all border border-primary/5">
+            {/* Campo Senha */}
+            <div className="space-y-2.5">
+              <label className="text-[14px] font-semibold text-[#1A1A1A] block">Senha</label>
+              <div className="bg-[#F5E6D3] rounded-xl h-[52px] flex items-center px-4 gap-3 border border-[#E8D4BD]">
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Sua senha"
-                  className="bg-transparent flex-1 h-full outline-none text-text-main font-semibold placeholder:text-text-secondary/40 text-[15px]"
+                  placeholder="Senha"
+                  className="bg-transparent flex-1 h-full outline-none text-[#1A1A1A] font-medium placeholder:text-[#999999] text-[15px]"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-text-main/60">
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#666666]">
                   <span className="material-symbols-outlined text-[22px]">
                     {showPassword ? 'visibility' : 'visibility_off'}
                   </span>
@@ -151,32 +163,30 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Botão Entrar */}
             <button
               type="submit"
-              className="w-full h-[54px] bg-primary text-white font-bold rounded-[14px] text-[16px] mt-4 hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/20"
+              className="w-full h-[52px] bg-[#FF6B00] text-white font-bold rounded-xl text-[16px] mt-6 hover:brightness-110 active:scale-[0.98] transition-all shadow-lg"
             >
-              Entrar Agora
+              Entrar
             </button>
 
+            {/* Botão Inscrever-se */}
             <button
               type="button"
               onClick={() => onNavigate('register')}
-              className="w-full h-[54px] bg-white text-primary border-2 border-primary/40 font-bold rounded-[14px] text-[16px] hover:bg-primary/5 active:scale-[0.98] transition-all"
+              className="w-full h-[52px] bg-white text-[#FF6B00] border-2 border-[#FF6B00] font-bold rounded-xl text-[16px] hover:bg-[#FFF5EE] active:scale-[0.98] transition-all"
             >
-              Criar Nova Conta
+              Inscrever-se
             </button>
           </form>
         </div>
       </div>
 
-      {/* Support Icon */}
-      <button className="fixed bottom-6 right-6 size-12 bg-white rounded-full shadow-2xl flex items-center justify-center border border-gray-100 z-[100] active:scale-90 transition-all">
-        <img src="https://ui-avatars.com/api/?name=Support&background=fdf2f8&color=ef4444" className="w-full h-full rounded-full object-cover" alt="Support" />
+      {/* Avatar de suporte - canto inferior direito */}
+      <button className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center border-2 border-white z-[100] active:scale-90 transition-all overflow-hidden">
+        <img src="https://ui-avatars.com/api/?name=Support&background=FF6B00&color=ffffff&size=128" className="w-full h-full object-cover" alt="Support" />
       </button>
-
-      {/* Decorative footer curve */}
-      <div className="absolute bottom-0 left-0 right-0 h-4 bg-gray-200/50 rounded-t-[100%] blur-[2px]"></div>
     </div>
   );
 };

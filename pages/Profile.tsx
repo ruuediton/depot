@@ -11,11 +11,9 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showToast }) => {
   const [currentProfile, setCurrentProfile] = useState<any>(profile);
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [stats, setStats] = useState<any>({
     balance: profile?.balance || 0,
-    total_earnings: 0,
-    today_earnings: 0,
+    total_recharge: 0,
   });
 
   useEffect(() => {
@@ -23,128 +21,41 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
       setCurrentProfile(profile);
       fetchStats();
     }
-
-    const handleBeforeInstallPrompt = (e: any) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
   }, [profile]);
-
-  const handleInstallApp = React.useCallback(async () => {
-    try {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          setDeferredPrompt(null);
-          showToast?.("Instalação iniciada!", "success");
-        }
-      } else {
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (navigator as any).standalone;
-        if (isStandalone) {
-          showToast?.("O aplicativo já está instalado e em execução.", "success");
-          return;
-        }
-
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-        if (isIOS) {
-          showToast?.("Para instalar no iOS: Toque em 'Compartilhar' e depois em 'Adicionar à Tela de Início'", "info");
-        } else {
-          showToast?.("Para instalar no Android: Use o menu do navegador e selecione 'Instalar Aplicativo'.", "info");
-        }
-      }
-    } catch (err) {
-      console.error("Install prompt error:", err);
-      showToast?.("Não foi possível abrir o instalador. Tente pelo menu do navegador.", "error");
-    }
-  }, [deferredPrompt, showToast]);
-
-  const SERVICES_MENU = React.useMemo(() => [
-    { label: 'Meus dispositivos', icon: 'assignment', page: 'purchase-history', color: 'bg-green-50 text-[#00C853]' },
-    { label: 'Extrato de conta', icon: 'account_balance', page: 'historico-conta', color: 'bg-green-50 text-[#00C853]' },
-    { label: 'Equipe', icon: 'pie_chart', page: 'subordinate-list', color: 'bg-green-50 text-[#00C853]' },
-    { label: 'Resgatar cupons', icon: 'auto_awesome', page: 'gift-chest', color: 'bg-green-50 text-[#00C853]' },
-    { label: 'Marketplace', icon: 'storefront', page: 'investimentos-fundo', color: 'bg-green-50 text-[#00C853]' },
-
-    { label: 'Alterar senha login', icon: 'lock_open', page: 'change-password', color: 'bg-green-50 text-[#00C853]' },
-    { label: 'Dados bancários', icon: 'account_balance', page: 'add-bank', color: 'bg-green-50 text-[#00C853]' },
-
-    { label: 'Quem Somos', icon: 'corporate_fare', page: 'about-bp', color: 'bg-green-50 text-[#00C853]' },
-    { label: 'Termos e regras', icon: 'gavel', page: 'info', color: 'bg-green-50 text-[#00C853]' },
-  ], [handleInstallApp]);
 
   const fetchStats = async () => {
     if (!currentProfile?.id) return;
 
     try {
       const { data: userResponse } = await supabase.auth.getUser();
-      const userId = /* currentProfile.id || */ userResponse.user?.id;
+      const userId = userResponse.user?.id;
 
       if (!userId) return;
 
       const [
         profileStatsRes,
-        withdrawalsRes,
         depositsRes,
         depositsUsdtRes,
-        bonusRes,
-        teamRes
       ] = await Promise.all([
         supabase.rpc('get_profile_stats'),
-
-        // Fetch specific withdrawals (Completed/Approved)
-        supabase
-          .from('retirada_clientes')
-          .select('valor_solicitado')
-          .eq('user_id', userId)
-          .in('estado_da_retirada', ['concluido', 'aprovado', 'sucedido', 'processado', 'pagamento_enviado']),
-
-        // Fetch specific deposits (Bank)
         supabase
           .from('depositos_clientes')
           .select('valor_deposito')
           .eq('user_id', userId)
           .in('estado_de_pagamento', ['sucedido', 'completo', 'sucesso', 'concluido']),
-
-        // Fetch specific deposits (USDT)
         supabase
           .from('depositos_usdt')
           .select('amount_kz')
           .eq('user_id', userId)
           .in('status', ['sucedido', 'completo', 'sucesso', 'concluido']),
-
-        // Fetch all rewards/bonuses
-        supabase
-          .from('bonus_transacoes')
-          .select('valor_recebido')
-          .eq('user_id', userId),
-
-        // Fetch team count
-        supabase.rpc('get_my_team')
       ]);
-
-      const totalWithdrawals = withdrawalsRes.data?.reduce((acc: number, curr: any) => acc + Number(curr.valor_solicitado || 0), 0) || 0;
 
       const totalDeposits = (depositsRes.data?.reduce((acc: number, curr: any) => acc + Number(curr.valor_deposito || 0), 0) || 0) +
         (depositsUsdtRes.data?.reduce((acc: number, curr: any) => acc + Number(curr.amount_kz || 0), 0) || 0);
 
-      const totalRewards = bonusRes.data?.reduce((acc: number, curr: any) => acc + Number(curr.valor_recebido || 0), 0) || 0;
-
-      const totalSubordinates = teamRes.data?.length || 0;
-
       setStats({
         balance: profileStatsRes.data?.balance || 0,
-        today_earnings: profileStatsRes.data?.renda_diaria || 0,
-        total_withdrawals: totalWithdrawals,
         total_recharge: totalDeposits,
-        total_rewards: totalRewards,
-        total_subordinates: totalSubordinates
       });
 
     } catch (err) {
@@ -153,172 +64,190 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
   };
 
   if (!currentProfile) return (
-    <div className="flex justify-center items-center h-screen">
-      <SpokeSpinner size="w-10 h-10" color="text-[#00C853]" />
+    <div className="flex justify-center items-center h-screen bg-[#F5F5F5]">
+      <SpokeSpinner size="w-10 h-10" color="text-primary" />
     </div>
   );
 
   return (
-    <div className="bg-[#F4F7F6] min-h-screen pb-32 font-display antialiased">
-      {/* Red/Green Header Gradient Area with Mixture Effect */}
-      <div className="bg-gradient-to-br from-[#0F1111] to-[#1A1C1C] pt-12 pb-24 px-6 rounded-b-[48px] shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#00C853]/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 overflow-hidden pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#00C853]/5 blur-[80px] rounded-full translate-y-1/2 -translate-x-1/2 overflow-hidden pointer-events-none"></div>
-
-        <div className="flex items-center justify-between relative z-10">
-          <div className="flex items-center gap-4">
-            <div className="size-16 rounded-[24px] p-1 bg-white/10 backdrop-blur-md border border-white/20 overflow-hidden shadow-xl">
-              <img
-                src={currentProfile?.avatar_url || '/default_avatar.png'}
-                onError={(e) => {
-                  e.currentTarget.src = '/default_avatar.png';
-                  e.currentTarget.onerror = null;
-                }}
-                alt="Avatar"
-                className="w-full h-full object-cover rounded-[20px]"
-              />
-            </div>
-            <div>
-              <p className="font-black text-[18px] text-white tracking-tight">Membro BP</p>
-              <div className="flex items-center gap-2 mt-0.5">
-                <span className="px-2 py-0.5 bg-[#00C853] text-black text-[9px] font-black rounded-md uppercase tracking-widest">VIP</span>
-                <p className="text-[12px] text-white/60 font-medium">ID: {currentProfile.invite_code || '---'}</p>
-              </div>
-            </div>
+    <div className="bg-[#F5F5F5] dark:bg-[#0A0A0A] font-display text-gray-900 dark:text-gray-100 antialiased overflow-x-hidden">
+      <div className="max-w-md mx-auto min-h-screen flex flex-col relative pb-20">
+        {/* Header laranja */}
+        <header className="bg-primary pt-10 pb-16 px-4 relative overflow-hidden">
+          {/* Ícone decorativo de dinheiro */}
+          <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-10 opacity-10 pointer-events-none">
+            <span className="material-symbols-outlined text-[180px] text-white">attach_money</span>
           </div>
-          <button
-            onClick={onLogout}
-            className="size-11 flex items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl text-white border border-white/10 active:scale-90 transition-all hover:bg-white/20"
-          >
-            <span className="material-symbols-outlined text-[20px]">logout</span>
-          </button>
-        </div>
-      </div>
 
-      {/* Wallet Card */}
-      <div className="px-6 -mt-16 relative z-20">
-        <div className="bg-white rounded-[32px] p-8 shadow-premium border border-white/50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 opacity-5">
-            <span className="material-symbols-outlined text-[100px] -rotate-12">account_balance_wallet</span>
-          </div>
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="size-1.5 bg-[#00C853] rounded-full animate-pulse"></div>
-              <span className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em]">Saldo em Conta</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-baseline gap-2">
-                <span className="text-[14px] font-black text-[#00C853] mb-2 uppercase">KZs</span>
-                <span className="text-[36px] font-black text-gray-900 tracking-tighter leading-none">
-                  {(stats.balance || 0).toLocaleString('pt-AO', { minimumFractionDigits: 2 })}
+          {/* Navegação superior */}
+          <nav className="flex items-center justify-between mb-8 relative z-10">
+            <div className="flex items-center gap-1">
+              <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center">
+                <span className="text-[10px] font-bold text-white leading-tight text-center uppercase">
+                  The<br />Home
                 </span>
               </div>
-              <button
-                onClick={() => onNavigate('p2p-transfer')}
-                className="size-14 bg-gray-900 text-white rounded-[24px] flex items-center justify-center shadow-xl active:scale-90 transition-all hover:bg-[#00C853]"
-              >
-                <span className="material-symbols-outlined text-[28px]">payments</span>
+              <span className="text-white font-bold text-lg tracking-tight">THE HOME-VIP</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <button className="text-white opacity-90">
+                <span className="material-symbols-outlined">mail</span>
               </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="px-6 mt-8 grid grid-cols-2 gap-4">
-        <button
-          onClick={() => onNavigate('deposit')}
-          className="flex flex-col items-center justify-center gap-1 bg-[#EEFFF5] text-[#00C853] p-4 rounded-[28px] font-black text-[12px] uppercase tracking-widest active:scale-95 transition-all border border-[#00C853]/10"
-        >
-          <span className="material-symbols-outlined text-2xl mb-1">add_circle</span>
-          Recarregar
-        </button>
-        <button
-          onClick={() => onNavigate('retirada')}
-          className="flex flex-col items-center justify-center gap-1 bg-white text-gray-900 shadow-premium p-4 rounded-[28px] font-black text-[12px] uppercase tracking-widest active:scale-95 transition-all border border-gray-100"
-        >
-          <span className="material-symbols-outlined text-2xl mb-1">arrow_circle_up</span>
-          Retirar
-        </button>
-      </div>
-
-
-      {/* Stats Area - Compact & Organized */}
-      <div className="px-6 mt-8">
-        <div className="bg-white p-2 rounded-[36px] shadow-premium border border-white/50">
-          <div className="grid grid-cols-2 gap-2">
-            <div className="bg-gray-50/50 p-5 rounded-[28px] border border-gray-100">
-              <span className="text-gray-400 text-[9px] uppercase font-black tracking-widest">Lucros Hoje</span>
-              <p className="text-[16px] font-black text-[#00C853] mt-1 tracking-tight">
-                + {(stats.today_earnings || 0).toLocaleString('pt-AO', { minimumFractionDigits: 2 })}
-              </p>
-            </div>
-            <div className="bg-gray-50/50 p-5 rounded-[28px] border border-gray-100">
-              <span className="text-gray-400 text-[9px] uppercase font-black tracking-widest">Total Retirado</span>
-              <p className="text-[16px] font-black text-[#CC0C39] mt-1 tracking-tight">
-                - {(stats.total_withdrawals || 0).toLocaleString('pt-AO', { minimumFractionDigits: 2 })}
-              </p>
-            </div>
-            <div className="bg-gray-50/50 p-5 rounded-[28px] border border-gray-100">
-              <span className="text-gray-400 text-[9px] uppercase font-black tracking-widest">Investimento</span>
-              <p className="text-[16px] font-black text-gray-900 mt-1 tracking-tight">
-                {(stats.total_recharge || 0).toLocaleString('pt-AO', { minimumFractionDigits: 2 })}
-              </p>
-            </div>
-            <div className="bg-gray-50/50 p-5 rounded-[28px] border border-gray-100">
-              <span className="text-gray-400 text-[9px] uppercase font-black tracking-widest">Recompensas</span>
-              <p className="text-[16px] font-black text-[#00C853] mt-1 tracking-tight">
-                {(stats.total_rewards || 0).toLocaleString('pt-AO', { minimumFractionDigits: 2 })}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Services Grid */}
-      <div className="px-6 mt-8">
-        <div className="grid grid-cols-4 gap-y-8 gap-x-2">
-          {SERVICES_MENU.map((item: any) => (
-            <div
-              key={item.label}
-              onClick={() => item.action ? item.action() : onNavigate(item.page)}
-              className="flex flex-col items-center gap-2 cursor-pointer active:scale-95 transition-all text-center group"
-            >
-              <div className={`size-14 rounded-[20px] flex items-center justify-center bg-white shadow-premium border border-white group-hover:bg-[#00C853] group-hover:text-white transition-all`}>
-                <span className="material-symbols-outlined text-[24px]">{item.icon}</span>
+              <button className="text-white opacity-90">
+                <span className="material-symbols-outlined">headset_mic</span>
+              </button>
+              <div className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded-full text-white text-xs border border-white/20">
+                <span className="material-symbols-outlined text-sm">language</span>
+                <span>Português</span>
+                <span className="material-symbols-outlined text-sm">expand_more</span>
               </div>
-              <span className="text-[9px] text-gray-400 leading-tight font-black uppercase tracking-widest px-1">{item.label}</span>
             </div>
-          ))}
-        </div>
-      </div>
+          </nav>
 
-      {/* Illustrative Banner */}
-      <div className="px-6 mt-10">
-        <div
-          onClick={() => onNavigate('invite-page')}
-          className="bg-gray-900 rounded-[32px] p-6 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all relative overflow-hidden shadow-2xl"
-        >
-          <div className="relative z-10 w-2/3">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="size-2 bg-[#00C853] rounded-full"></span>
-              <span className="text-[10px] text-[#00C853] font-black uppercase tracking-widest">Programa de Afiliados</span>
-            </div>
-            <h4 className="font-black text-[20px] text-white leading-tight tracking-tight">Expanda sua rede e fature mais</h4>
+          {/* Balanço */}
+          <div className="text-center relative z-10">
+            <p className="text-white/80 text-sm mb-1">Balanço total (USDT)</p>
+            <h1 className="text-white text-5xl font-bold mb-6">{stats.balance.toFixed(2)}</h1>
+            <p className="text-white/80 text-sm mb-1">Valor de recarga (USDT)</p>
+            <h2 className="text-white text-3xl font-bold">{stats.total_recharge.toFixed(2)}</h2>
           </div>
-          <div className="relative z-10">
-            <div className="size-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/10">
-              <span className="material-symbols-outlined text-[32px] text-[#00C853]">groups</span>
-            </div>
+        </header>
+
+        {/* Barra de email com badge VIP */}
+        <div className="px-0 -mt-8 relative z-20">
+          <div className="bg-[#DAFE73] flex items-center justify-between px-4 py-3 rounded-t-3xl">
+            <span className="text-gray-800 font-medium text-sm">{currentProfile?.email || 'openialucros@gmail.com'}</span>
+            <span className="bg-white/50 px-3 py-0.5 rounded-full text-xs font-bold text-gray-700">VIP</span>
           </div>
-          {/* Decorative background circle */}
-          <div className="absolute -right-8 -bottom-8 size-32 bg-[#00C853]/10 rounded-full blur-[40px]"></div>
         </div>
+
+        {/* Grid de ícones */}
+        <div className="bg-[#2D2D3A] grid grid-cols-4 pt-4 pb-6 px-2 relative z-10">
+          <button
+            onClick={() => onNavigate('historico-conta')}
+            className="flex flex-col items-center gap-1 text-center border-r border-white/10"
+          >
+            <span className="material-symbols-outlined text-white text-3xl mb-1">account_balance</span>
+            <span className="text-white/70 text-[10px] leading-tight">Conta</span>
+          </button>
+          <button
+            onClick={() => onNavigate('deposit')}
+            className="flex flex-col items-center gap-1 text-center border-r border-white/10"
+          >
+            <span className="material-symbols-outlined text-white text-3xl mb-1">monetization_on</span>
+            <span className="text-white/70 text-[10px] leading-tight">Recarrega</span>
+          </button>
+          <button
+            onClick={() => onNavigate('retirada')}
+            className="flex flex-col items-center gap-1 text-center border-r border-white/10"
+          >
+            <span className="material-symbols-outlined text-white text-3xl mb-1">wallet</span>
+            <span className="text-white/70 text-[10px] leading-tight">Retirar</span>
+          </button>
+          <div className="flex flex-col items-center gap-1 text-center relative">
+            <span className="material-symbols-outlined text-white text-3xl mb-1">trending_up</span>
+            <span className="text-white/70 text-[10px] leading-tight">Recordes<br />financeiros</span>
+            <img
+              alt="Profile thumbnail"
+              className="absolute -top-6 -right-1 w-10 h-10 rounded-full border-2 border-[#2D2D3A] object-cover shadow-lg"
+              src={currentProfile?.avatar_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuCjLecNBWsXyRmYIbMkRmB9bA9UAVZzkAtYMgdn0dPJ3Jmo0xOzF6xTu323lQAkvVZbl4Zf3NKui5VGrsVaF-U5-LzApdQjtmfvDjaC3SSlRCOd3PxId-vNg3iIxnXrAM5k45qxh9AAtEaGL7mk_zVTKW_xdjswa-OwszimAyxO-JmFInPMCwyUAThO6O3pxX_fuBxoOEUg4GteNvzL3dNgVsAQ4gU7vFKsPoeQW5ln0a7cJWmE2Nd2Idi3KjKeN7tcvtiy5Ck4wF-b"}
+              onError={(e) => {
+                e.currentTarget.src = '/default_avatar.png';
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Menu principal */}
+        <main className="flex-1 bg-white dark:bg-zinc-900 -mt-4 rounded-t-[40px] px-6 pt-10 shadow-inner">
+          <ul className="space-y-2">
+            <li
+              onClick={() => onNavigate('p2p-transfer')}
+              className="flex items-center justify-between py-4 group cursor-pointer"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-primary">move_up</span>
+                </div>
+                <span className="text-gray-700 dark:text-gray-200 font-medium">Transferir</span>
+              </div>
+              <span className="material-symbols-outlined text-gray-400">chevron_right</span>
+            </li>
+            <li
+              onClick={() => onNavigate('change-password')}
+              className="flex items-center justify-between py-4 group cursor-pointer"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-blue-600">password</span>
+                </div>
+                <span className="text-gray-700 dark:text-gray-200 font-medium">Alterar a senha</span>
+              </div>
+              <span className="material-symbols-outlined text-gray-400">chevron_right</span>
+            </li>
+            <li
+              onClick={onLogout}
+              className="flex items-center justify-between py-4 group cursor-pointer"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-teal-600">logout</span>
+                </div>
+                <span className="text-gray-700 dark:text-gray-200 font-medium">sair</span>
+              </div>
+              <span className="material-symbols-outlined text-gray-400">chevron_right</span>
+            </li>
+          </ul>
+        </main>
+
+        {/* Bottom Navigation */}
+        <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-primary flex items-center justify-around py-3 rounded-t-xl z-50">
+          <button
+            onClick={() => onNavigate('home')}
+            className="flex flex-col items-center gap-1 text-white/70"
+          >
+            <span className="material-symbols-outlined text-2xl">home</span>
+            <span className="text-[10px]">Lar</span>
+          </button>
+          <button
+            onClick={() => onNavigate('tasks')}
+            className="flex flex-col items-center gap-1 text-white/70"
+          >
+            <span className="material-symbols-outlined text-2xl">receipt_long</span>
+            <span className="text-[10px]">Tarefa</span>
+          </button>
+          <button
+            onClick={() => onNavigate('invite-page')}
+            className="flex flex-col items-center gap-1 text-white/70"
+          >
+            <span className="material-symbols-outlined text-2xl">groups</span>
+            <span className="text-[10px]">Equipe</span>
+          </button>
+          <button
+            onClick={() => onNavigate('shop')}
+            className="flex flex-col items-center gap-1 text-white/70"
+          >
+            <span className="material-symbols-outlined text-2xl">workspace_premium</span>
+            <span className="text-[10px]">VIP</span>
+          </button>
+          <button className="flex flex-col items-center gap-1 text-white font-bold">
+            <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>account_circle</span>
+            <span className="text-[10px]">Meu</span>
+          </button>
+        </nav>
+
+        {/* CSS para ícone ativo */}
+        <style>{`
+          .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+          }
+          .active-nav {
+            font-variation-settings: 'FILL' 1;
+          }
+        `}</style>
       </div>
     </div>
   );
 };
 
 export default Profile;
-
-

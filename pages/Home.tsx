@@ -14,35 +14,10 @@ interface MarketingItem {
   data: string;
 }
 
-const carouselImages = [
-  "/carousel1.png",
-  "/carousel2.png",
-  "/carousel3.png"
-];
-
-const FILTERS = [
-  { label: 'Geral', icon: 'star', page: 'historico-conta' },
-  { label: 'P2P', icon: 'sync_alt', page: 'p2p-transfer' },
-  { label: 'Retiradas', icon: 'shopping_bag', page: 'withdrawal-history' },
-  { label: 'Compras', icon: 'account_balance', page: 'purchase-history' },
-  { label: 'Recargas', icon: 'handshake', page: 'deposit-history' },
-  { label: 'Suporte', icon: 'contact_support', page: 'support' }
-];
-
 const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
-  const [activeFilter, setActiveFilter] = useState('Todas');
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [cheapestProduct, setCheapestProduct] = useState<any>(null);
   const [marketingItems, setMarketingItems] = useState<MarketingItem[]>([]);
-  const [recentPurchases, setRecentPurchases] = useState<any[]>([]);
   const [loadingData, setLoadingData] = useState(true);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-    }, 3500);
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     if (!profile?.id) return;
@@ -80,30 +55,12 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
       }
     };
 
-    const fetchRecentPurchases = async () => {
-      try {
-        const { data } = await supabase
-          .from('historico_compras')
-          .select('id, nome_produto, status')
-          .eq('user_id', profile.id)
-          .order('data_compra', { ascending: false })
-          .limit(5);
-
-        if (data) {
-          setRecentPurchases(data);
-        }
-      } catch (err) {
-        console.error("Purchases fetch error:", err);
-      }
-    };
-
     const loadAll = async () => {
       setLoadingData(true);
       try {
         await Promise.all([
           fetchCheapest(),
-          fetchMarketing(),
-          fetchRecentPurchases()
+          fetchMarketing()
         ]);
       } catch (err) {
         console.error("Home data load error:", err);
@@ -114,239 +71,289 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
 
     if (profile?.id) {
       loadAll();
-    }
-  }, [profile?.id]);
+      // Simulate data loading
+      const timer = setTimeout(() => {
+        setLoadingData(false);
+      }, 1500); // Simulate a 1.5 second loading time
+
+      return () => clearTimeout(timer);
+    }, []); // Empty dependency array means this runs once on mount
 
   return (
-    <div className="flex flex-col pb-32 bg-bg-neutral min-h-screen font-sans antialiased relative">
-      <section className="relative w-full h-[220px] overflow-hidden rounded-b-[40px] shadow-lg">
-        <div className="flex transition-transform duration-1000 ease-in-out h-full" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
-          {carouselImages.map((img, index) => (
-            <div key={index} className="w-full h-full flex-shrink-0 bg-cover bg-center" style={{ backgroundImage: `url("${img}")` }}>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-            </div>
-          ))}
+    <div className="bg-[#FF6B00] min-h-screen pb-20 font-sans antialiased">
+      {/* Header laranja com logo e ícones */}
+      <div className="bg-[#FF6B00] px-4 pt-4 pb-2 flex items-center justify-between sticky top-0 z-50">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+            <span className="material-symbols-outlined text-primary text-xl font-bold">home</span>
+          </div>
+          <h1 className="text-xl font-black tracking-tight italic">THE HOME-VIP</h1>
         </div>
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {carouselImages.map((_, i) => (
-            <div key={i} className={`h-1 rounded-full transition-all duration-300 ${currentSlide === i ? 'w-6 bg-primary' : 'w-2 bg-white/40'}`}></div>
-          ))}
-        </div>
-      </section>
 
-      {/* Marquee Banner - Orange Theme */}
-      <div className="bg-primary py-2 overflow-hidden flex items-center h-9 relative z-20 shadow-[0_4px_20px_rgba(250,100,0,0.2)]">
-        <div className="flex whitespace-nowrap animate-marquee">
-          <span className="text-[10px] font-black text-white px-8 flex items-center gap-2">
-            <span className="size-1 bg-white/40 rounded-full"></span> BEM-VINDO AO THE HOME VIP <span className="size-1 bg-white/40 rounded-full"></span> OFERTAS EXCLUSIVAS DIÁRIAS <span className="size-1 bg-white/40 rounded-full"></span> SUPORTE 24H DISPONÍVEL
-          </span>
-          <span className="text-[10px] font-black text-white px-8 flex items-center gap-2">
-            <span className="size-1 bg-white/40 rounded-full"></span> BEM-VINDO AO THE HOME VIP <span className="size-1 bg-white/40 rounded-full"></span> OFERTAS EXCLUSIVAS DIÁRIAS <span className="size-1 bg-white/40 rounded-full"></span> SUPORTE 24H DISPONÍVEL
-          </span>
+        {/* Ícones do topo */}
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <span className="material-symbols-outlined text-2xl">mail</span>
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border-2 border-primary rounded-full"></span>
+          </div>
+          <span className="material-symbols-outlined text-2xl">support_agent</span>
+          <div className="flex items-center gap-1 border border-white/40 rounded-full px-2 py-0.5 text-xs bg-white/10">
+            <span className="material-symbols-outlined text-sm">language</span>
+            <span>Português</span>
+            <span className="material-symbols-outlined text-xs">keyboard_arrow_down</span>
+          </div>
         </div>
       </div>
 
-      {/* Quick Actions - Enhanced Style */}
-      <div className="px-5 pt-8 mb-2">
-        <div className="grid grid-cols-3 gap-4">
-          <button onClick={() => onNavigate('deposit')} className="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-[24px] shadow-premium active:scale-95 transition-all group hover:bg-primary/5">
-            <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
-              <span className="material-symbols-outlined text-[24px]">add_card</span>
-            </div>
-            <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Recarga</span>
-          </button>
-          <button onClick={() => onNavigate('retirada')} className="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-[24px] shadow-premium active:scale-95 transition-all group hover:bg-primary/5">
-            <div className="size-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-primary group-hover:text-white transition-all">
-              <span className="material-symbols-outlined text-[24px]">payments</span>
-            </div>
-            <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Retirar</span>
-          </button>
-          <button onClick={() => onNavigate('tutorials')} className="flex flex-col items-center justify-center gap-2 p-4 bg-white rounded-[24px] shadow-premium active:scale-95 transition-all group hover:bg-primary/5">
-            <div className="size-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-primary group-hover:text-white transition-all">
-              <span className="material-symbols-outlined text-[24px]">auto_stories</span>
-            </div>
-            <span className="text-[10px] font-bold text-text-secondary uppercase tracking-widest">Guia</span>
-          </button>
+      {/* Banner de alerta com animação */}
+      <div className="mx-4 mt-2 mb-4 bg-white/20 rounded-full py-1.5 px-4 flex items-center gap-2 overflow-hidden">
+        <span className="material-symbols-outlined text-sm shrink-0">notifications</span>
+        <div className="text-xs font-medium overflow-hidden whitespace-nowrap">
+          <div className="scrolling-text">
+            ip1 é 13USDT e a recompensa diária é 8USDT. Benefícios por 60 dias. Recompensa de indicação nível 1: 10%...
+          </div>
         </div>
       </div>
 
-      {/* Sticky Filters - Home VIP Style */}
-      <div className="sticky top-0 z-40 glass-panel py-4 mt-6">
-        <div className="flex gap-3 px-5 overflow-x-auto no-scrollbar scroll-smooth">
-          {FILTERS.map((f: any) => (
-            <button key={f.label} onClick={() => f.page ? onNavigate(f.page) : setActiveFilter(f.label)} className={`flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-2xl px-5 transition-all active:scale-95 shadow-sm ${activeFilter === f.label ? 'bg-primary text-white' : 'bg-white text-text-secondary hover:bg-gray-50'}`}>
-              <span className={`material-symbols-outlined text-[18px]`} style={{ fontVariationSettings: activeFilter === f.label ? "'FILL' 1" : "'FILL' 0" }}>{f.icon}</span>
-              <p className={`text-[12px] uppercase tracking-wider ${activeFilter === f.label ? 'font-black' : 'font-bold'}`}>{f.label}</p>
-            </button>
-          ))}
+      {/* Banner BUILT FROM SCRATCH */}
+      <div className="px-4">
+        <div className="rounded-xl overflow-hidden shadow-lg mb-6 bg-white relative">
+          <img
+            alt="Interior design banner"
+            className="w-full h-40 object-cover opacity-90"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCH8Do3zySKPiURyqcXnaNVzw_ZAlJ10FGwvREfqVDzem1XONESKJvvtiMwaMLfjpoB1tpOXe5TXnaxACNJXatYPG_LMozu0H1l1v6kNAm2XMdEMQCNBpM34aYGc1tnWCl7_ZIALpPTs0mNIH2XZHLEm6ZZjvrEr9pTZ--jD3gviMHiDxjZ6O6i-OSKd0RfLbsHqh7_iIQIV1BGkoUD51_QWyrJBPeXoSGTD0t3Okq2OBmRmhqH1R6kdf1897j72pWKk6_W4okaFdnM"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
+            <h2 className="text-2xl font-black italic tracking-tighter text-white">
+              BUILT <span className="text-primary font-bold">FROM</span> SCRATCH
+            </h2>
+            <p className="text-[10px] text-white/80">SEE OUR HISTORY</p>
+          </div>
+          <div className="absolute right-4 bottom-4 w-10 h-10 rounded-full border-2 border-white overflow-hidden shadow-lg">
+            <img
+              alt="Support"
+              className="w-full h-full object-cover"
+              src={profile?.avatar_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuAvTdB2RECG0r99JebLEuhQFQCYJTJ1QbSGBZavZaT-ezAX1d9wzcMBwaGFIuzr_4I1tUtr1HiM02GpaM295-MH_N9ZeO0TPPaU2jXYPTpBiWvaf13RX6lNOscbTs1QbZ08XV1ukus6NWPZj0ZcMf-kdRPdqCgFTNtUg20uNKfWo0hF8PGAnFxdHfFBy219Xd5pi053E9qKMpEuNRmpvnmsAuFXxVaQ1tq3NTHBAYOelGIHsK_oKBmFjN_u2ArCvl6UQMA-g3Nl1C7n"}
+              onError={(e) => {
+                e.currentTarget.src = '/default_avatar.png';
+              }}
+            />
+          </div>
         </div>
       </div>
 
-      {cheapestProduct && (
-        <section className="mt-8">
-          <div className="flex items-center justify-between px-6 pb-4">
-            <h2 className="text-[20px] font-black leading-tight text-text-main tracking-tight">Oportunidades de Hoje</h2>
-            <button onClick={() => onNavigate('shop')} className="text-[12px] font-bold text-primary uppercase tracking-widest hover:underline">Ver todas</button>
+      {/* Grid de ações principais (5 botões) */}
+      <div className="px-4 grid grid-cols-3 gap-3 mb-6">
+        {/* Recarrega */}
+        <button
+          onClick={() => onNavigate('deposit')}
+          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+        >
+          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
+            <span className="material-symbols-outlined text-3xl">account_balance_wallet</span>
           </div>
-          <div className="px-5">
-            <div className="relative w-full overflow-hidden rounded-[32px] bg-white shadow-premium group border border-white/50">
-              <div className="p-6 flex flex-col sm:flex-row gap-6">
-                <div className="w-full sm:w-36 h-36 bg-gray-50 rounded-[24px] p-4 flex items-center justify-center shadow-inner">
-                  <img loading="lazy" decoding="async" src={cheapestProduct.image_url || "/placeholder_product.png"} alt="" className="max-w-full max-h-full object-contain drop-shadow-md" />
-                </div>
-                <div className="flex-1 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-1 bg-primary/10 text-primary text-[10px] font-black rounded-lg uppercase tracking-wider">LÍDER DE VENDAS</span>
-                    </div>
-                    <h3 className="text-text-main text-[18px] font-bold mt-3 leading-tight line-clamp-2">{cheapestProduct.name}</h3>
-                    <div className="flex items-baseline gap-1 mt-3">
-                      <span className="text-[14px] font-black text-primary/70 uppercase tracking-tighter">KZs</span>
-                      <span className="text-[32px] font-black text-text-main leading-none tracking-tighter">{cheapestProduct.price.toLocaleString()}</span>
-                    </div>
+          <span className="text-xs font-semibold leading-tight">Recarrega</span>
+        </button>
+
+        {/* Retirar */}
+        <button
+          onClick={() => onNavigate('retirada')}
+          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+        >
+          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
+            <span className="material-symbols-outlined text-3xl">payments</span>
+          </div>
+          <span className="text-xs font-semibold leading-tight">Retirar</span>
+        </button>
+
+        {/* Perfil de companhia */}
+        <button
+          onClick={() => onNavigate('about-bp')}
+          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+        >
+          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
+            <span className="material-symbols-outlined text-3xl">corporate_fare</span>
+          </div>
+          <span className="text-xs font-semibold leading-tight">Perfil de companhia</span>
+        </button>
+
+        {/* Convidar amigos */}
+        <button
+          onClick={() => onNavigate('invite-page')}
+          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+        >
+          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
+            <span className="material-symbols-outlined text-3xl">person_add</span>
+          </div>
+          <span className="text-xs font-semibold leading-tight">Convidar amigos</span>
+        </button>
+
+        {/* Cooperação de Agência */}
+        <button
+          onClick={() => onNavigate('subordinate-list')}
+          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+        >
+          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
+            <span className="material-symbols-outlined text-3xl">handshake</span>
+          </div>
+          <span className="text-xs font-semibold leading-tight">Cooperação de Agência</span>
+        </button>
+      </div>
+
+      {/* Botão Aplicativo */}
+      <div className="px-4">
+        <button
+          onClick={() => onNavigate('tutorials')}
+          className="w-full bg-gradient-to-r from-yellow-400/90 to-yellow-500/90 rounded-full py-4 px-6 flex items-center justify-between mb-8 shadow-inner shadow-white/20"
+        >
+          <span className="text-xl font-bold tracking-wide">Aplicativo</span>
+          <span className="material-symbols-outlined font-bold">download_for_offline</span>
+        </button>
+      </div>
+
+      {/* Sala de Tarefas */}
+      <div className="bg-white dark:bg-card-dark rounded-t-3xl p-6 -mx-0">
+        <h3 className="text-black dark:text-white text-xl font-bold mb-4">Sala de Tarefas</h3>
+
+        <div className="space-y-4">
+          {loadingData ? (
+            <>
+              {[1, 2, 3].map(i => (
+                <div key={i} className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-3 flex gap-4 border border-slate-100 dark:border-zinc-700 shadow-sm animate-pulse">
+                  <div className="w-24 h-24 bg-gray-200 rounded-lg"></div>
+                  <div className="flex-1 space-y-2">
+                    <div className="h-5 bg-gray-200 rounded w-1/4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+                    <div className="h-3 bg-gray-200 rounded w-3/4"></div>
                   </div>
-                  <button
-                    onClick={() => onNavigate('shop')}
-                    className="bg-primary hover:brightness-110 text-white text-[13px] font-black py-4 px-6 rounded-2xl w-full mt-6 transition-all shadow-[0_12px_24px_-8px_rgba(250,100,0,0.4)] uppercase tracking-widest"
-                  >
-                    Investir Agora
-                  </button>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Marketing Section */}
-      <section className="mt-8 px-5">
-        <h2 className="text-[18px] font-bold text-text-main mb-5 leading-tight tracking-tight px-1">Recomendados para você</h2>
-
-        {loadingData ? (
-          <div className="grid grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-gray-200 h-40 rounded-3xl mb-3"></div>
-                <div className="h-4 bg-gray-200 rounded-full w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded-full w-1/2"></div>
-              </div>
-            ))}
-          </div>
-        ) : marketingItems.slice(0, 4).length > 0 ? (
-          <div className="grid grid-cols-2 gap-4">
-            {marketingItems.slice(0, 4).map((item, i) => (
-              <div key={item.id} onClick={() => onNavigate('shop')} className="cursor-pointer group">
-                <div className="bg-white h-48 flex items-center justify-center shadow-premium rounded-[28px] p-4 mb-3 border border-white/50 group-hover:bg-primary/5 group-hover:scale-[1.02] transition-all overflow-hidden relative">
-                  <img loading="lazy" decoding="async" src={item.url_image} className="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity drop-shadow-lg" alt={item.descricao_nome} />
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-primary text-white text-[9px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg">Premium</span>
-                  </div>
-                </div>
-                <div className="px-1">
-                  <span className="text-text-main text-[13px] font-bold leading-tight line-clamp-2 mt-1">{item.descricao_nome}</span>
-                  <div className="flex items-center gap-1 mt-1 text-primary">
-                    <span className="material-symbols-outlined text-[14px]">bolt</span>
-                    <span className="text-[10px] font-black tracking-widest uppercase">Promoção</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-4">
-            {[1, 2].map((item, i) => (
-              <div key={i} className="cursor-pointer group opacity-40">
-                <div className="bg-white h-48 p-4 flex items-center justify-center shadow-premium rounded-[28px] mb-3 border border-white/50">
-                  <span className="material-symbols-outlined text-gray-300 text-5xl">inventory_2</span>
-                </div>
-                <div className="h-4 bg-gray-200 rounded-full w-3/4 mb-2"></div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <button onClick={() => onNavigate('shop')} className="mt-6 w-full py-4 bg-white border border-gray-100 rounded-2xl text-[12px] font-bold text-text-secondary uppercase tracking-widest hover:text-primary hover:bg-white transition-all shadow-sm">Ver catálogo completo</button>
-      </section>
-
-      <div className="h-10"></div>
-
-      <section className="bg-white rounded-t-[40px] px-6 pt-10 pb-6 shadow-[0_-20px_50px_rgba(250,100,0,0.03)]">
-        <h2 className="text-[18px] font-bold text-text-main mb-6 leading-tight tracking-tight">Continuar explorando</h2>
-        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-6 px-1">
-          {marketingItems.slice(4, 8).length > 0 ? (
-            marketingItems.slice(4, 8).map((item) => (
-              <div key={item.id} onClick={() => onNavigate('shop')} className="min-w-[180px] cursor-pointer group">
-                <div className="bg-gray-50 h-44 flex items-center justify-center rounded-[32px] mb-3 group-hover:bg-primary/5 transition-all overflow-hidden border border-gray-100">
-                  <img loading="lazy" decoding="async" src={item.url_image} className="w-full h-full object-contain opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
-                </div>
-                <p className="text-[14px] text-text-main font-bold leading-tight truncate px-1">{item.descricao_nome}</p>
-                <p className="text-[11px] text-text-secondary font-bold uppercase tracking-wider mt-1 px-1">Visualizado</p>
-              </div>
-            ))
-          ) : recentPurchases.length > 0 ? (
-            recentPurchases.map((purchase) => (
-              <div key={purchase.id} onClick={() => onNavigate('purchase-history')} className="min-w-[180px] cursor-pointer group">
-                <div className="bg-gray-50 h-44 flex items-center justify-center rounded-[32px] mb-3 group-hover:bg-primary/5 transition-all overflow-hidden border border-gray-100">
-                  <img loading="lazy" decoding="async" src="/placeholder_product.png" className="w-full h-full object-contain opacity-80 mix-blend-multiply" />
-                </div>
-                <p className="text-[14px] text-text-main font-bold leading-tight truncate px-1">{purchase.nome_produto}</p>
-                <p className="text-[11px] text-primary font-bold uppercase tracking-wider mt-1 px-1">{purchase.status === 'pendente' ? 'Processando' : 'Investido'}</p>
-              </div>
-            ))
+              ))}
+            </>
           ) : (
-            [1, 2, 3].map((_, i) => (
-              <div key={i} onClick={() => onNavigate('shop')} className="min-w-[180px] cursor-pointer opacity-50">
-                <div className="bg-gray-50 h-44 flex items-center justify-center rounded-[32px] mb-3 border border-gray-100">
-                  <span className="material-symbols-outlined text-gray-200 text-4xl">travel_explore</span>
+            <>
+              {/* Card de produto 1 - Resistor */}
+              <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-3 flex gap-4 border border-slate-100 dark:border-zinc-700 shadow-sm" onClick={() => onNavigate('shop')}>
+                <div className="relative w-24 h-24 bg-white dark:bg-zinc-700 rounded-lg overflow-hidden shrink-0">
+                  <img
+                    alt="Resistor Set"
+                    className="w-full h-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6zaV-cbAV7xxy7KJ60Hx5CeLLC0g0aD9wJa1QQkTb8l6VTjUQ_yWh3rDgOY1UJGQ3fSdw0tYv3We9aZ6ltmauDfRoigMFh8MBNB0m-VGYkAMmobLLaP9LzydH5mAA3e3Ja080cgckAM5Bh1OGXrKy20BlpOmCkeCC7XG7nKVhoZhhG4_ZOfott5g-2Q3KphYqthNa1ACUnH3Zm7RfVGbu3Uon9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-white text-3xl">lock</span>
+                  </div>
                 </div>
-                <p className="text-[14px] text-text-main font-bold leading-tight truncate px-1">Novas Ofertas</p>
+                <div className="flex-1">
+                  <div className="text-primary font-bold text-lg">$10.00</div>
+                  <div className="text-[10px] text-gray-400 dark:text-gray-500 mb-1">Preço</div>
+                  <p className="text-xs text-slate-800 dark:text-slate-200 line-clamp-2 leading-snug">50pcs Resistor 0.25W 5% 3.3 - 3.3M Ohm Carbon Film resistors</p>
+                </div>
               </div>
-            ))
+
+              {/* Card de produto 2 - Pen Set */}
+              <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-3 flex gap-4 border border-slate-100 dark:border-zinc-700 shadow-sm" onClick={() => onNavigate('shop')}>
+                <div className="relative w-24 h-24 bg-white dark:bg-zinc-700 rounded-lg overflow-hidden shrink-0">
+                  <img
+                    alt="Pen Set"
+                    className="w-full h-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuANftelW4IwDQtQ_F-qAlUO52Btrsa3N5EsLDoRo_kRJu51I6o6cythBDIpuULD1XISI-JsIiap4OEk2PyEmog2iLjseA7U-rxB2CdGzXI2NNH2yKmrhDvoMsVZMg0lGYV_bvHYQMbsoyGlJo7LNYB7jC_E7Q2vdnY7c_pTnXqfKpL-oGo8J-t_CDqoSAPL0UsHtN3e3Ja080cgckAM5Bh1OGXrKy20BlpOmCkeCC7XG7nKVhoZhhG4_ZOfott5g-2Q3KphYqthNa1ACUnH3Zm7RfVGbu3Uon9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-white text-3xl">lock</span>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="text-primary font-bold text-lg">$15.80</div>
+                  <div className="text-[10px] text-gray-400 dark:text-gray-500 mb-1">Preço</div>
+                  <p className="text-xs text-slate-800 dark:text-slate-200 line-clamp-2 leading-snug">Faber-Castell RX Gel Colour Pen 0.7mm FC Rxgel Pen Bright Ink Gel RX Gel Color Set</p>
+                </div>
+              </div>
+
+              {/* Card de produto 3 - Lipstick Pen */}
+              <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-3 flex gap-4 border border-slate-100 dark:border-zinc-700 shadow-sm" onClick={() => onNavigate('shop')}>
+                <div className="relative w-24 h-24 bg-white dark:bg-zinc-700 rounded-lg overflow-hidden shrink-0">
+                  <img
+                    alt="Lipstick Pen"
+                    className="w-full h-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2R03IrwJqAkMwpvg6w3Pn3Gbn7T8ExTQDiuzmdaxy3NnRU1GMT0-ZxZSs2VpfQTQah0w9N5Lp_zCbCyOW3cGLha5__ZK-zY7nSv8LQi6aJgKw7DSEE6nQNTGYnOeBHhuAGZ7tYGNsMfVjbZenpmaWSzAo1Rbfqsh7JSUoGBIoy8r42IRhn9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-white text-3xl">lock</span>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="text-primary font-bold text-lg">$29.90</div>
+                  <div className="text-[10px] text-gray-400 dark:text-gray-500 mb-1">Preço</div>
+                  <p className="text-xs text-slate-800 dark:text-slate-200 line-clamp-2 leading-snug">Glittering Lipstick Black Ink Pen 0.5mm For School and Office Use Gift</p>
+                </div>
+              </div>
+            </>
           )}
         </div>
-        <button onClick={() => onNavigate('purchase-history')} className="w-full py-4 text-[12px] font-black text-primary border-t border-gray-50 uppercase tracking-[0.2em] hover:bg-primary/5 transition-all rounded-b-[40px]">Seu Histórico Completo</button>
-      </section>
+      </div>
 
-      <div className="h-2 bg-[#F0F2F2]"></div>
+      {/* Botão flutuante de presente */}
+      <div className="fixed right-4 bottom-24 z-40">
+        <button
+          onClick={() => onNavigate('gift-chest')}
+          className="w-12 h-12 bg-black dark:bg-zinc-700 rounded-full flex items-center justify-center border-2 border-primary/50 shadow-lg"
+        >
+          <span className="material-symbols-outlined text-yellow-400">card_giftcard</span>
+        </button>
+      </div>
 
-      <section className="bg-white px-4 pt-4 pb-6">
-        <h2 className="text-[16px] font-bold text-text-main mb-3 leading-tight">Conquiste os melhores produtos</h2>
-        <div className="grid grid-cols-2 gap-3">
-          {marketingItems.slice(8, 12).length > 0 ? (
-            marketingItems.slice(8, 12).map((item) => (
-              <div key={item.id} onClick={() => onNavigate('shop')} className="cursor-pointer group">
-                <div className="bg-[#F7F8F8] h-40 flex items-center justify-center border border-gray-100 rounded-lg mb-1.5 group-hover:bg-primary/5 transition-colors overflow-hidden">
-                  <img loading="lazy" decoding="async" src={item.url_image} className="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition-opacity" />
-                </div>
-                <p className="text-[12px] text-text-main font-medium truncate">{item.descricao_nome}</p>
-              </div>
-            ))
-          ) : (
-            [
-              { title: 'Eletrônicos', img: '/placeholder_product.png' },
-              { title: 'Acessórios', img: '/placeholder_product.png' },
-              { title: 'Móveis', img: '/placeholder_product.png' },
-              { title: 'Decoração', img: '/placeholder_product.png' }
-            ].map((cat, i) => (
-              <div key={i} onClick={() => onNavigate('shop')} className="cursor-pointer">
-                <div className="bg-[#F7F8F8] h-40 p-3 flex items-center justify-center border border-gray-100 rounded-lg mb-1.5">
-                  <img loading="lazy" decoding="async" src={cat.img} className="max-h-full max-w-full object-contain opacity-80" />
-                </div>
-                <p className="text-[12px] text-text-main font-medium">{cat.title}</p>
-              </div>
-            ))
-          )}
-        </div>
-        <button onClick={() => onNavigate('shop')} className="mt-4 text-[13px] font-medium text-primary hover:underline">Ver mais</button>
-      </section>
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-primary flex items-center justify-around py-3 rounded-t-xl z-50">
+        <button className="flex flex-col items-center gap-1 text-white font-bold">
+          <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>home</span>
+          <span className="text-[10px]">Lar</span>
+        </button>
+        <button
+          onClick={() => onNavigate('tasks')}
+          className="flex flex-col items-center gap-1 text-white/70"
+        >
+          <span className="material-symbols-outlined text-2xl">receipt_long</span>
+          <span className="text-[10px]">Tarefa</span>
+        </button>
+        <button
+          onClick={() => onNavigate('invite-page')}
+          className="flex flex-col items-center gap-1 text-white/70"
+        >
+          <span className="material-symbols-outlined text-2xl">groups</span>
+          <span className="text-[10px]">Equipe</span>
+        </button>
+        <button
+          onClick={() => onNavigate('shop')}
+          className="flex flex-col items-center gap-1 text-white/70"
+        >
+          <span className="material-symbols-outlined text-2xl">workspace_premium</span>
+          <span className="text-[10px]">VIP</span>
+        </button>
+        <button
+          onClick={() => onNavigate('profile')}
+          className="flex flex-col items-center gap-1 text-white/70"
+        >
+          <span className="material-symbols-outlined text-2xl">account_circle</span>
+          <span className="text-[10px]">Meu</span>
+        </button>
+      </nav>
 
+      {/* Botão de suporte flutuante */}
+      <button
+        onClick={() => onNavigate('support')}
+        className="fixed bottom-20 right-4 w-12 h-12 bg-yellow-400 rounded-full shadow-2xl flex items-center justify-center z-50 active:scale-90 transition-all"
+      >
+        <span className="material-symbols-outlined text-white text-[24px]">support_agent</span>
+      </button>
+
+      {/* CSS para ícone ativo */}
       <style>{`
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .animate-marquee { animation: marquee 25s linear infinite; }
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
       `}</style>
     </div>
   );
 };
 
 export default Home;
-

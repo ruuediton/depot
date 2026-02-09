@@ -1,7 +1,5 @@
-﻿
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState } from 'react';
 import { supabase } from '../supabase';
-import SpokeSpinner from '../components/SpokeSpinner';
 
 interface ChangePasswordProps {
   onNavigate: (page: any) => void;
@@ -18,13 +16,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onNavigate, showToast }
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Validações em tempo real
-  const [isSixDigits, setIsSixDigits] = useState(false);
-
-  useEffect(() => {
-    setIsSixDigits(newPassword.length === 6);
-  }, [newPassword]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -38,18 +29,14 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onNavigate, showToast }
       return;
     }
 
-    if (!isSixDigits) {
-      showToast?.("A nova senha deve ter exatamente 6 dígitos.", "error");
+    if (newPassword.length < 6) {
+      showToast?.("A nova senha deve ter pelo menos 6 caracteres.", "error");
       return;
     }
 
     setLoading(true);
 
     try {
-      // Nota: No Supabase, atualizar a senha de um usuário logado 
-      // não exige a senha antiga via API auth.updateUser, mas 
-      // é uma boa prática validar ou reautenticar se o sistema exigir.
-      // Para simplicidade e seguindo o padrão Supabase:
       const { error } = await supabase.auth.updateUser({
         password: newPassword
       });
@@ -68,107 +55,124 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ onNavigate, showToast }
   };
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-white font-sans text-black antialiased">
-      <header className="relative header-gradient-mixture pb-16 pt-4 px-4 overflow-hidden">
-        {/* Background Decorative Circles */}
-        <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-[-20%] left-[-10%] w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
-
-        <div className="relative z-10 flex items-center justify-between">
-          <button
-            onClick={() => onNavigate('profile')}
-            className="w-11 h-11 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md transition-all active:scale-90"
-          >
-            <span className="material-symbols-outlined text-white text-[28px]">arrow_back</span>
-          </button>
-          <h1 className="text-xl font-black text-white tracking-tight">Trocar Senha</h1>
-          <div className="w-11"></div>
+    <div className="bg-[#FF6F00] min-h-screen flex flex-col items-center font-sans antialiased">
+      {/* Status Bar */}
+      <div className="w-full h-12 flex items-center justify-between px-6 text-white">
+        <span className="text-sm font-semibold">9:41</span>
+        <div className="flex items-center space-x-1.5">
+          <span className="material-symbols-outlined text-sm">signal_cellular_alt</span>
+          <span className="material-symbols-outlined text-sm">wifi</span>
+          <span className="material-symbols-outlined text-sm">battery_full</span>
         </div>
+      </div>
+
+      {/* Header */}
+      <header className="w-full px-4 py-2 flex items-center relative">
+        <button
+          onClick={() => onNavigate('profile')}
+          className="z-10 text-white p-2"
+        >
+          <span className="material-symbols-outlined">chevron_left</span>
+        </button>
+        <h1 className="absolute inset-0 flex items-center justify-center text-white text-lg font-medium">
+          Alterar a senha
+        </h1>
       </header>
 
-      <main className="flex-1 px-5 py-2 flex flex-col">
-        {/* Form Section */}
-        <form className="flex flex-col gap-3 mt-4" onSubmit={handleSubmit}>
-          {/* Current Password */}
-          <div className="bg-gray-50 rounded-xl h-[50px] flex items-center px-4 gap-3 relative border border-transparent focus-within:border-[#00C853] transition-colors">
-            <span className="material-symbols-outlined text-[#00C853] text-[24px]">lock</span>
-            <input
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="bg-transparent flex-1 h-full outline-none text-[#111] font-medium placeholder:text-gray-400 text-[14px]"
-              placeholder="Digite sua senha atual"
-              type={showCurrent ? "text" : "password"}
-            />
-            <button type="button" onClick={() => setShowCurrent(!showCurrent)}>
-              <span className="material-symbols-outlined text-gray-400 text-[20px]">
-                {showCurrent ? 'visibility' : 'visibility_off'}
-              </span>
+      {/* Main Content */}
+      <main className="w-full max-w-md px-4 mt-6">
+        <div className="bg-white dark:bg-neutral-900 rounded-[28px] p-6 shadow-xl">
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Senha Antiga */}
+            <div className="relative">
+              <input
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="w-full h-14 px-4 pr-12 bg-[#FFF5F0] dark:bg-neutral-800 border-none rounded-xl text-neutral-600 dark:text-neutral-300 placeholder-neutral-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="Senha Antiga"
+                type={showCurrent ? "text" : "password"}
+              />
+              <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400"
+                type="button"
+                onClick={() => setShowCurrent(!showCurrent)}
+              >
+                <span className="material-symbols-outlined">
+                  {showCurrent ? 'visibility_off' : 'visibility'}
+                </span>
+              </button>
+            </div>
+
+            {/* Nova Senha */}
+            <div className="relative">
+              <input
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full h-14 px-4 pr-12 bg-[#FFF5F0] dark:bg-neutral-800 border-none rounded-xl text-neutral-600 dark:text-neutral-300 placeholder-neutral-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="Nova Senha"
+                type={showNew ? "text" : "password"}
+              />
+              <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400"
+                type="button"
+                onClick={() => setShowNew(!showNew)}
+              >
+                <span className="material-symbols-outlined">
+                  {showNew ? 'visibility_off' : 'visibility'}
+                </span>
+              </button>
+            </div>
+
+            {/* Re-introduza a nova palavra-passe */}
+            <div className="relative">
+              <input
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full h-14 px-4 pr-12 bg-[#FFF5F0] dark:bg-neutral-800 border-none rounded-xl text-neutral-600 dark:text-neutral-300 placeholder-neutral-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="Re-introduza a nova palavra-passe"
+                type={showConfirm ? "text" : "password"}
+              />
+              <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400"
+                type="button"
+                onClick={() => setShowConfirm(!showConfirm)}
+              >
+                <span className="material-symbols-outlined">
+                  {showConfirm ? 'visibility_off' : 'visibility'}
+                </span>
+              </button>
+            </div>
+
+            {/* Botão Confirme */}
+            <button
+              className="w-full bg-primary hover:bg-orange-600 active:scale-[0.98] transition-all text-white font-medium py-4 rounded-2xl mt-4 shadow-lg shadow-primary/20"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? 'Processando...' : 'confirme'}
             </button>
-          </div>
-
-          {/* New Password */}
-          <div className="bg-gray-50 rounded-xl h-[50px] flex items-center px-4 gap-3 relative border border-transparent focus-within:border-[#00C853] transition-colors">
-            <span className="material-symbols-outlined text-[#00C853] text-[24px]">lock</span>
-            <input
-              value={newPassword}
-              onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, '').slice(0, 6);
-                setNewPassword(val);
-              }}
-              className="bg-transparent flex-1 h-full outline-none text-[#111] font-medium placeholder:text-gray-400 text-[14px]"
-              placeholder="Crie uma nova senha (6 dígitos)"
-              type={showNew ? "text" : "password"}
-              maxLength={6}
-              inputMode="numeric"
-            />
-            <button type="button" onClick={() => setShowNew(!showNew)}>
-              <span className="material-symbols-outlined text-gray-400 text-[20px]">
-                {showNew ? 'visibility' : 'visibility_off'}
-              </span>
-            </button>
-          </div>
-
-          {/* Confirm Password */}
-          <div className="bg-gray-50 rounded-xl h-[50px] flex items-center px-4 gap-3 relative border border-transparent focus-within:border-[#00C853] transition-colors">
-            <span className="material-symbols-outlined text-[#00C853] text-[24px]">lock</span>
-            <input
-              value={confirmPassword}
-              onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, '').slice(0, 6);
-                setConfirmPassword(val);
-              }}
-              className="bg-transparent flex-1 h-full outline-none text-[#111] font-medium placeholder:text-gray-400 text-[14px]"
-              placeholder="Repita a nova senha"
-              type={showConfirm ? "text" : "password"}
-              maxLength={6}
-              inputMode="numeric"
-            />
-            <button type="button" onClick={() => setShowConfirm(!showConfirm)}>
-              <span className="material-symbols-outlined text-gray-400 text-[20px]">
-                {showConfirm ? 'visibility' : 'visibility_off'}
-              </span>
-            </button>
-          </div>
-
-          <div className="flex-1 min-h-[10px]"></div>
-
-          {/* Action Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full h-[45px] rounded-2xl bg-[#00C853] hover:bg-[#00a844] active:scale-[0.98] transition-all flex items-center justify-center mb-6 shadow-lg shadow-green-200 ${loading ? 'opacity-50' : ''}`}
-          >
-            {loading ? (
-              <SpokeSpinner size="w-6 h-6" className="text-black" />
-            ) : (
-              <span className="text-white text-[15px] font-bold tracking-wide">Confirmar Alteração</span>
-            )}
-          </button>
-        </form>
+          </form>
+        </div>
       </main>
+
+      {/* Avatar de suporte flutuante */}
+      <div className="fixed bottom-10 right-6">
+        <div className="relative group cursor-pointer" onClick={() => onNavigate('support')}>
+          <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-white/50 shadow-2xl transition-transform active:scale-90">
+            <img
+              alt="Customer Service Representative"
+              className="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVMsuBX2ic9czUhYRcjD5re9s0_u1JVpGnN0qDdgOqZCmpgzpaGT-BU639iXHlLT0Q3JpCBo9BAidZZdIhy_CmoO2ycCztKP-JaAv5zeKC9Kcf3dlLYJXGZpGCKNLaoAkx7SRBDoDcW4Ffd_f76RfHImKFl8bY4p6coFd-3KqpOTVbjf_GhemPQQTCGKsCzZYXyb8VEOJuYuKz0dg8uN38E9jzPzSleOR4x1vY489hVSZN8G7yw8hC9ggdfynwfGaLuyC7xS-2-0Ks"
+            />
+          </div>
+          <div className="absolute top-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+        </div>
+      </div>
+
+      {/* Indicador inferior */}
+      <div className="fixed bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-white/20 rounded-full"></div>
     </div>
   );
 };
 
 export default ChangePassword;
-

@@ -49,7 +49,7 @@ const App: React.FC = () => {
       setSession(session);
       if (session) {
         fetchProfile(session.user.id);
-        setShowTaskPopup(true);
+        // setShowTaskPopup(true); // Removido em favor da página dedicada
       } else {
         setProfile(null);
         setCurrentPage('register');
@@ -102,7 +102,7 @@ const App: React.FC = () => {
   // --- Navigation ---
   useEffect(() => {
     document.title = `${PAGE_TITLES[currentPage] || 'The Home Depot'} | BP`;
-    if (currentPage === 'home' && session) setShowTaskPopup(true);
+    // if (currentPage === 'home' && session) setShowTaskPopup(true); // Removido
   }, [currentPage, session]);
 
   const handleNavigate = useCallback((page: string, data: any = null) => {
@@ -156,7 +156,8 @@ const App: React.FC = () => {
       'deposit-history': PAGES_CONFIG.WalletHistory,
       'withdrawal-history': PAGES_CONFIG.WithdrawalHistory,
       'invite-page': PAGES_CONFIG.InvitePage,
-      'guia-indicacao': PAGES_CONFIG.GuiaIndicacao
+      'guia-indicacao': PAGES_CONFIG.GuiaIndicacao,
+      'tasks': PAGES_CONFIG.Tasks
     };
 
     const Component = pages[currentPage] || PAGES_CONFIG.Home;
@@ -191,14 +192,15 @@ const App: React.FC = () => {
       )}
 
       {/* Bottom Navigation */}
-      {session && ['home', 'shop', 'profile', 'invite-page'].includes(currentPage) && (
+      {session && ['home', 'shop', 'profile', 'tasks', 'subordinate-list', 'gift-chest'].includes(currentPage) && (
         <nav className="fixed bottom-4 left-4 right-4 max-w-[calc(448px-2rem)] mx-auto glass-panel rounded-[28px] py-3 px-6 z-40 shadow-glass">
           <div className="flex justify-between items-center bg-transparent">
             {[
-              { id: 'home', icon: 'home', label: 'Início' },
-              { id: 'shop', icon: 'oil_barrel', label: 'Investir' },
-              { id: 'invite-page', icon: 'groups', label: 'Convidar' },
-              { id: 'profile', icon: 'account_circle', label: 'Meu BP' }
+              { id: 'home', icon: 'home', label: 'Lar' },
+              { id: 'tasks', icon: 'receipt_long', label: 'Tarefa' },
+              { id: 'invite-page', icon: 'groups', label: 'Equipe' },
+              { id: 'shop', icon: 'workspace_premium', label: 'VIP' },
+              { id: 'profile', icon: 'account_circle', label: 'Meu' }
             ].map((item) => (
               <button
                 key={item.id}

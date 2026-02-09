@@ -1,12 +1,11 @@
-﻿
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import SpokeSpinner from '../components/SpokeSpinner';
 import { useLoading } from '../contexts/LoadingContext';
 
 interface ShopProps {
   onNavigate: (page: any) => void;
-  showToast?: (message: string, type: any) => void;
+  showToast?: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
   balance: number;
 }
 
@@ -59,25 +58,27 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
     if (data) setPurchasedIds(data.map(p => p.product_id));
   };
 
-  const handleOpenModal = React.useCallback((product: any) => {
+  const handlePurchase = async (product: any) => {
     if (purchasedIds.includes(product.id)) {
-      showToast?.("Limite excedido, compre outro!", "warning");
+      showToast?.("Você já possui este nível VIP!", "warning");
       return;
     }
     setSelectedProduct(product);
-  }, [purchasedIds, showToast]);
+  };
 
-  const handlePurchase = async () => {
+  const confirmPurchase = async () => {
     if (!selectedProduct) return;
+
+    if (balance < selectedProduct.price) {
+      showToast?.("Saldo insuficiente!", "error");
+      onNavigate('deposit');
+      return;
+    }
 
     setIsBuying(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Sessão expirada");
-
-      if (balance < selectedProduct.price) {
-        throw new Error("Balance insuficiente");
-      }
 
       const { data, error } = await supabase.rpc('purchase_product', {
         p_product_id: selectedProduct.id,
@@ -88,10 +89,10 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
       if (data?.success === false) throw new Error(data.message);
 
       setSelectedProduct(null);
-      showToast?.(data?.message || `Compra sucedida!`, "success");
+      showToast?.(data?.message || `VIP ${selectedProduct.name} desbloqueado!`, "success");
       setPurchasedIds(prev => [...prev, selectedProduct.id]);
 
-      setTimeout(() => onNavigate('purchase-history'), 1000);
+      setTimeout(() => onNavigate('tasks'), 1000);
     } catch (error: any) {
       showToast?.(error.message || "Falha na transação", "error");
     } finally {
@@ -99,96 +100,110 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
     }
   };
 
-  const formatPrice = React.useCallback((price: number) => {
-    const [inteiro, centavos] = price.toFixed(2).split('.');
-    return { inteiro, centavos };
-  }, []);
-
   return (
-    <div className="bg-[#F4F7F6] min-h-screen text-gray-900 font-display antialiased pb-32">
-      <main className="max-w-md mx-auto pt-8">
-        <div className="px-6 mb-8 mt-4">
-          <h1 className="text-[28px] font-black tracking-tight leading-tight">BP Marketplace</h1>
-          <p className="text-gray-400 text-[13px] font-medium mt-1 uppercase tracking-widest">Equipamentos de energia solar</p>
+    <div className="bg-[#A44900] dark:bg-[#1A1A1A] min-h-screen pb-32 font-sans antialiased text-[#0F1111]">
+      {/* Header Styled After Image */}
+      <header className="px-4 pt-3 pb-2 flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+                <div className="bg-white rounded px-1.5 py-1 w-9 h-9 flex items-center justify-center shadow-sm">
+                    <div className="flex flex-col leading-none">
+                        <span className="text-[#FF6B00] font-black text-[9px] text-center uppercase">THE</span>
+                        <span className="text-[#FF6B00] font-black text-[8px] text-center uppercase">HOME</span>
+                    </div>
+                </div>
+                <h1 className="text-white font-black text-lg tracking-tight uppercase">THE HOME-VIP</h1>
+            </div>
+            <div className="flex items-center gap-2">
+                <button className="text-white/80 p-1.5 bg-white/10 rounded-full">
+                    <span className="material-symbols-outlined text-[20px]">notifications</span>
+                </button>
+                <button className="text-white/80 p-1.5 bg-white/10 rounded-full" onClick={() => onNavigate('support')}>
+                    <span className="material-symbols-outlined text-[20px]">headset_mic</span>
+                </button>
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/5 shadow-sm">
+                    <span className="material-symbols-outlined text-white text-[16px]">language</span>
+                    <span className="text-white text-[11px] font-bold">Português</span>
+                    <span className="material-symbols-outlined text-white text-[14px]">expand_more</span>
+                </div>
+            </div>
         </div>
+        <div className="flex justify-end pr-2 pt-2">
+            <button className="text-white/40 text-[11px] font-bold hover:text-white/60 transition-colors uppercase tracking-widest">
+                Registro de atualização
+            </button>
+        </div>
+      </header>
+
+      <main className="max-w-md mx-auto px-4 pt-4 space-y-6">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40 gap-4">
-            <SpokeSpinner size="w-12 h-12" color="text-[#00C853]" />
+            <SpokeSpinner size="w-10 h-10" color="text-white" />
           </div>
         ) : (
-          <div className="flex flex-col gap-6 py-4">
+          <div className="space-y-6">
             {products.map((product) => {
-              const { inteiro, centavos } = formatPrice(product.price);
               const isPurchased = purchasedIds.includes(product.id);
-
+              
               return (
-                <div key={product.id} className="group relative flex flex-col gap-4 p-6 mx-5 bg-white rounded-[40px] shadow-premium border border-white/50 transition-all hover:scale-[1.01] active:scale-[0.98]">
-                  {/* Badge Row */}
-                  <div className="flex justify-between items-center mb-1">
-                    <span className={`px-3 py-1 bg-[#EEFFF5] text-[#00C853] text-[9px] font-black rounded-full uppercase tracking-widest border border-[#00C853]/10`}>Oficial</span>
-                    {product.price < 10000 && (
-                      <span className="px-3 py-1 bg-[#FFFBEB] text-[#D97706] text-[9px] font-black rounded-full uppercase tracking-widest border border-[#FDE68A]">Popular</span>
-                    )}
+                <div key={product.id} className="relative bg-[#34271D] dark:bg-[#2D2D2D] rounded-[24px] p-5 shadow-2xl border border-white/5 group hover:scale-[1.02] transition-transform duration-300">
+                  {/* VIP Level Badge */}
+                  <div className="absolute top-0 right-0 bg-[#E8D5C4] dark:bg-[#3D3D3D] px-4 py-1.5 rounded-tr-[24px] rounded-bl-[16px] text-[10px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest z-10">
+                    VIP{product.name.replace(/\D/g, '') || '1'}
                   </div>
 
-                  <div className="flex gap-4 items-center">
-                    {/* Left Side: Image Container */}
-                    <div className="relative w-32 h-32 bg-gray-50 rounded-[28px] overflow-hidden shrink-0 flex items-center justify-center p-3 shadow-inner group-hover:bg-white transition-colors duration-500">
-                      <img loading="lazy" decoding="async"
-                        src={product.image_url || "/placeholder_product.png"}
-                        alt={product.name}
-                        className="max-w-full max-h-full object-contain drop-shadow-md group-hover:scale-110 transition-transform duration-500"
-                      />
+                  <div className="flex items-center gap-6">
+                    {/* Left: Product Image Container (Circular like image) */}
+                    <div className="relative w-24 h-24 shrink-0">
+                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-600/20 rounded-full animate-pulse blur-sm"></div>
+                        <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#241B14] flex items-center justify-center border border-white/10 shadow-inner">
+                            <img src={product.image_url || "/vip_placeholder.png"} alt={product.name} className="w-16 h-16 object-contain filter drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
+                        </div>
                     </div>
 
-                    {/* Right Side: Info */}
-                    <div className="flex-1 min-w-0 flex flex-col justify-between h-32">
-                      <h3 className="text-[17px] font-black leading-tight text-gray-900 mb-2 line-clamp-2 pr-4 tracking-tight">
-                        {product.name}
-                      </h3>
-
-                      <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2">
-                          <div className="size-5 rounded-lg bg-[#EEFFF5] flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[14px] text-[#00C853]">bolt</span>
-                          </div>
-                          <p className="text-[12px] font-bold text-gray-500 tracking-tight">Renda <span className="text-[#00C853] font-black">Kz {product.daily_income?.toLocaleString()}</span></p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="size-5 rounded-lg bg-gray-50 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[14px] text-gray-400">schedule</span>
-                          </div>
-                          <p className="text-[12px] font-bold text-gray-500 tracking-tight">Ativo por <span className="text-gray-900 font-black">{product.duration_days} dias</span></p>
-                        </div>
+                    {/* Right: Info Grid */}
+                    <div className="flex-1 grid grid-cols-2 gap-x-6 gap-y-4">
+                      <div>
+                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight mb-1">Tarefas diárias</p>
+                        <p className="text-[15px] font-black text-white">1</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight mb-1">Simples interesse</p>
+                        <p className="text-[15px] font-black text-[#00C853]">
+                          {(product.daily_income / 1).toFixed(2)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight mb-1">Lucro diário</p>
+                        <p className="text-[15px] font-black text-white">
+                          {product.daily_income?.toLocaleString('pt-AO')} Kz
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight mb-1">O lucro total</p>
+                        <p className="text-[15px] font-black text-white">
+                          {(product.daily_income * product.duration_days)?.toLocaleString('pt-AO')} Kz
+                        </p>
                       </div>
                     </div>
                   </div>
 
                   {/* Pricing and Action Section */}
-                  <div className="mt-4 pt-5 border-t border-gray-50 flex items-center justify-between gap-4">
-                    <div className="flex items-baseline">
-                      <span className="text-[12px] font-black text-[#00C853] pr-1">KZs</span>
-                      <span className="text-[26px] font-black text-gray-900 tracking-tighter">{inteiro}</span>
-                      <span className="text-[12px] font-black text-gray-400">,{centavos}</span>
-                    </div>
-
+                  <div className="mt-6 flex justify-end">
                     <button
-                      onClick={() => handleOpenModal(product)}
+                      onClick={() => handlePurchase(product)}
                       disabled={isPurchased}
-                      className={`h-[54px] px-8 rounded-[20px] text-[13px] font-black transition-all active:scale-[0.96] shadow-premium uppercase tracking-[0.1em] ${isPurchased
-                        ? 'bg-gray-100 text-gray-300 cursor-not-allowed border border-gray-200 shadow-none'
-                        : 'bg-gray-900 hover:bg-[#00C853] text-white'
-                        }`}
+                      className={`h-11 px-6 bg-black text-white text-[13px] font-black rounded-full flex items-center gap-3 active:scale-95 transition-all shadow-xl border border-white/5 ${
+                        isPurchased ? 'opacity-40 grayscale' : 'hover:bg-[#FF6B00]'
+                      }`}
                     >
-                      {isPurchased ? 'Adquirido' : 'Investir'}
+                      <span className="tracking-tight">{product.price.toLocaleString('pt-AO')} Kz</span>
+                      <div className="w-[1px] h-3 bg-white/20"></div>
+                      <span className="uppercase tracking-widest text-[10px]">
+                        {isPurchased ? 'Ativo' : 'Desbloquear agora'}
+                      </span>
                     </button>
                   </div>
-
-                  {isPurchased && (
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-12 pointer-events-none opacity-10">
-                      <h4 className="text-[40px] font-black text-gray-900 border-8 border-gray-900 px-6 py-2 uppercase tracking-widest whitespace-nowrap">LIMITE EXCEDIDO</h4>
-                    </div>
-                  )}
                 </div>
               );
             })}
@@ -196,53 +211,65 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
         )}
       </main>
 
-      {/* Confirmation Modal */}
+      {/* Confirmation Modal - MATCHING IMAGE PRECISELY */}
       {selectedProduct && (
-        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-6 animate-in fade-in duration-300">
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-md"
+            className="absolute inset-0 bg-black/70 backdrop-blur-md"
             onClick={() => !isBuying && setSelectedProduct(null)}
           />
-          <div className="relative w-full max-w-sm bg-white/95 backdrop-blur-xl rounded-t-[48px] sm:rounded-[40px] p-8 pb-10 sm:pb-8 border border-white/50 shadow-2xl scale-100 animate-in slide-in-from-bottom-20 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-500">
-            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-8 sm:hidden"></div>
+          <div className="relative w-full max-w-[340px] bg-white rounded-[32px] p-10 text-center shadow-2xl animate-in zoom-in-95 duration-500 transform flex flex-col items-center">
+            <p className="text-[#565959] text-[16px] font-medium leading-relaxed px-2 mb-8 mt-2">
+              O saldo de recarga é desbloqueado automaticamente Precisa recarregar <br/>
+              <span className="text-gray-900 font-black tracking-tighter text-lg underline underline-offset-4 decoration-primary/30">
+                Kz {selectedProduct.price.toLocaleString('pt-AO')}
+              </span>
+            </p>
 
-            <div className="flex flex-col items-center text-center mb-8">
-              <div className="size-20 rounded-[32px] bg-gray-50 flex items-center justify-center mb-5 shadow-inner">
-                <img src={selectedProduct.image_url || "/placeholder_product.png"} className="size-12 object-contain" />
-              </div>
-              <h3 className="text-[22px] font-black text-gray-900 mb-2 tracking-tight">Confirmar Investimento</h3>
-              <p className="text-gray-500 text-[14px] font-medium leading-relaxed px-4">
-                Você está adquirindo o <span className="font-bold text-gray-900">{selectedProduct.name}</span> por <span className="text-[#00C853] font-black">Kz {selectedProduct.price.toLocaleString()}</span>.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <button
-                disabled={isBuying}
-                onClick={handlePurchase}
-                className="w-full h-[58px] bg-[#00C853] hover:brightness-110 rounded-[22px] font-black text-white text-[15px] transition-all active:scale-[0.96] flex items-center justify-center uppercase tracking-widest shadow-[0_12px_32px_-8px_rgba(0,200,83,0.5)]"
-              >
-                {isBuying ? <SpokeSpinner size="w-6 h-6" color="text-white" /> : 'Confirmar Pagamento'}
-              </button>
-              <button
-                disabled={isBuying}
-                onClick={() => setSelectedProduct(null)}
-                className="w-full h-[54px] bg-transparent text-gray-400 font-bold text-[13px] uppercase tracking-widest hover:text-gray-600 transition-all"
-              >
-                Voltar
-              </button>
-            </div>
-
-            <div className="flex items-center justify-center gap-2 mt-8 opacity-20 grayscale">
-              <span className="material-symbols-outlined text-[20px]">verified_user</span>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em]">Criptografia BP SECURE</p>
-            </div>
+            <button
+              disabled={isBuying}
+              onClick={confirmPurchase}
+              className="w-full h-[54px] bg-gradient-to-r from-[#FF512F] to-[#DD2476] text-white rounded-full font-black text-lg transition-all active:scale-90 flex items-center justify-center shadow-[0_12px_24px_-8px_rgba(255,81,47,0.5)] transform hover:brightness-110"
+            >
+              {isBuying ? <SpokeSpinner size="w-6 h-6" color="text-white" /> : 'confirme'}
+            </button>
           </div>
         </div>
       )}
+
+      {/* Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#FF6B00] border-t border-white/10 flex items-center justify-around py-3 rounded-t-2xl z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
+        <button onClick={() => onNavigate('home')} className="flex flex-col items-center gap-1 text-white/70">
+          <span className="material-symbols-outlined text-2xl">home</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider">Lar</span>
+        </button>
+        <button onClick={() => onNavigate('tasks')} className="flex flex-col items-center gap-1 text-white/70">
+          <span className="material-symbols-outlined text-2xl">receipt_long</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider">Tarefa</span>
+        </button>
+        <button className="flex flex-col items-center gap-1 text-white font-black">
+          <div className="bg-white/20 rounded-full p-1.5 mb-0.5 shadow-inner">
+            <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-wider">VIP</span>
+        </button>
+        <button onClick={() => onNavigate('invite-page')} className="flex flex-col items-center gap-1 text-white/70">
+          <span className="material-symbols-outlined text-2xl">groups</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider">Equipe</span>
+        </button>
+        <button onClick={() => onNavigate('profile')} className="flex flex-col items-center gap-1 text-white/70">
+          <span className="material-symbols-outlined text-2xl">account_circle</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider">Meu</span>
+        </button>
+      </nav>
+
+      <style>{`
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+        }
+      `}</style>
     </div>
   );
 };
 
 export default Shop;
-
