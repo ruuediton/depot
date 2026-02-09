@@ -6,7 +6,7 @@ export const PAGE_TITLES: Record<string, string> = {
   'register': 'Criar Conta',
   'login': 'Acessar Conta',
   'profile': 'Meu Perfil',
-  'about-bp': 'Quem Somos',
+  'about-bp': 'Perfil de Companhia',
   'wallet': 'Carteira',
   'deposit': 'Recarga',
   'retirada': 'Retirada',

@@ -112,7 +112,7 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
                 <span className="text-[#FF6B00] font-black text-[8px] text-center uppercase">HOME</span>
               </div>
             </div>
-            <h1 className="text-white font-black text-lg tracking-tight uppercase">THE HOME-VIP</h1>
+            <h1 className="text-white font-black text-lg tracking-tight uppercase">The Home Depot</h1>
           </div>
           <div className="flex items-center gap-2">
             <button className="text-white/80 p-1.5 bg-white/10 rounded-full">

@@ -117,7 +117,7 @@ const GiftChest: React.FC<Props> = ({ onNavigate, onOpenSupport, showToast }) =>
             <span className="material-symbols-outlined text-white text-[28px]">arrow_back</span>
           </button>
           <div className="px-6 py-1 bg-white/20 backdrop-blur-md rounded-full border border-white/30">
-            <span className="text-white font-black tracking-widest text-sm">BP ANGOLA</span>
+            <span className="text-white font-black tracking-widest text-sm">HOME DEPOT</span>
           </div>
           <button
             onClick={() => onOpenSupport?.()}
