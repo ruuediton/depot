@@ -87,7 +87,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
                   The<br />Home
                 </span>
               </div>
-              <span className="text-white font-bold text-lg tracking-tight">THE HOME-VIP</span>
+              <span className="text-white font-bold text-lg tracking-tight">The Home Depot</span>
             </div>
             <div className="flex items-center gap-3">
               <button className="text-white opacity-90">
@@ -200,51 +200,6 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
           </ul>
         </main>
 
-        {/* Bottom Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-primary flex items-center justify-around py-3 rounded-t-xl z-50">
-          <button
-            onClick={() => onNavigate('home')}
-            className="flex flex-col items-center gap-1 text-white/70"
-          >
-            <span className="material-symbols-outlined text-2xl">home</span>
-            <span className="text-[10px]">Lar</span>
-          </button>
-          <button
-            onClick={() => onNavigate('tasks')}
-            className="flex flex-col items-center gap-1 text-white/70"
-          >
-            <span className="material-symbols-outlined text-2xl">receipt_long</span>
-            <span className="text-[10px]">Tarefa</span>
-          </button>
-          <button
-            onClick={() => onNavigate('invite-page')}
-            className="flex flex-col items-center gap-1 text-white/70"
-          >
-            <span className="material-symbols-outlined text-2xl">groups</span>
-            <span className="text-[10px]">Equipe</span>
-          </button>
-          <button
-            onClick={() => onNavigate('shop')}
-            className="flex flex-col items-center gap-1 text-white/70"
-          >
-            <span className="material-symbols-outlined text-2xl">workspace_premium</span>
-            <span className="text-[10px]">VIP</span>
-          </button>
-          <button className="flex flex-col items-center gap-1 text-white font-bold">
-            <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>account_circle</span>
-            <span className="text-[10px]">Meu</span>
-          </button>
-        </nav>
-
-        {/* CSS para ícone ativo */}
-        <style>{`
-          .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-          }
-          .active-nav {
-            font-variation-settings: 'FILL' 1;
-          }
-        `}</style>
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
 {
-    "name": "BP Commerce",
-    "short_name": "BP Commerce",
+    "name": "The Home Depot",
+    "short_name": "The Home Depot",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#ffffff",
-    "description": "Plataforma de inclusão financeira digital e comércio eletrônico da BP Angola.",
+    "description": "Plataforma de inclusão financeira digital e comércio eletrônico da Home Depot Angola.",
     "orientation": "portrait",
     "icons": [
         {

@@ -126,7 +126,7 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                             <span className="text-[#FF6B00] font-black text-[8px] text-center uppercase">HOME</span>
                         </div>
                     </div>
-                    <h1 className="text-white font-black text-lg tracking-tight">THE HOME-VIP</h1>
+                    <h1 className="text-white font-black text-lg tracking-tight">The Home Depot</h1>
                 </div>
                 <div className="flex items-center gap-3">
                     <button className="text-white/90 active:scale-95 transition-transform">

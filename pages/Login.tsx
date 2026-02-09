@@ -102,7 +102,7 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
               <text x="80" y="68" fontFamily="Arial Black, sans-serif" fontSize="20" fontWeight="900" fill="#FF6B00" textAnchor="middle" fontStyle="italic">DEPOT</text>
             </svg>
           </div>
-          <h1 className="text-[26px] font-black text-white tracking-[0.15em] uppercase drop-shadow-lg">THE HOME-VIP</h1>
+          <h1 className="text-[26px] font-black text-white tracking-[0.15em] uppercase drop-shadow-lg">The Home Depot</h1>
         </div>
       </div>
 

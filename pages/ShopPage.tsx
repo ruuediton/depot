@@ -105,33 +105,33 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
       {/* Header Styled After Image */}
       <header className="px-4 pt-3 pb-2 flex flex-col gap-2">
         <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-                <div className="bg-white rounded px-1.5 py-1 w-9 h-9 flex items-center justify-center shadow-sm">
-                    <div className="flex flex-col leading-none">
-                        <span className="text-[#FF6B00] font-black text-[9px] text-center uppercase">THE</span>
-                        <span className="text-[#FF6B00] font-black text-[8px] text-center uppercase">HOME</span>
-                    </div>
-                </div>
-                <h1 className="text-white font-black text-lg tracking-tight uppercase">THE HOME-VIP</h1>
+          <div className="flex items-center gap-2">
+            <div className="bg-white rounded px-1.5 py-1 w-9 h-9 flex items-center justify-center shadow-sm">
+              <div className="flex flex-col leading-none">
+                <span className="text-[#FF6B00] font-black text-[9px] text-center uppercase">THE</span>
+                <span className="text-[#FF6B00] font-black text-[8px] text-center uppercase">HOME</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-                <button className="text-white/80 p-1.5 bg-white/10 rounded-full">
-                    <span className="material-symbols-outlined text-[20px]">notifications</span>
-                </button>
-                <button className="text-white/80 p-1.5 bg-white/10 rounded-full" onClick={() => onNavigate('support')}>
-                    <span className="material-symbols-outlined text-[20px]">headset_mic</span>
-                </button>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/5 shadow-sm">
-                    <span className="material-symbols-outlined text-white text-[16px]">language</span>
-                    <span className="text-white text-[11px] font-bold">Português</span>
-                    <span className="material-symbols-outlined text-white text-[14px]">expand_more</span>
-                </div>
+            <h1 className="text-white font-black text-lg tracking-tight uppercase">THE HOME-VIP</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="text-white/80 p-1.5 bg-white/10 rounded-full">
+              <span className="material-symbols-outlined text-[20px]">notifications</span>
+            </button>
+            <button className="text-white/80 p-1.5 bg-white/10 rounded-full" onClick={() => onNavigate('support')}>
+              <span className="material-symbols-outlined text-[20px]">headset_mic</span>
+            </button>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/5 shadow-sm">
+              <span className="material-symbols-outlined text-white text-[16px]">language</span>
+              <span className="text-white text-[11px] font-bold">Português</span>
+              <span className="material-symbols-outlined text-white text-[14px]">expand_more</span>
             </div>
+          </div>
         </div>
         <div className="flex justify-end pr-2 pt-2">
-            <button className="text-white/40 text-[11px] font-bold hover:text-white/60 transition-colors uppercase tracking-widest">
-                Registro de atualização
-            </button>
+          <button className="text-white/40 text-[11px] font-bold hover:text-white/60 transition-colors uppercase tracking-widest">
+            Registro de atualização
+          </button>
         </div>
       </header>
 
@@ -144,7 +144,7 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
           <div className="space-y-6">
             {products.map((product) => {
               const isPurchased = purchasedIds.includes(product.id);
-              
+
               return (
                 <div key={product.id} className="relative bg-[#34271D] dark:bg-[#2D2D2D] rounded-[24px] p-5 shadow-2xl border border-white/5 group hover:scale-[1.02] transition-transform duration-300">
                   {/* VIP Level Badge */}
@@ -155,10 +155,10 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
                   <div className="flex items-center gap-6">
                     {/* Left: Product Image Container (Circular like image) */}
                     <div className="relative w-24 h-24 shrink-0">
-                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-600/20 rounded-full animate-pulse blur-sm"></div>
-                        <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#241B14] flex items-center justify-center border border-white/10 shadow-inner">
-                            <img src={product.image_url || "/vip_placeholder.png"} alt={product.name} className="w-16 h-16 object-contain filter drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
-                        </div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-600/20 rounded-full animate-pulse blur-sm"></div>
+                      <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#241B14] flex items-center justify-center border border-white/10 shadow-inner">
+                        <img src={product.image_url || "/vip_placeholder.png"} alt={product.name} className="w-16 h-16 object-contain filter drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
+                      </div>
                     </div>
 
                     {/* Right: Info Grid */}
@@ -193,9 +193,8 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
                     <button
                       onClick={() => handlePurchase(product)}
                       disabled={isPurchased}
-                      className={`h-11 px-6 bg-black text-white text-[13px] font-black rounded-full flex items-center gap-3 active:scale-95 transition-all shadow-xl border border-white/5 ${
-                        isPurchased ? 'opacity-40 grayscale' : 'hover:bg-[#FF6B00]'
-                      }`}
+                      className={`h-11 px-6 bg-black text-white text-[13px] font-black rounded-full flex items-center gap-3 active:scale-95 transition-all shadow-xl border border-white/5 ${isPurchased ? 'opacity-40 grayscale' : 'hover:bg-[#FF6B00]'
+                        }`}
                     >
                       <span className="tracking-tight">{product.price.toLocaleString('pt-AO')} Kz</span>
                       <div className="w-[1px] h-3 bg-white/20"></div>
@@ -220,7 +219,7 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
           />
           <div className="relative w-full max-w-[340px] bg-white rounded-[32px] p-10 text-center shadow-2xl animate-in zoom-in-95 duration-500 transform flex flex-col items-center">
             <p className="text-[#565959] text-[16px] font-medium leading-relaxed px-2 mb-8 mt-2">
-              O saldo de recarga é desbloqueado automaticamente Precisa recarregar <br/>
+              O saldo de recarga é desbloqueado automaticamente Precisa recarregar <br />
               <span className="text-gray-900 font-black tracking-tighter text-lg underline underline-offset-4 decoration-primary/30">
                 Kz {selectedProduct.price.toLocaleString('pt-AO')}
               </span>
@@ -236,32 +235,6 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
           </div>
         </div>
       )}
-
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#FF6B00] border-t border-white/10 flex items-center justify-around py-3 rounded-t-2xl z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
-        <button onClick={() => onNavigate('home')} className="flex flex-col items-center gap-1 text-white/70">
-          <span className="material-symbols-outlined text-2xl">home</span>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Lar</span>
-        </button>
-        <button onClick={() => onNavigate('tasks')} className="flex flex-col items-center gap-1 text-white/70">
-          <span className="material-symbols-outlined text-2xl">receipt_long</span>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Tarefa</span>
-        </button>
-        <button className="flex flex-col items-center gap-1 text-white font-black">
-          <div className="bg-white/20 rounded-full p-1.5 mb-0.5 shadow-inner">
-            <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
-          </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider">VIP</span>
-        </button>
-        <button onClick={() => onNavigate('invite-page')} className="flex flex-col items-center gap-1 text-white/70">
-          <span className="material-symbols-outlined text-2xl">groups</span>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Equipe</span>
-        </button>
-        <button onClick={() => onNavigate('profile')} className="flex flex-col items-center gap-1 text-white/70">
-          <span className="material-symbols-outlined text-2xl">account_circle</span>
-          <span className="text-[10px] font-bold uppercase tracking-wider">Meu</span>
-        </button>
-      </nav>
 
       <style>{`
         .material-symbols-outlined {

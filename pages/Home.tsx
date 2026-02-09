@@ -77,7 +77,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
       }, 1500); // Simulate a 1.5 second loading time
 
       return () => clearTimeout(timer);
-    }, []); // Empty dependency array means this runs once on mount
+    }
+  }, [profile?.id]); // Re-run when profile ID changes
 
   return (
     <div className="bg-[#FF6B00] min-h-screen pb-20 font-sans antialiased">
@@ -87,7 +88,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
           <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
             <span className="material-symbols-outlined text-primary text-xl font-bold">home</span>
           </div>
-          <h1 className="text-xl font-black tracking-tight italic">THE HOME-VIP</h1>
+          <h1 className="text-xl font-black tracking-tight italic">The Home Depot</h1>
         </div>
 
         {/* Ícones do topo */}
@@ -302,51 +303,6 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
         </button>
       </div>
 
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-primary flex items-center justify-around py-3 rounded-t-xl z-50">
-        <button className="flex flex-col items-center gap-1 text-white font-bold">
-          <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>home</span>
-          <span className="text-[10px]">Lar</span>
-        </button>
-        <button
-          onClick={() => onNavigate('tasks')}
-          className="flex flex-col items-center gap-1 text-white/70"
-        >
-          <span className="material-symbols-outlined text-2xl">receipt_long</span>
-          <span className="text-[10px]">Tarefa</span>
-        </button>
-        <button
-          onClick={() => onNavigate('invite-page')}
-          className="flex flex-col items-center gap-1 text-white/70"
-        >
-          <span className="material-symbols-outlined text-2xl">groups</span>
-          <span className="text-[10px]">Equipe</span>
-        </button>
-        <button
-          onClick={() => onNavigate('shop')}
-          className="flex flex-col items-center gap-1 text-white/70"
-        >
-          <span className="material-symbols-outlined text-2xl">workspace_premium</span>
-          <span className="text-[10px]">VIP</span>
-        </button>
-        <button
-          onClick={() => onNavigate('profile')}
-          className="flex flex-col items-center gap-1 text-white/70"
-        >
-          <span className="material-symbols-outlined text-2xl">account_circle</span>
-          <span className="text-[10px]">Meu</span>
-        </button>
-      </nav>
-
-      {/* Botão de suporte flutuante */}
-      <button
-        onClick={() => onNavigate('support')}
-        className="fixed bottom-20 right-4 w-12 h-12 bg-yellow-400 rounded-full shadow-2xl flex items-center justify-center z-50 active:scale-90 transition-all"
-      >
-        <span className="material-symbols-outlined text-white text-[24px]">support_agent</span>
-      </button>
-
-      {/* CSS para ícone ativo */}
       <style>{`
         .material-symbols-outlined {
           font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;

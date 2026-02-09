@@ -77,7 +77,7 @@ const Tasks: React.FC<TasksProps> = ({ onNavigate, showToast }) => {
                             <rect width="28" height="28" fill="white" rx="4" />
                             <path d="M8 10L14 6L20 10V20H8V10Z" fill="#FF6B00" />
                         </svg>
-                        <span className="text-white font-black text-[16px] tracking-wide">THE HOME-VIP</span>
+                        <span className="text-white font-black text-[16px] tracking-wide">The Home Depot</span>
                     </div>
 
                     {/* Ícones do topo */}
@@ -202,29 +202,6 @@ const Tasks: React.FC<TasksProps> = ({ onNavigate, showToast }) => {
                 </div>
             </div>
 
-            {/* Bottom Navigation */}
-            <div className="fixed bottom-0 left-0 right-0 bg-[#FF6B00] border-t border-white/10 px-4 py-3 flex items-center justify-around z-50">
-                <button onClick={() => onNavigate('home')} className="flex flex-col items-center gap-1">
-                    <span className="material-symbols-outlined text-white/70 text-[24px]">home</span>
-                    <span className="text-white/70 text-[10px] font-semibold">Lar</span>
-                </button>
-                <button className="flex flex-col items-center gap-1">
-                    <span className="material-symbols-outlined text-white text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>receipt_long</span>
-                    <span className="text-white text-[10px] font-semibold">Tarefa</span>
-                </button>
-                <button onClick={() => onNavigate('invite-page')} className="flex flex-col items-center gap-1">
-                    <span className="material-symbols-outlined text-white/70 text-[24px]">groups</span>
-                    <span className="text-white/70 text-[10px] font-semibold">Equipe</span>
-                </button>
-                <button onClick={() => onNavigate('shop')} className="flex flex-col items-center gap-1">
-                    <span className="material-symbols-outlined text-white/70 text-[24px]">workspace_premium</span>
-                    <span className="text-white/70 text-[10px] font-semibold">VIP</span>
-                </button>
-                <button onClick={() => onNavigate('profile')} className="flex flex-col items-center gap-1">
-                    <span className="material-symbols-outlined text-white/70 text-[24px]">person</span>
-                    <span className="text-white/70 text-[10px] font-semibold">Meu</span>
-                </button>
-            </div>
         </div>
     );
 };

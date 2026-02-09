@@ -221,7 +221,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
               <span className="text-[14px] font-black italic tracking-tighter">DEPOT</span>
             </div>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-widest uppercase drop-shadow-md">THE HOME-VIP</h1>
+          <h1 className="text-2xl font-black text-white tracking-widest uppercase drop-shadow-md">The Home Depot</h1>
         </div>
       </div>
 

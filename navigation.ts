@@ -2,7 +2,7 @@ import { lazy } from 'react';
 
 export const PAGE_TITLES: Record<string, string> = {
   'home': 'Início',
-  'shop': 'Loja BP',
+  'shop': 'Loja',
   'register': 'Criar Conta',
   'login': 'Acessar Conta',
   'profile': 'Meu Perfil',
