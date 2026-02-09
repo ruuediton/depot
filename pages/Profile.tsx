@@ -162,6 +162,18 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
         <main className="flex-1 bg-white dark:bg-zinc-900 -mt-4 rounded-t-[40px] px-6 pt-10 shadow-inner">
           <ul className="space-y-2">
             <li
+              onClick={() => onNavigate('add-bank')}
+              className="flex items-center justify-between py-4 group cursor-pointer"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-purple-600">credit_card</span>
+                </div>
+                <span className="text-gray-700 dark:text-gray-200 font-medium">Adicionar Cartão</span>
+              </div>
+              <span className="material-symbols-outlined text-gray-400">chevron_right</span>
+            </li>
+            <li
               onClick={() => onNavigate('p2p-transfer')}
               className="flex items-center justify-between py-4 group cursor-pointer"
             >
