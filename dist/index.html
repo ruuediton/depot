@@ -3,177 +3,87 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#ffffff" />
-
-  <!-- Preconnect para recursos externos -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#FA6400" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <link rel="manifest" href="/manifest.json" />
   <title>BP Commerce</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
+
+  <!-- Preconnect & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
     rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            primary: '#1B5E20', // Deep Forest Green
-            secondary: '#00C853', // Growth Green
-            wealth: '#00C853', // Gold/Amarelo
-            'background-light': '#F8F9FA', // Fundo Neutro
-            'background-dark': '#F0F2F2', // Slightly darker for contrast if needed
-            'text-primary': '#263238', // Typography color
-            'text-secondary': '#546E7A', // Lighter Typography
-            surface: '#FFFFFF',
-            border: '#ECEFF1',
-            alert: '#EF5350',
-          },
-          fontFamily: {
-            display: ['Manrope', 'sans-serif'],
-            sans: ['Manrope', 'sans-serif'],
-          },
-          borderRadius: {
-            'xl': '1rem',
-            '2xl': '1.5rem',
-            '3xl': '2rem',
-          },
-          boxShadow: {
-            'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 10px -2px rgba(0, 0, 0, 0.03)',
-            'premium': '0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 15px -5px rgba(0, 0, 0, 0.05)',
-          }
-        }
-      }
-    }
-  </script>
+
   <style>
-    @keyframes emoji-float {
-
-      0%,
-      100% {
-        transform: translateY(0) scale(1);
-      }
-
-      50% {
-        transform: translateY(-10px) scale(1.2);
-      }
-    }
-
-    .emoji-effect {
-      display: inline-block;
-      animation: emoji-float 2s infinite ease-in-out;
-      margin: 0 4px;
-    }
-
     body {
-      background-color: #F8F9FA;
-      color: #263238;
-      font-family: 'Manrope', sans-serif;
+      background-color: #F4F7F6;
+      font-family: 'Outfit', sans-serif;
       margin: 0;
       -webkit-font-smoothing: antialiased;
-    }
-
-    /* Global Rounded Corners & Smooth Shadows */
-    .card-premium {
-      background: white;
-      border-radius: 24px;
-      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-      border: 1px solid #ECEFF1;
-      transition: all 0.3s ease;
-      will-change: transform, box-shadow;
-    }
-
-    .card-premium:hover {
-      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
-      transform: translateY(-2px);
-    }
-
-    /* Otimizações de performance */
-    * {
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-
-    button,
-    a {
-      -moz-user-select: none;
-           user-select: none;
-      -webkit-user-select: none;
-    }
-
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-
-    .material-symbols-filled {
-      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      overflow-x: hidden;
     }
 
     /* Immediate Splash Screen */
     #splash-screen {
       position: fixed;
       inset: 0;
-      background: white;
+      background: #F4F7F6;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      transition: opacity 0.4s ease-out, visibility 0.4s;
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s;
+    }
+
+    .splash-content {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .splash-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #2D2D2D;
+      margin: 0;
+      letter-spacing: -0.04em;
+    }
+
+    .splash-status {
+      font-size: 14px;
+      font-weight: 700;
+      color: #FA6400;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
     }
 
     .loading-bar-container {
-      width: 120px;
-      height: 3px;
-      background: #F0F2F2;
+      width: 140px;
+      height: 4px;
+      background: rgba(250, 100, 0, 0.1);
       border-radius: 10px;
       overflow: hidden;
+      margin-top: 32px;
     }
 
     .loading-bar {
       width: 40%;
       height: 100%;
-      background: #00C853;
+      background: #FA6400;
       border-radius: 10px;
-      animation: shift 1.5s infinite linear;
-    }
-
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 0.8;
-        transform: scale(0.98);
-      }
-
-      50% {
-        opacity: 1;
-        transform: scale(1);
-      }
+      animation: shift 1.5s infinite ease-in-out;
     }
 
     @keyframes shift {
-      0% {
-        transform: translateX(-150%);
-      }
-
-      100% {
-        transform: translateX(250%);
-      }
+      0% { transform: translateX(-150%); }
+      100% { transform: translateX(250%); }
     }
 
     .app-loaded #splash-screen {
@@ -181,41 +91,31 @@
       visibility: hidden;
       pointer-events: none;
     }
+
+    /* Core Utility Classes for initial render */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    * { -webkit-tap-highlight-color: transparent; }
   </style>
 
-  <script type="module" crossorigin src="/assets/index-BaS3q1EV.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/react-vendor-C8-TlGsU.js">
-  <link rel="modulepreload" crossorigin href="/assets/vendor-D2WcXlqy.js">
-  <link rel="modulepreload" crossorigin href="/assets/pdf-utils-DX6aKe5X.js">
-  <link rel="modulepreload" crossorigin href="/assets/supabase-DIRwJvxg.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-IEjHzVMx.css">
+  <script type="module" crossorigin src="/assets/index-BonT0QVc.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/react-vendor-0Am1niUb.js">
+  <link rel="modulepreload" crossorigin href="/assets/vendor-DtN75V_I.js">
+  <link rel="modulepreload" crossorigin href="/assets/supabase-BsxaddrC.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-GBZ70gCU.css">
 </head>
 
-<body class="antialiased">
+<body class="antialiased no-scrollbar">
   <div id="splash-screen">
-    <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-      <h1 style="font-size: 22px; font-weight: 800; color: #0F1111; margin: 0; letter-spacing: -0.02em;">
-        <span class="emoji-effect" style="animation-delay: 0s;">✨</span>
-        Estamos felizes por você
-        <span class="emoji-effect" style="animation-delay: 0.3s;">😊</span>
-      </h1>
-      <p
-        style="font-size: 16px; font-weight: 700; color: #00C853; margin: 0; display: flex; align-items: center; gap: 6px;">
-        Carregando.... <span class="emoji-effect" style="animation-delay: 0.6s;">🎉</span>
-      </p>
+    <div class="splash-content">
+      <h1 class="splash-title">BP Commerce</h1>
+      <p class="splash-status">Iniciando sistema...</p>
     </div>
-    <div class="loading-bar-container" style="margin-top: 32px;">
-      <div class="loading-bar" style="background: #00C853;"></div>
+    <div class="loading-bar-container">
+      <div class="loading-bar"></div>
     </div>
   </div>
   <div id="root"></div>
-  <script>
-    window.addEventListener('load', function () {
-      setTimeout(() => {
-        document.body.classList.add('app-loaded');
-      }, 500);
-    });
-  </script>
 </body>
 
 </html>

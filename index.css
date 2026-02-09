@@ -1,18 +1,18 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 :root {
   --primary: #FA6400;
   --secondary: #FA6400;
   --accent: #FF8F4D;
   --wealth: #FA6400;
-  --bg-neutral: #FEF7F4;
-  --text-main: #2D2D2D;
-  --text-secondary: #757575;
-  --border-subtle: rgba(250, 100, 0, 0.1);
-  --glass: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --input-bg: #FFF8F6;
+  --bg-neutral: #F7F9FB;
+  --text-main: #1A1A1A;
+  --text-secondary: #6B7280;
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --glass: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --input-bg: #FFFFFF;
 }
 
 @theme {
@@ -26,8 +26,9 @@
   --color-border-subtle: var(--border-subtle);
   --color-input-bg: var(--input-bg);
 
-  --shadow-premium: 0 10px 40px -10px rgba(250, 100, 0, 0.15), 0 4px 6px -4px rgba(250, 100, 0, 0.05);
-  --shadow-glass: 0 8px 32px 0 rgba(250, 100, 0, 0.1);
+  /* Shadows - "Paper Light" Style */
+  --shadow-premium: 0 1px 3px rgba(0,0,0,0.02), 0 4px 12px -2px rgba(0,0,0,0.04);
+  --shadow-glass: 0 4px 20px -1px rgba(0, 0, 0, 0.03), 0 2px 10px -1px rgba(0, 0, 0, 0.02);
 
   --font-display: 'Outfit', sans-serif;
   --font-sans: 'Outfit', sans-serif;
@@ -35,7 +36,7 @@
 
 /* Base Styles */
 body {
-  background-color: #F4F7F6;
+  background-color: var(--bg-neutral);
   color: var(--text-main);
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   margin: 0;
@@ -43,65 +44,64 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
 }
 
 /* Premium Glassmorphism */
 .glass-panel {
   background: var(--glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--glass-border);
 }
 
 .premium-card {
   background: white;
-  border-radius: 24px;
+  border-radius: 20px;
   box-shadow: var(--shadow-premium);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(0, 0, 0, 0.02);
 }
 
 .premium-card:active {
-  transform: scale(0.98);
+  transform: scale(0.985);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 /* Global Transitions */
 * {
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-  transition-duration: 200ms;
+  transition-property: opacity, transform, background-color, border-color;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Header Gradient Home-VIP */
 .header-gradient-mixture {
-  background: linear-gradient(135deg, #FF6B00 0%, #FA6400 100%);
+  background: linear-gradient(145deg, #FF7A00 0%, #FA6400 100%);
   position: relative;
   z-index: 10;
 }
 
 .text-glow {
-  text-shadow: 0 0 15px rgba(0, 200, 83, 0.3);
+  text-shadow: 0 2px 10px rgba(250, 100, 0, 0.2);
 }
 
 /* Marquee Otimizado */
 @keyframes marquee {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 .animate-marquee {
-  animation: marquee 30s linear infinite;
+  animation: marquee 40s linear infinite;
   display: flex;
   width: max-content;
+  will-change: transform;
 }
 
-/* Scrollbar Otimizado */
-::-webkit-scrollbar {
-  width: 0;
-  height: 0;
+/* Scrollbar Hidden */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 .no-scrollbar {
@@ -115,26 +115,28 @@ body {
 }
 
 .hover-lift {
-  transition: transform 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hover-lift:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 /* Skeleton Loading */
 .skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
   background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite;
+  animation: skeleton-loading 2s infinite ease-in-out;
 }
 
 @keyframes skeleton-loading {
-  0% {
-    background-position: 200% 0;
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 
-  100% {
-    background-position: -200% 0;
-  }
+/* Layout Speed Helpers */
+.tiger-fast {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  perspective: 1000;
 }
