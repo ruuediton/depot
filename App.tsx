@@ -17,7 +17,7 @@ const App: React.FC = () => {
   const { withLoading, showWarning } = useLoading();
   const { performFullLogout } = useAuthActions();
 
-  const [currentPage, setCurrentPage] = useState<string>('register');
+  const [currentPage, setCurrentPage] = useState<string>(() => localStorage.getItem('currentPage') || 'register');
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -25,7 +25,7 @@ const App: React.FC = () => {
   const [showTaskPopup, setShowTaskPopup] = useState(false);
   const [navigationData, setNavigationData] = useState<any>(null);
 
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
 
   // --- Initialization & Auth ---
   useEffect(() => {
@@ -49,10 +49,10 @@ const App: React.FC = () => {
       setSession(session);
       if (session) {
         fetchProfile(session.user.id);
-        // setShowTaskPopup(true); // Removido em favor da página dedicada
       } else {
         setProfile(null);
         setCurrentPage('register');
+        localStorage.setItem('currentPage', 'register');
       }
     });
 
@@ -74,34 +74,11 @@ const App: React.FC = () => {
     return () => { channel.unsubscribe(); };
   }, [session]);
 
-  // --- Session Timeout ---
-  const resetSessionTimer = useCallback(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (!session) return;
 
-    timerRef.current = setTimeout(async () => {
-      await performFullLogout();
-      showWarning('Sessão expirada. Por favor, acesse sua conta novamente.');
-    }, 30 * 60 * 1000);
-  }, [session, performFullLogout, showWarning]);
-
-  useEffect(() => {
-    const events = ['mousedown', 'keydown', 'touchstart'];
-    const handleActivity = () => resetSessionTimer();
-
-    if (session) {
-      events.forEach(event => window.addEventListener(event, handleActivity, { passive: true }));
-      resetSessionTimer();
-    }
-    return () => {
-      events.forEach(event => window.removeEventListener(event, handleActivity));
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [session, resetSessionTimer]);
 
   // --- Navigation ---
   useEffect(() => {
-    document.title = `${PAGE_TITLES[currentPage] || 'The Home Depot'} | BP`;
+    document.title = `${PAGE_TITLES[currentPage] || 'The Home Depot'} | The Home Depot`;
     // if (currentPage === 'home' && session) setShowTaskPopup(true); // Removido
   }, [currentPage, session]);
 
@@ -113,6 +90,8 @@ const App: React.FC = () => {
       setShowWelcomeModal(true);
       sessionStorage.setItem('welcome_shown', 'true');
     }
+
+    localStorage.setItem('currentPage', page);
 
     const heavyPages = ['historico-conta', 'withdrawal-history', 'purchase-history', 'shop'];
     if (heavyPages.includes(page)) {
@@ -204,7 +183,7 @@ const App: React.FC = () => {
             ].map((item) => (
               <button
                 key={item.id}
-                onClick={() => setCurrentPage(item.id)}
+                onClick={() => handleNavigate(item.id)}
                 className={`flex flex-col items-center gap-1 transition-all duration-300 ${currentPage === item.id ? 'text-[#FA6400] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
               >
                 <div className={`relative ${currentPage === item.id ? 'after:content-[""] after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-[#FA6400] after:rounded-full' : ''}`}>
