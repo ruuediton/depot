@@ -101,14 +101,11 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
   };
 
   return (
-    <div className="bg-[#F7F9FB] min-h-screen pb-32 font-sans antialiased text-[#1A1A1A]">
-      {/* Simple Header */}
-      <header className="px-6 pt-8 pb-4">
-        <h1 className="text-2xl font-black text-gray-900 tracking-tight">VIP Shop</h1>
-        <p className="text-sm text-gray-500 font-medium">Invista e aumente seus lucros diários</p>
-      </header>
+    <div className="bg-[#FF6B00] min-h-screen flex flex-col font-sans antialiased">
+      {/* Header Vazio conforme solicitado */}
+      <header className="w-full h-14 flex items-center px-4 relative"></header>
 
-      <main className="max-w-md mx-auto px-4 pt-2 space-y-4">
+      <main className="flex-1 px-4 pb-32">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40 gap-4">
             <SpokeSpinner size="w-10 h-10" color="text-primary" />
@@ -120,57 +117,65 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
               const vipLevel = product.name.replace(/\D/g, '') || '1';
 
               return (
-                <div key={product.id} className="relative bg-white rounded-[28px] p-6 shadow-sm border border-gray-100 group transition-all duration-300">
-                  {/* VIP Level Badge */}
-                  <div className="absolute top-4 right-4 bg-primary/10 px-3 py-1 rounded-full text-[10px] font-black text-primary uppercase tracking-widest z-10">
-                    VIP {vipLevel}
+                <div key={product.id} className="relative bg-white rounded-[4px] p-5 transition-all animate-fade-in border border-white/10">
+                  {/* Vip Level Badge */}
+                  <div className="absolute top-0 right-0 bg-[#FF6B00] px-3 py-1 rounded-tr-[4px] rounded-bl-[4px] text-[10px] font-semibold text-white z-10">
+                    Vip {vipLevel}
                   </div>
 
-                  <div className="flex items-start gap-5">
-                    {/* Left: Product Image */}
-                    <div className="relative w-20 h-20 shrink-0 bg-gray-50 rounded-2xl flex items-center justify-center border border-gray-100 p-2">
-                      <img src={product.image_url || "/vip_placeholder.png"} alt={product.name} className="w-full h-full object-contain" />
+                  <div className="flex gap-5">
+                    {/* Lado Esquerdo: Imagem ocupando a altura do conteúdo */}
+                    <div className="w-28 h-28 bg-[#F8F9FA] rounded-[4px] flex items-center justify-center border border-gray-100 p-2 shrink-0 self-center">
+                      <img
+                        src={product.image_url || "/vip_placeholder.png"}
+                        alt={product.name}
+                        className="w-full h-full object-contain"
+                      />
                     </div>
 
-                    {/* Right: Info Grid */}
-                    <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-3">
-                      <div>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Renda Diária</p>
-                        <p className="text-[14px] font-black text-gray-900">
-                          {product.daily_income?.toLocaleString('pt-AO')} Kz
-                        </p>
+                    {/* Lado Direito: Informações */}
+                    <div className="flex-1 flex flex-col gap-3">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <p className="text-[10px] text-gray-400 font-semibold leading-none mb-1">Renda</p>
+                          <p className="text-[13px] font-semibold text-gray-900">
+                            {product.daily_income?.toLocaleString('pt-AO')} Kz
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-gray-400 font-semibold leading-none mb-1">Interesse</p>
+                          <p className="text-[13px] font-semibold text-[#00C853]">
+                            {(product.daily_income / 1).toFixed(2)}
+                          </p>
+                        </div>
+                        <div className="col-span-2">
+                          <p className="text-[10px] text-gray-400 font-semibold leading-none mb-1">Lucro total</p>
+                          <p className="text-[13px] font-semibold text-[#FF6B00]">
+                            {(product.daily_income * product.duration_days)?.toLocaleString('pt-AO')} Kz
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Interesse</p>
-                        <p className="text-[14px] font-black text-[#00C853]">
-                          {(product.daily_income / 1).toFixed(2)}
-                        </p>
-                      </div>
-                      <div className="col-span-2 pt-1">
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Lucro Total</p>
-                        <p className="text-[14px] font-black text-primary">
-                          {(product.daily_income * product.duration_days)?.toLocaleString('pt-AO')} Kz
-                        </p>
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* Pricing and Action Section */}
-                  <div className="mt-6 flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Preço</p>
-                      <p className="text-lg font-black text-gray-900">{product.price.toLocaleString('pt-AO')} Kz</p>
+                      {/* Preço e Botão */}
+                      <div className="flex items-end justify-between mt-1 pt-3 border-t border-gray-50">
+                        <div>
+                          <p className="text-[10px] text-gray-400 font-semibold leading-none mb-1">Preço</p>
+                          <p className="text-base font-semibold text-gray-900">
+                            {product.price.toLocaleString('pt-AO')} Kz
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => handlePurchase(product)}
+                          disabled={isPurchased}
+                          className={`h-9 px-6 rounded-[4px] text-[13px] font-semibold transition-all active:scale-95 ${isPurchased
+                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            : 'bg-[#FF6B00] text-white'
+                            }`}
+                        >
+                          {isPurchased ? 'Ativo' : 'Comprar'}
+                        </button>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => handlePurchase(product)}
-                      disabled={isPurchased}
-                      className={`h-11 px-8 rounded-full text-[14px] font-bold transition-all active:scale-95 ${isPurchased
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-primary text-white shadow-lg shadow-primary/20 hover:brightness-110'
-                        }`}
-                    >
-                      {isPurchased ? 'Ativo' : 'Comprar'}
-                    </button>
                   </div>
                 </div>
               );
@@ -179,33 +184,28 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
         )}
       </main>
 
-      {/* Confirmation Modal */}
+      {/* Confirmation Modal - Estilo igual à imagem de referência */}
       {selectedProduct && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center px-6 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-8 animate-in fade-in duration-300">
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"
             onClick={() => !isBuying && setSelectedProduct(null)}
           />
-          <div className="relative w-full max-w-[320px] bg-white rounded-[32px] p-8 text-center shadow-2xl animate-in zoom-in-95 duration-300 transform">
-            <h3 className="text-xl font-black text-gray-900 mb-4">Confirmar Compra</h3>
-            <p className="text-gray-500 text-[14px] leading-relaxed mb-8">
-              Deseja investir <span className="text-primary font-bold">Kz {selectedProduct.price.toLocaleString('pt-AO')}</span> para desbloquear o <span className="font-bold text-gray-900">VIP {selectedProduct.name.replace(/\D/g, '')}</span>?
+          <div className="relative w-full max-w-[320px] bg-white rounded-[4px] px-8 py-10 text-center shadow-2xl animate-in zoom-in-95 duration-300 transform">
+            <p className="text-[#444444] text-[15px] leading-[1.6] mb-2 px-2">
+              O saldo de recarga é desbloqueado automaticamente Precisa recarregar
+            </p>
+            <p className="text-gray-900 font-bold text-[20px] mb-8">
+              Kz {selectedProduct.price.toLocaleString('pt-AO')}
             </p>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col items-center">
               <button
                 disabled={isBuying}
                 onClick={confirmPurchase}
-                className="w-full h-[54px] bg-primary text-white rounded-2xl font-bold text-[16px] transition-all active:scale-95 shadow-lg shadow-primary/20"
+                className="w-full h-[52px] bg-[#FF3B30] text-white rounded-full font-semibold text-[16px] transition-all active:scale-95 flex items-center justify-center shadow-lg shadow-red-500/20"
               >
-                {isBuying ? <SpokeSpinner size="w-6 h-6" color="text-white" /> : 'Confirmar'}
-              </button>
-              <button
-                disabled={isBuying}
-                onClick={() => setSelectedProduct(null)}
-                className="w-full h-[50px] text-gray-400 font-bold text-[14px]"
-              >
-                Cancelar
+                {isBuying ? <SpokeSpinner size="w-6 h-6" color="text-white" /> : 'confirme'}
               </button>
             </div>
           </div>
