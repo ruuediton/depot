@@ -11,10 +11,15 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showToast }) => {
   const [currentProfile, setCurrentProfile] = useState<any>(profile);
+  const [exchangeRate, setExchangeRate] = useState<number>(1000); // Default or fetch
   const [stats, setStats] = useState<any>({
     balance: profile?.balance || 0,
-    total_recharge: 0,
+    totalDeposit: 0,
+    totalWithdrawal: 0,
+    todayEarnings: 0,
+    pending: 0,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (profile) {
@@ -27,191 +32,226 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
     if (!currentProfile?.id) return;
 
     try {
-      const { data: userResponse } = await supabase.auth.getUser();
-      const userId = userResponse.user?.id;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-      if (!userId) return;
+      // 1. Fetch Exchange Rate (Parallel or fallback)
+      fetch('https://api.exchangerate-api.com/v4/latest/USD')
+        .then(res => res.json())
+        .then(data => { if (data?.rates?.AOA) setExchangeRate(data.rates.AOA); })
+        .catch(() => console.log("Using default rate"));
 
+      // 2. Fetch Aggregated Data
       const [
-        profileStatsRes,
         depositsRes,
         depositsUsdtRes,
+        withdrawalsRes,
+        tasksRes,
+        bonusRes
       ] = await Promise.all([
-        supabase.rpc('get_profile_stats'),
-        supabase
-          .from('depositos_clientes')
-          .select('valor_deposito')
-          .eq('user_id', userId)
-          .in('estado_de_pagamento', ['sucedido', 'completo', 'sucesso', 'concluido']),
-        supabase
-          .from('depositos_usdt')
-          .select('amount_kz')
-          .eq('user_id', userId)
-          .in('status', ['sucedido', 'completo', 'sucesso', 'concluido']),
+        supabase.from('depositos_clientes').select('valor_deposito, estado_de_pagamento').eq('user_id', user.id),
+        supabase.from('depositos_usdt').select('amount_kz, status').eq('user_id', user.id),
+        supabase.from('retirada_clientes').select('valor_solicitado, estado_da_retirada').eq('user_id', user.id),
+        supabase.from('tarefas_diarias').select('renda_coletada, data_atribuicao').eq('user_id', user.id),
+        supabase.from('bonus_transacoes').select('valor_recebido, data_recebimento').eq('user_id', user.id)
       ]);
 
-      const totalDeposits = (depositsRes.data?.reduce((acc: number, curr: any) => acc + Number(curr.valor_deposito || 0), 0) || 0) +
-        (depositsUsdtRes.data?.reduce((acc: number, curr: any) => acc + Number(curr.amount_kz || 0), 0) || 0);
+      // Calculations
+      const totalDeposit = (depositsRes.data?.filter(d => ['sucedido', 'completo', 'sucesso', 'concluido'].includes(d.estado_de_pagamento.toLowerCase())).reduce((acc, curr) => acc + Number(curr.valor_deposito || 0), 0) || 0) +
+        (depositsUsdtRes.data?.filter(d => ['sucedido', 'completo', 'sucesso', 'concluido'].includes(d.status.toLowerCase())).reduce((acc, curr) => acc + Number(curr.amount_kz || 0), 0) || 0);
+
+      const totalWithdrawal = withdrawalsRes.data?.filter(w => ['sucedido', 'completo', 'sucesso', 'concluido'].includes(w.estado_da_retirada.toLowerCase())).reduce((acc, curr) => acc + Number(curr.valor_solicitado || 0), 0) || 0;
+
+      const pending = (depositsRes.data?.filter(d => d.estado_de_pagamento === 'pendente').reduce((acc, curr) => acc + Number(curr.valor_deposito || 0), 0) || 0) +
+        (withdrawalsRes.data?.filter(w => w.estado_da_retirada === 'pendente').reduce((acc, curr) => acc + Number(curr.valor_solicitado || 0), 0) || 0);
+
+      // Today's Earnings (Simplified: sum of tasks and bonuses today)
+      const today = new Date().toISOString().split('T')[0];
+      const taskEarnings = tasksRes.data?.filter(t => t.data_atribuicao.startsWith(today)).reduce((acc, curr) => acc + Number(curr.renda_coletada || 0), 0) || 0;
+      const bonusEarnings = bonusRes.data?.filter(b => b.data_recebimento.startsWith(today)).reduce((acc, curr) => acc + Number(curr.valor_recebido || 0), 0) || 0;
 
       setStats({
-        balance: profileStatsRes.data?.balance || 0,
-        total_recharge: totalDeposits,
+        balance: currentProfile.balance || 0,
+        totalDeposit,
+        totalWithdrawal,
+        todayEarnings: taskEarnings + bonusEarnings,
+        pending,
       });
 
+      setLoading(false);
     } catch (err) {
       console.error("Error fetching stats:", err);
+      setLoading(false);
     }
   };
 
-  if (!currentProfile) return (
-    <div className="flex justify-center items-center h-screen bg-[#F5F5F5]">
-      <SpokeSpinner size="w-10 h-10" color="text-primary" />
+  const balanceAOA = stats.balance * exchangeRate;
+
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen bg-[#f27f0d]">
+      <SpokeSpinner size="w-10 h-10" color="text-white" />
     </div>
   );
 
   return (
-    <div className="bg-[#F5F5F5] dark:bg-[#0A0A0A] font-display text-gray-900 dark:text-gray-100 antialiased overflow-x-hidden">
-      <div className="max-w-md mx-auto min-h-screen flex flex-col relative pb-20">
-        {/* Header laranja */}
-        <header className="bg-primary pt-10 pb-16 px-4 relative overflow-hidden">
-          {/* Ícone decorativo de dinheiro */}
-          <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-10 opacity-10 pointer-events-none">
-            <span className="material-symbols-outlined text-[180px] text-white">attach_money</span>
-          </div>
-
-          {/* Navegação superior */}
-          <nav className="flex items-center justify-between mb-8 relative z-10">
-            <div className="flex items-center gap-1">
-              <div className="w-8 h-8 bg-white/20 rounded flex items-center justify-center">
-                <span className="text-[10px] font-bold text-white leading-tight text-center uppercase">
-                  The<br />Home
-                </span>
-              </div>
-              <span className="text-white font-bold text-lg tracking-tight">The Home Depot</span>
+    <div className="bg-[#f27f0d] font-display text-slate-800 antialiased min-h-screen flex justify-center pb-32">
+      <div className="w-full max-w-[430px] bg-[#f27f0d] min-h-screen relative flex flex-col">
+        {/* Header */}
+        <header className="pt-12 px-6 pb-4 flex justify-between items-center bg-[#f27f0d]">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/30 shrink-0 bg-white/20">
+              <img
+                alt="User"
+                className="w-full h-full object-cover"
+                src={currentProfile?.avatar_url || "https://lh3.googleusercontent.com/a/default-user=s120-c"}
+              />
             </div>
-            <div className="flex items-center gap-3">
-              <button className="text-white opacity-90">
-                <span className="material-symbols-outlined">mail</span>
-              </button>
-              <button className="text-white opacity-90">
-                <span className="material-symbols-outlined">headset_mic</span>
-              </button>
-              <div className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded-full text-white text-xs border border-white/20">
-                <span className="material-symbols-outlined text-sm">language</span>
-                <span>Português</span>
-                <span className="material-symbols-outlined text-sm">expand_more</span>
-              </div>
+            <div>
+              <h2 className="text-sm font-bold text-white tracking-tight">
+                {currentProfile?.phone || 'Usuário'}
+              </h2>
+              <p className="text-[10px] text-orange-100/70 uppercase font-bold tracking-widest">
+                ID: {currentProfile?.id?.substring(0, 8).toUpperCase()}
+              </p>
             </div>
-          </nav>
-
-          {/* Balanço */}
-          <div className="text-center relative z-10">
-            <p className="text-white/80 text-sm mb-1">Balanço total (USDT)</p>
-            <h1 className="text-white text-5xl font-bold mb-6">{stats.balance.toFixed(2)}</h1>
-            <p className="text-white/80 text-sm mb-1">Valor de recarga (USDT)</p>
-            <h2 className="text-white text-3xl font-bold">{stats.total_recharge.toFixed(2)}</h2>
           </div>
+          <button className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center relative backdrop-blur-md active:scale-90 transition-all border border-white/10">
+            <span className="material-symbols-outlined text-white text-[22px]">notifications</span>
+            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#f27f0d]"></span>
+          </button>
         </header>
 
-        {/* Barra de email com badge VIP */}
-        <div className="px-0 -mt-8 relative z-20">
-          <div className="bg-[#DAFE73] flex items-center justify-between px-4 py-3 rounded-t-3xl">
-            <span className="text-gray-800 font-medium text-sm">{currentProfile?.email || 'openialucros@gmail.com'}</span>
-            <span className="bg-white/50 px-3 py-0.5 rounded-full text-xs font-bold text-gray-700">VIP</span>
+        {/* Main Content */}
+        <main className="flex-grow px-6 pt-4 space-y-6">
+          {/* Balance Card - Premium Glassmorphic feel */}
+          <div className="bg-white rounded-3xl p-6 shadow-2xl shadow-black/10 text-[#f27f0d] animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <p className="text-[#f27f0d]/60 text-[10px] font-black uppercase tracking-[0.15em] mb-1">Balanço Total</p>
+                <div className="flex items-baseline gap-2">
+                  <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
+                    {stats.balance.toLocaleString('pt-AO')}
+                  </h3>
+                  <span className="text-sm font-bold text-slate-400">USDT</span>
+                </div>
+              </div>
+              <div className="bg-[#f27f0d]/10 w-11 h-11 rounded-2xl flex items-center justify-center">
+                <span className="material-symbols-outlined text-[#f27f0d] text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>account_balance_wallet</span>
+              </div>
+            </div>
+            <div className="pt-5 border-t border-slate-50">
+              <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Equivalente em Kwanzas</p>
+              <p className="text-xl font-black text-slate-800 tracking-tight">
+                {balanceAOA.toLocaleString('pt-AO')} <span className="text-xs font-bold text-slate-500">AOA</span>
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Grid de ícones */}
-        <div className="bg-[#2D2D3A] grid grid-cols-4 pt-4 pb-6 px-2 relative z-10">
-          <button
-            onClick={() => onNavigate('historico-conta')}
-            className="flex flex-col items-center gap-1 text-center border-r border-white/10"
-          >
-            <span className="material-symbols-outlined text-white text-3xl mb-1">account_balance</span>
-            <span className="text-white/70 text-[10px] leading-tight">Conta</span>
-          </button>
-          <button
-            onClick={() => onNavigate('deposit')}
-            className="flex flex-col items-center gap-1 text-center border-r border-white/10"
-          >
-            <span className="material-symbols-outlined text-white text-3xl mb-1">monetization_on</span>
-            <span className="text-white/70 text-[10px] leading-tight">Recarrega</span>
-          </button>
-          <button
-            onClick={() => onNavigate('retirada')}
-            className="flex flex-col items-center gap-1 text-center border-r border-white/10"
-          >
-            <span className="material-symbols-outlined text-white text-3xl mb-1">wallet</span>
-            <span className="text-white/70 text-[10px] leading-tight">Retirar</span>
-          </button>
-          <div className="flex flex-col items-center gap-1 text-center relative">
-            <span className="material-symbols-outlined text-white text-3xl mb-1">trending_up</span>
-            <span className="text-white/70 text-[10px] leading-tight">Recordes<br />financeiros</span>
-            <img
-              alt="Profile thumbnail"
-              className="absolute -top-6 -right-1 w-10 h-10 rounded-full border-2 border-[#2D2D3A] object-cover shadow-lg"
-              src={currentProfile?.avatar_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuCjLecNBWsXyRmYIbMkRmB9bA9UAVZzkAtYMgdn0dPJ3Jmo0xOzF6xTu323lQAkvVZbl4Zf3NKui5VGrsVaF-U5-LzApdQjtmfvDjaC3SSlRCOd3PxId-vNg3iIxnXrAM5k45qxh9AAtEaGL7mk_zVTKW_xdjswa-OwszimAyxO-JmFInPMCwyUAThO6O3pxX_fuBxoOEUg4GteNvzL3dNgVsAQ4gU7vFKsPoeQW5ln0a7cJWmE2Nd2Idi3KjKeN7tcvtiy5Ck4wF-b"}
-              onError={(e) => {
-                e.currentTarget.src = '/default_avatar.png';
-              }}
-            />
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
+              <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.1em] mb-1">Total Depósito</p>
+              <p className="font-black text-green-600 text-sm tracking-tight">{stats.totalDeposit.toLocaleString()} Kz</p>
+            </div>
+            <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
+              <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.1em] mb-1">Total Saques</p>
+              <p className="font-black text-red-500 text-sm tracking-tight">{stats.totalWithdrawal.toLocaleString()} Kz</p>
+            </div>
+            <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
+              <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.1em] mb-1">Ganhos Hoje</p>
+              <p className="font-black text-[#f27f0d] text-sm tracking-tight">+{stats.todayEarnings.toLocaleString()} Kz</p>
+            </div>
+            <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
+              <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.1em] mb-1">Pendente</p>
+              <p className="font-black text-orange-500 text-sm tracking-tight">{stats.pending.toLocaleString()} Kz</p>
+            </div>
           </div>
-        </div>
 
-        {/* Menu principal */}
-        <main className="flex-1 bg-white dark:bg-zinc-900 -mt-4 rounded-t-[40px] px-6 pt-10 shadow-inner">
-          <ul className="space-y-2">
-            <li
+          {/* Settings Section */}
+          <div className="mt-8 space-y-2">
+            <h3 className="text-[10px] font-black text-white/90 uppercase tracking-[0.2em] mb-3 px-1 drop-shadow-sm">Configurações da Conta</h3>
+
+            <button
               onClick={() => onNavigate('add-bank')}
-              className="flex items-center justify-between py-4 group cursor-pointer"
+              className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
             >
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-purple-600">credit_card</span>
+                <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">account_balance</span>
                 </div>
-                <span className="text-gray-700 dark:text-gray-200 font-medium">Adicionar Cartão</span>
+                <span className="font-bold text-slate-800 text-sm">Adicionar Conta</span>
               </div>
-              <span className="material-symbols-outlined text-gray-400">chevron_right</span>
-            </li>
-            <li
-              onClick={() => onNavigate('p2p-transfer')}
-              className="flex items-center justify-between py-4 group cursor-pointer"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-primary">move_up</span>
-                </div>
-                <span className="text-gray-700 dark:text-gray-200 font-medium">Transferir</span>
-              </div>
-              <span className="material-symbols-outlined text-gray-400">chevron_right</span>
-            </li>
-            <li
-              onClick={() => onNavigate('change-password')}
-              className="flex items-center justify-between py-4 group cursor-pointer"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-blue-600">password</span>
-                </div>
-                <span className="text-gray-700 dark:text-gray-200 font-medium">Alterar a senha</span>
-              </div>
-              <span className="material-symbols-outlined text-gray-400">chevron_right</span>
-            </li>
-            <li
-              onClick={onLogout}
-              className="flex items-center justify-between py-4 group cursor-pointer"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-teal-600">logout</span>
-                </div>
-                <span className="text-gray-700 dark:text-gray-200 font-medium">sair</span>
-              </div>
-              <span className="material-symbols-outlined text-gray-400">chevron_right</span>
-            </li>
-          </ul>
-        </main>
+              <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
+            </button>
 
+            <button
+              onClick={() => onNavigate('security-verify')}
+              className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">lock_person</span>
+                </div>
+                <span className="font-bold text-slate-800 text-sm">Segurança & Senha</span>
+              </div>
+              <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
+            </button>
+
+            <button
+              onClick={() => onNavigate('ganhos-tarefas')}
+              className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">redeem</span>
+                </div>
+                <span className="font-bold text-slate-800 text-sm">Recompensas Diárias</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="bg-red-500 text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider">Novo</span>
+                <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
+              </div>
+            </button>
+
+            <button
+              onClick={() => onNavigate('historico-fundos')}
+              className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">history</span>
+                </div>
+                <span className="font-bold text-slate-800 text-sm">Histórico de Pedidos</span>
+              </div>
+              <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
+            </button>
+
+            <button
+              onClick={() => onNavigate('about-bp')}
+              className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">info</span>
+                </div>
+                <span className="font-bold text-slate-800 text-sm">Sobre Nós</span>
+              </div>
+              <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
+            </button>
+
+            <button
+              onClick={onLogout}
+              className="w-full flex items-center justify-between h-16 px-5 bg-white/10 hover:bg-white/20 rounded-2xl transition-all group mt-6 border border-white/20 active:scale-[0.98]"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/30">
+                  <span className="material-symbols-outlined text-white text-[20px] font-bold">logout</span>
+                </div>
+                <span className="font-black text-white text-sm uppercase tracking-widest">Sair da Conta</span>
+              </div>
+            </button>
+          </div>
+        </main>
       </div>
     </div>
   );

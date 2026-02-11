@@ -181,28 +181,41 @@ const App: React.FC = () => {
       )}
 
       {/* Bottom Navigation */}
-      {session && ['home', 'shop', 'profile', 'tasks', 'gift-chest'].includes(currentPage) && (
-        <nav className="fixed bottom-4 left-4 right-4 max-w-[calc(448px-2rem)] mx-auto glass-panel rounded-[28px] py-3 px-6 z-40 shadow-glass">
-          <div className="flex justify-between items-center bg-transparent">
-            {[
-              { id: 'home', icon: 'home', label: 'Lar' },
-              { id: 'tasks', icon: 'receipt_long', label: 'Tarefa' },
-              { id: 'invite-page', icon: 'groups', label: 'Equipe' },
-              { id: 'shop', icon: 'workspace_premium', label: 'VIP' },
-              { id: 'profile', icon: 'account_circle', label: 'Meu' }
-            ].map((item) => (
+      {session && ['home', 'shop', 'profile', 'tasks', 'wallet', 'gift-chest'].includes(currentPage) && (
+        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 backdrop-blur-lg border-t border-slate-100 px-6 pb-8 pt-4 flex justify-between items-center z-50">
+          {[
+            { id: 'home', icon: 'grid_view', label: 'Home' },
+            { id: 'tasks', icon: 'schedule', label: 'Tarefas' },
+            { id: 'shop', icon: 'add', isFab: true },
+            { id: 'wallet', icon: 'account_balance_wallet', label: 'Carteira' },
+            { id: 'profile', icon: 'person', label: 'Meu' }
+          ].map((item) => (
+            item.isFab ? (
+              <div key={item.id} className="relative -top-8">
+                <button
+                  onClick={() => handleNavigate(item.id)}
+                  className="w-14 h-14 bg-[#f27f0d] text-white rounded-full flex items-center justify-center shadow-lg shadow-orange-900/20 ring-4 ring-white active:scale-95 transition-all"
+                >
+                  <span className="material-symbols-outlined text-[32px] font-bold">add</span>
+                </button>
+              </div>
+            ) : (
               <button
                 key={item.id}
                 onClick={() => handleNavigate(item.id)}
-                className={`flex flex-col items-center gap-1 transition-all duration-300 ${currentPage === item.id ? 'text-[#FA6400] scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+                className={`flex flex-col items-center gap-1 transition-all duration-300 ${currentPage === item.id ? 'text-[#f27f0d]' : 'text-slate-400'}`}
               >
-                <div className={`relative ${currentPage === item.id ? 'after:content-[""] after:absolute after:-bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-[#FA6400] after:rounded-full' : ''}`}>
-                  <span className="material-symbols-outlined text-[26px]" style={{ fontVariationSettings: currentPage === item.id ? "'FILL' 1" : "'FILL' 0" }}>{item.icon}</span>
+                <div className="relative">
+                  <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: currentPage === item.id ? "'FILL' 1" : "'FILL' 0" }}>
+                    {item.icon}
+                  </span>
                 </div>
-                <span className={`text-[10px] font-bold ${currentPage === item.id ? 'opacity-100' : 'opacity-0 h-0 invisible'}`}>{item.label}</span>
+                <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
               </button>
-            ))}
-          </div>
+            )
+          ))}
+          {/* iOS Home Indicator */}
+          <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-100 rounded-full"></div>
         </nav>
       )}
 
