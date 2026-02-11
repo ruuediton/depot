@@ -137,7 +137,8 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                         deposit: {
                             ...data.data,
                             nome_destinatario: selectedBank.nome_destinatario,
-                            nome_banco: selectedBank.nome_do_banco
+                            nome_banco: selectedBank.nome_do_banco,
+                            amount: valKz
                         }
                     });
                 }

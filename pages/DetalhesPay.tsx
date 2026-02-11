@@ -4,7 +4,8 @@ interface Props {
     onNavigate: (page: string) => void;
     data?: {
         deposit?: {
-            amount: number;
+            amount?: number;
+            valor_deposito?: number;
             nome_destinatario: string;
             nome_banco: string;
             iban: string;
@@ -18,6 +19,7 @@ interface Props {
 
 const DetalhesPay: React.FC<Props> = ({ onNavigate, data, showToast }) => {
     const deposit = data?.deposit;
+    const amount = deposit?.amount || deposit?.valor_deposito || 0;
 
     // Formatting date
     const formatDate = (dateString?: string) => {
@@ -66,7 +68,7 @@ const DetalhesPay: React.FC<Props> = ({ onNavigate, data, showToast }) => {
                     </div>
                     <p className="text-[#f27f0d] font-bold mb-1 uppercase tracking-wider text-[10px]">Depósito Solicitado</p>
                     <h2 className="text-4xl font-black text-slate-900 tracking-tight">
-                        {deposit?.amount?.toLocaleString('pt-AO')} Kz
+                        {amount.toLocaleString('pt-AO')} Kz
                     </h2>
                     <p className="text-slate-500 text-xs font-semibold mt-2">{formatDate(deposit?.created_at)}</p>
                 </div>
@@ -129,7 +131,7 @@ const DetalhesPay: React.FC<Props> = ({ onNavigate, data, showToast }) => {
                             <div className="flex justify-between items-center">
                                 <span className="text-slate-500 text-sm font-medium">Valor Pago</span>
                                 <div className="flex items-center gap-2">
-                                    <span className="font-black text-[#f27f0d] text-base">{deposit?.amount?.toLocaleString('pt-AO')} Kz</span>
+                                    <span className="font-black text-[#f27f0d] text-base">{amount.toLocaleString('pt-AO')} Kz</span>
                                 </div>
                             </div>
                         </div>
