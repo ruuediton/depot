@@ -26,6 +26,10 @@ const Withdraw: React.FC<Props> = ({ onNavigate, showToast }) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    setSelectedBankId('');
+  }, [method]);
+
   const fetchData = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -42,7 +46,6 @@ const Withdraw: React.FC<Props> = ({ onNavigate, showToast }) => {
       const { data: banks } = await supabase.rpc('get_my_bank_accounts');
       if (banks && banks.length > 0) {
         setBankAccounts(banks);
-        setSelectedBankId(banks[0].id);
       }
 
     } catch (error) {
@@ -112,11 +115,18 @@ const Withdraw: React.FC<Props> = ({ onNavigate, showToast }) => {
       return;
     }
 
+    if (!/^\d{4}$/.test(securityPassword)) {
+      showToast?.("O PIN deve conter exatamente 4 dígitos", "error");
+      return;
+    }
+
     try {
       await withLoading(async () => {
         const { error } = await supabase.rpc('request_withdrawal', {
           p_amount: val,
-          p_pin: securityPassword
+          p_pin: securityPassword,
+          p_bank_id: selectedBankId,
+          p_method: method
         });
 
         if (error) throw error;
@@ -215,6 +225,8 @@ const Withdraw: React.FC<Props> = ({ onNavigate, showToast }) => {
                   className="w-full bg-[#FDF4EE] dark:bg-[#2d2d2d] border-none rounded-xl px-4 py-4 text-sm focus:ring-2 focus:ring-[#FF6B00]/20 dark:text-white placeholder-gray-400"
                   placeholder="Valor (1.000 - 100.000 Kz)"
                   type="text"
+                  autoComplete="off"
+                  name="withdrawal-amount"
                 />
               </div>
 
@@ -227,8 +239,8 @@ const Withdraw: React.FC<Props> = ({ onNavigate, showToast }) => {
                 >
                   <span className={selectedBankId ? 'text-gray-800 dark:text-white' : 'text-gray-400'}>
                     {selectedBankId
-                      ? bankAccounts.find(b => b.id === selectedBankId)?.bank_name || 'Selecione seu IBAN'
-                      : 'Por favor selecione seu IBAN de retirada'}
+                      ? bankAccounts.find(b => b.id === selectedBankId)?.bank_name || `Selecione seu ${method}`
+                      : `Por favor selecione seu ${method} de retirada`}
                   </span>
                   <span className="material-symbols-outlined text-gray-400">
                     {showBankDropdown ? 'expand_less' : 'expand_more'}
@@ -263,6 +275,8 @@ const Withdraw: React.FC<Props> = ({ onNavigate, showToast }) => {
                   className="w-full bg-[#FDF4EE] dark:bg-[#2d2d2d] border-none rounded-xl px-4 py-4 text-sm focus:ring-2 focus:ring-[#FF6B00]/20 dark:text-white placeholder-gray-400"
                   placeholder="Senha de segurança"
                   type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  name="withdrawal-pin"
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}

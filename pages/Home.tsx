@@ -18,6 +18,26 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
   const [cheapestProduct, setCheapestProduct] = useState<any>(null);
   const [marketingItems, setMarketingItems] = useState<MarketingItem[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Imagens do carrossel
+  const carouselImages = [
+    {
+      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuCH8Do3zySKPiURyqcXnaNVzw_ZAlJ10FGwvREfqVDzem1XONESKJvvtiMwaMLfjpoB1tpOXe5TXnaxACNJXatYPG_LMozu0H1l1v6kNAm2XMdEMQCNBpM34aYGc1tnWCl7_ZIALpPTs0mNIH2XZHLEm6ZZjvrEr9pTZ--jD3gviMHiDxjZ6O6i-OSKd0RfLbsHqh7_iIQIV1BGkoUD51_QWyrJBPeXoSGTD0t3Okq2OBmRmhqH1R6kdf1897j72pWKk6_W4okaFdnM",
+      title: "BUILT FROM SCRATCH",
+      subtitle: "SEE OUR HISTORY"
+    },
+    {
+      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuD6zaV-cbAV7xxy7KJ60Hx5CeLLC0g0aD9wJa1QQkTb8l6VTjUQ_yWh3rDgOY1UJGQ3fSdw0tYv3We9aZ6ltmauDfRoigMFh8MBNB0m-VGYkAMmobLLaP9LzydH5mAA3e3Ja080cgckAM5Bh1OGXrKy20BlpOmCkeCC7XG7nKVhoZhhG4_ZOfott5g-2Q3KphYqthNa1ACUnH3Zm7RfVGbu3Uon9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M",
+      title: "QUALITY TOOLS",
+      subtitle: "FOR YOUR HOME"
+    },
+    {
+      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuANftelW4IwDQtQ_F-qAlUO52Btrsa3N5EsLDoRo_kRJu51I6o6cythBDIpuULD1XISI-JsIiap4OEk2PyEmog2iLjseA7U-rxB2CdGzXI2NNH2yKmrhDvoMsVZMg0lGYV_bvHYQMbsoyGlJo7LNYB7jC_E7Q2vdnY7c_pTnXqfKpL-oGo8J-t_CDqoSAPL0UsHtN3e3Ja080cgckAM5Bh1OGXrKy20BlpOmCkeCC7XG7nKVhoZhhG4_ZOfott5g-2Q3KphYqthNa1ACUnH3Zm7RfVGbu3Uon9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M",
+      title: "BEST PRICES",
+      subtitle: "GUARANTEED"
+    }
+  ];
 
   useEffect(() => {
     if (!profile?.id) return;
@@ -80,6 +100,15 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
     }
   }, [profile?.id]); // Re-run when profile ID changes
 
+  // Auto-deslizar carrossel a cada 3 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [carouselImages.length]);
+
   return (
     <div className="bg-[#FF6B00] min-h-screen pb-20 font-sans antialiased">
       {/* Header laranja com logo e ícones */}
@@ -116,21 +145,44 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
         </div>
       </div>
 
-      {/* Banner BUILT FROM SCRATCH */}
+      {/* Carrossel de Banners */}
       <div className="px-4">
         <div className="rounded-xl overflow-hidden shadow-lg mb-6 bg-white relative">
-          <img
-            alt="Interior design banner"
-            className="w-full h-40 object-cover opacity-90"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCH8Do3zySKPiURyqcXnaNVzw_ZAlJ10FGwvREfqVDzem1XONESKJvvtiMwaMLfjpoB1tpOXe5TXnaxACNJXatYPG_LMozu0H1l1v6kNAm2XMdEMQCNBpM34aYGc1tnWCl7_ZIALpPTs0mNIH2XZHLEm6ZZjvrEr9pTZ--jD3gviMHiDxjZ6O6i-OSKd0RfLbsHqh7_iIQIV1BGkoUD51_QWyrJBPeXoSGTD0t3Okq2OBmRmhqH1R6kdf1897j72pWKk6_W4okaFdnM"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
-            <h2 className="text-2xl font-black italic tracking-tighter text-white">
-              BUILT <span className="text-primary font-bold">FROM</span> SCRATCH
-            </h2>
-            <p className="text-[10px] text-white/80">SEE OUR HISTORY</p>
+          {/* Container do carrossel */}
+          <div className="relative h-40 overflow-hidden">
+            {carouselImages.map((slide, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-all duration-700 ease-in-out ${index === currentSlide
+                    ? 'opacity-100 translate-x-0'
+                    : index < currentSlide
+                      ? 'opacity-0 -translate-x-full'
+                      : 'opacity-0 translate-x-full'
+                  }`}
+              >
+                <img
+                  alt={slide.title}
+                  className="w-full h-full object-cover opacity-90"
+                  src={slide.url}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
+                  <h2 className="text-2xl font-black italic tracking-tighter text-white">
+                    {slide.title.split(' ').map((word, i) =>
+                      word === 'FROM' ? (
+                        <span key={i} className="text-primary font-bold"> {word} </span>
+                      ) : (
+                        <span key={i}>{word} </span>
+                      )
+                    )}
+                  </h2>
+                  <p className="text-[10px] text-white/80">{slide.subtitle}</p>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="absolute right-4 bottom-4 w-10 h-10 rounded-full border-2 border-white overflow-hidden shadow-lg">
+
+          {/* Avatar do perfil */}
+          <div className="absolute right-4 bottom-4 w-10 h-10 rounded-full border-2 border-white overflow-hidden shadow-lg z-10">
             <img
               alt="Support"
               className="w-full h-full object-cover"
@@ -139,6 +191,21 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
                 e.currentTarget.src = '/default_avatar.png';
               }}
             />
+          </div>
+
+          {/* Indicadores de posição */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {carouselImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide
+                    ? 'w-6 bg-primary'
+                    : 'w-1.5 bg-white/50'
+                  }`}
+                aria-label={`Ir para slide ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>
