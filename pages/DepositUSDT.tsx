@@ -59,6 +59,7 @@ const DepositUSDT: React.FC<Props> = ({ onNavigate, showToast, data }) => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) throw new Error("Sessão expirada.");
 
+        // Call RPC to create deposit
         const { data, error } = await supabase.rpc('create_usdt_deposit', {
           p_amount_usdt: amountUsdt,
           p_exchange_rate: passedRate
@@ -67,10 +68,32 @@ const DepositUSDT: React.FC<Props> = ({ onNavigate, showToast, data }) => {
         if (error) throw new Error("Erro de conexão.");
         if (data && !data.success) throw new Error(data.message);
 
-        return data.message;
+        // Success! Navigate to confirmation details page (same as bank deposit)
+        // We construct the deposit object with available data + returned data
+        // If data.data exists, use it. Otherwise, use what we have.
+        const depositData = data.data || {
+          amount: amountKz,
+          status: 'pending',
+          payment_method: 'USDT',
+          created_at: new Date().toISOString(),
+          bank_name: 'USDT (TRC20)',
+          nome_banco: 'USDT (TRC20)',
+          iban: walletAddress,
+          nome_destinatario: recipientName
+        };
+
+        onNavigate('confirmar-deposito', {
+          deposit: {
+            ...depositData,
+            nome_destinatario: recipientName, // Ensure these are set for display
+            nome_banco: 'USDT (TRC20)',
+            iban: walletAddress
+          }
+        });
+
+        return data.message || 'Solicitação enviada!';
       }, 'Solicitação enviada! Aguarde a confirmação.');
 
-      onNavigate('home');
     } catch (error: any) {
       console.error(error);
       showToast?.(error.message, 'error');
