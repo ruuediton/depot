@@ -23,17 +23,17 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
   // Imagens do carrossel
   const carouselImages = [
     {
-      url: "https://i.imgur.com/9YZ8QXm.jpeg",
+      url: "/carousel1.png",
       title: "THE HOME DEPOT",
       subtitle: "YOUR HOME IMPROVEMENT STORE"
     },
     {
-      url: "https://i.imgur.com/7KZ9YXn.jpeg",
+      url: "/carousel2.png",
       title: "NATIONWIDE EXPANSION",
       subtitle: "COMING SUMMER 2025"
     },
     {
-      url: "https://i.imgur.com/8ZA0ZYo.jpeg",
+      url: "/carousel3.png",
       title: "QUALITY PRODUCTS",
       subtitle: "EVERYTHING YOU NEED"
     }
