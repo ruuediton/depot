@@ -17,7 +17,7 @@ const DepositUSDT: React.FC<Props> = ({ onNavigate, showToast, data }) => {
 
   const [walletData, setWalletData] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const walletAddress = walletData?.endereco_carteira || "Carregando...";
+  const walletAddress = walletData?.endereco_carteira || "Endereço de pagamento USDT indisponível";
   const recipientName = walletData?.nome_destinatario || "Carregando...";
 
   // Fetch Unified Wallet

@@ -113,7 +113,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
 
                 if (paymentMethod === 'USDT') {
                     if (!usdtBank || !usdtBank.iban) {
-                        showToast?.("Recarga via USDT temporariamente indisponível.", "error");
+                        showToast?.("Endereço de pagamento USDT indisponível", "error");
                         return;
                     }
                     onNavigate('deposit-usdt', {
