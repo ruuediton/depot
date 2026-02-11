@@ -216,20 +216,20 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                         <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 block">
                             Valor válido
                         </label>
-                        <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 focus-within:border-[#FF6B00] transition-all">
-                            <div className="flex items-baseline gap-2">
+                        <div className="bg-[#FEF7F2] rounded-xl px-4 h-[50px] flex items-center border border-[#FDEEE3] focus-within:border-[#FF6B00]/30 transition-all">
+                            <div className="flex items-baseline gap-1 w-full">
                                 <input
                                     type="number"
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
-                                    className="bg-transparent flex-1 outline-none text-2xl font-semibold text-gray-900 placeholder:text-gray-300"
+                                    className="bg-transparent flex-1 outline-none text-xl font-semibold text-gray-900 placeholder:text-gray-300"
                                     placeholder="0"
                                 />
-                                <span className="text-sm font-semibold text-gray-500">Kz</span>
+                                <span className="text-sm font-semibold text-gray-400">Kz</span>
                             </div>
                         </div>
                         {paymentMethod === 'USDT' && amount && (
-                            <p className="text-xs text-gray-500 mt-2 font-medium">≈ {usdtAmount} USDT</p>
+                            <p className="text-xs text-gray-400 mt-2 font-medium">≈ {usdtAmount} USDT</p>
                         )}
                     </div>
 
@@ -244,8 +244,8 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                                     key={val}
                                     onClick={() => setAmount(val.toString())}
                                     className={`p-2.5 rounded-lg text-xs font-semibold transition-all ${amount === val.toString()
-                                            ? 'bg-[#FF6B00] text-white shadow-sm'
-                                            : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                        ? 'bg-[#FF6B00] text-white shadow-sm'
+                                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                                         }`}
                                 >
                                     {val.toLocaleString()}
@@ -266,8 +266,8 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                                         key={bank.id}
                                         onClick={() => setSelectedBank(bank)}
                                         className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${selectedBank?.id === bank.id
-                                                ? 'bg-orange-50 border-[#FF6B00] text-[#FF6B00]'
-                                                : 'bg-gray-50 border-gray-100 text-gray-600'
+                                            ? 'bg-orange-50 border-[#FF6B00] text-[#FF6B00]'
+                                            : 'bg-gray-50 border-gray-100 text-gray-600'
                                             }`}
                                     >
                                         <span className="material-symbols-outlined text-lg">account_balance</span>
