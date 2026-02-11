@@ -70,8 +70,8 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
             key={level}
             onClick={() => setActiveTab(level)}
             className={`flex-1 h-10 rounded-[4px] font-bold text-[13px] uppercase tracking-wider transition-all whitespace-nowrap border ${activeTab === level
-                ? 'bg-white text-[#FF6B00] border-white'
-                : 'bg-[#FF6B00] text-white/70 border-white/30'
+              ? 'bg-white text-[#FF6B00] border-white'
+              : 'bg-[#FF6B00] text-white/70 border-white/30'
               }`}
           >
             Nível {level}
@@ -111,26 +111,24 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
 
               {filteredSubs.length > 0 ? (
                 filteredSubs.map((sub: any) => (
-                  <div key={sub.id} className="bg-white p-4 rounded-[4px] flex items-center gap-3">
-                    <div className="size-10 rounded-[4px] bg-[#F5F5F5] flex items-center justify-center text-gray-400">
+                  <div key={sub.id} className="bg-white px-3 py-2.5 rounded-[4px] flex items-center gap-3 shadow-sm border-b border-gray-50/50">
+                    <div className="size-9 rounded-[4px] bg-[#F5F7FA] flex items-center justify-center text-[#9DA3AE]">
                       <span className="material-symbols-outlined text-[20px]">person</span>
                     </div>
 
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[#111] font-bold text-[14px] tracking-tight">
+                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                      <p className="text-[#111] font-black text-[13px] tracking-tight leading-tight">
                         {sub.phone.replace(/(\d{3})(\d{3})(\d{3})/, '+$1 *** $3')}
                       </p>
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-400 text-[10px] font-bold">
-                          Desde {new Date(sub.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
+                      <span className="text-gray-400 text-[10px] font-bold mt-0.5">
+                        Desde {new Date(sub.created_at).toLocaleDateString()}
+                      </span>
                     </div>
 
                     <div className="text-right">
-                      <div className={`px-2 py-1 rounded-[2px] text-[9px] font-black uppercase tracking-wide ${sub.reloaded_amount >= 3000
-                          ? 'bg-green-50 text-[#00C853]'
-                          : 'bg-red-50 text-red-400'
+                      <div className={`px-2 py-[2px] rounded-[2px] text-[9px] font-black uppercase tracking-wide ${sub.reloaded_amount >= 3000
+                          ? 'bg-[#E8F5E9] text-[#2E7D32]'
+                          : 'bg-[#FFEBEE] text-[#D32F2F]'
                         }`}>
                         {sub.reloaded_amount >= 3000 ? 'INVESTIDO' : 'SEM INVEST.'}
                       </div>
