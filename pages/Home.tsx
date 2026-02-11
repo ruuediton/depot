@@ -23,82 +23,28 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
   // Imagens do carrossel
   const carouselImages = [
     {
-      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuCH8Do3zySKPiURyqcXnaNVzw_ZAlJ10FGwvREfqVDzem1XONESKJvvtiMwaMLfjpoB1tpOXe5TXnaxACNJXatYPG_LMozu0H1l1v6kNAm2XMdEMQCNBpM34aYGc1tnWCl7_ZIALpPTs0mNIH2XZHLEm6ZZjvrEr9pTZ--jD3gviMHiDxjZ6O6i-OSKd0RfLbsHqh7_iIQIV1BGkoUD51_QWyrJBPeXoSGTD0t3Okq2OBmRmhqH1R6kdf1897j72pWKk6_W4okaFdnM",
-      title: "BUILT FROM SCRATCH",
-      subtitle: "SEE OUR HISTORY"
+      url: "https://i.imgur.com/9YZ8QXm.jpeg",
+      title: "THE HOME DEPOT",
+      subtitle: "YOUR HOME IMPROVEMENT STORE"
     },
     {
-      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuD6zaV-cbAV7xxy7KJ60Hx5CeLLC0g0aD9wJa1QQkTb8l6VTjUQ_yWh3rDgOY1UJGQ3fSdw0tYv3We9aZ6ltmauDfRoigMFh8MBNB0m-VGYkAMmobLLaP9LzydH5mAA3e3Ja080cgckAM5Bh1OGXrKy20BlpOmCkeCC7XG7nKVhoZhhG4_ZOfott5g-2Q3KphYqthNa1ACUnH3Zm7RfVGbu3Uon9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M",
-      title: "QUALITY TOOLS",
-      subtitle: "FOR YOUR HOME"
+      url: "https://i.imgur.com/7KZ9YXn.jpeg",
+      title: "NATIONWIDE EXPANSION",
+      subtitle: "COMING SUMMER 2025"
     },
     {
-      url: "https://lh3.googleusercontent.com/aida-public/AB6AXuANftelW4IwDQtQ_F-qAlUO52Btrsa3N5EsLDoRo_kRJu51I6o6cythBDIpuULD1XISI-JsIiap4OEk2PyEmog2iLjseA7U-rxB2CdGzXI2NNH2yKmrhDvoMsVZMg0lGYV_bvHYQMbsoyGlJo7LNYB7jC_E7Q2vdnY7c_pTnXqfKpL-oGo8J-t_CDqoSAPL0UsHtN3e3Ja080cgckAM5Bh1OGXrKy20BlpOmCkeCC7XG7nKVhoZhhG4_ZOfott5g-2Q3KphYqthNa1ACUnH3Zm7RfVGbu3Uon9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M",
-      title: "BEST PRICES",
-      subtitle: "GUARANTEED"
+      url: "https://i.imgur.com/8ZA0ZYo.jpeg",
+      title: "QUALITY PRODUCTS",
+      subtitle: "EVERYTHING YOU NEED"
     }
   ];
 
   useEffect(() => {
     if (!profile?.id) return;
 
-    const fetchCheapest = async () => {
-      try {
-        const { data: products } = await supabase
-          .from('products')
-          .select('*')
-          .eq('status', 'active')
-          .order('price', { ascending: true })
-          .limit(1);
-
-        if (products && products.length > 0) {
-          setCheapestProduct(products[0]);
-        }
-      } catch (err) {
-        console.error("Home fetch error:", err);
-      }
-    };
-
-    const fetchMarketing = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('marketing')
-          .select('*')
-          .order('data', { ascending: false })
-          .limit(15);
-
-        if (data && !error) {
-          setMarketingItems(data);
-        }
-      } catch (err) {
-        console.error("Marketing fetch error:", err);
-      }
-    };
-
-    const loadAll = async () => {
-      setLoadingData(true);
-      try {
-        await Promise.all([
-          fetchCheapest(),
-          fetchMarketing()
-        ]);
-      } catch (err) {
-        console.error("Home data load error:", err);
-      } finally {
-        setLoadingData(false);
-      }
-    };
-
-    if (profile?.id) {
-      loadAll();
-      // Simulate data loading
-      const timer = setTimeout(() => {
-        setLoadingData(false);
-      }, 1500); // Simulate a 1.5 second loading time
-
-      return () => clearTimeout(timer);
-    }
-  }, [profile?.id]); // Re-run when profile ID changes
+    const timer = setTimeout(() => setLoadingData(false), 800);
+    return () => clearTimeout(timer);
+  }, [profile?.id]);
 
   // Auto-deslizar carrossel a cada 3 segundos
   useEffect(() => {
@@ -154,16 +100,17 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
               <div
                 key={index}
                 className={`absolute inset-0 transition-all duration-700 ease-in-out ${index === currentSlide
-                    ? 'opacity-100 translate-x-0'
-                    : index < currentSlide
-                      ? 'opacity-0 -translate-x-full'
-                      : 'opacity-0 translate-x-full'
+                  ? 'opacity-100 translate-x-0'
+                  : index < currentSlide
+                    ? 'opacity-0 -translate-x-full'
+                    : 'opacity-0 translate-x-full'
                   }`}
               >
                 <img
                   alt={slide.title}
-                  className="w-full h-full object-cover opacity-90"
+                  className="w-full h-full object-contain bg-gray-100"
                   src={slide.url}
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
                   <h2 className="text-2xl font-black italic tracking-tighter text-white">
@@ -200,8 +147,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide
-                    ? 'w-6 bg-primary'
-                    : 'w-1.5 bg-white/50'
+                  ? 'w-6 bg-primary'
+                  : 'w-1.5 bg-white/50'
                   }`}
                 aria-label={`Ir para slide ${index + 1}`}
               />
@@ -306,6 +253,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
                     alt="Resistor Set"
                     className="w-full h-full object-cover"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6zaV-cbAV7xxy7KJ60Hx5CeLLC0g0aD9wJa1QQkTb8l6VTjUQ_yWh3rDgOY1UJGQ3fSdw0tYv3We9aZ6ltmauDfRoigMFh8MBNB0m-VGYkAMmobLLaP9LzydH5mAA3e3Ja080cgckAM5Bh1OGXrKy20BlpOmCkeCC7XG7nKVhoZhhG4_ZOfott5g-2Q3KphYqthNa1ACUnH3Zm7RfVGbu3Uon9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <span className="material-symbols-outlined text-white text-3xl">lock</span>
@@ -325,6 +273,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
                     alt="Pen Set"
                     className="w-full h-full object-cover"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuANftelW4IwDQtQ_F-qAlUO52Btrsa3N5EsLDoRo_kRJu51I6o6cythBDIpuULD1XISI-JsIiap4OEk2PyEmog2iLjseA7U-rxB2CdGzXI2NNH2yKmrhDvoMsVZMg0lGYV_bvHYQMbsoyGlJo7LNYB7jC_E7Q2vdnY7c_pTnXqfKpL-oGo8J-t_CDqoSAPL0UsHtN3e3Ja080cgckAM5Bh1OGXrKy20BlpOmCkeCC7XG7nKVhoZhhG4_ZOfott5g-2Q3KphYqthNa1ACUnH3Zm7RfVGbu3Uon9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <span className="material-symbols-outlined text-white text-3xl">lock</span>
@@ -344,6 +293,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
                     alt="Lipstick Pen"
                     className="w-full h-full object-cover"
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2R03IrwJqAkMwpvg6w3Pn3Gbn7T8ExTQDiuzmdaxy3NnRU1GMT0-ZxZSs2VpfQTQah0w9N5Lp_zCbCyOW3cGLha5__ZK-zY7nSv8LQi6aJgKw7DSEE6nQNTGYnOeBHhuAGZ7tYGNsMfVjbZenpmaWSzAo1Rbfqsh7JSUoGBIoy8r42IRhn9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                     <span className="material-symbols-outlined text-white text-3xl">lock</span>
