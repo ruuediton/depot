@@ -16,6 +16,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
     const [banks, setBanks] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedBank, setSelectedBank] = useState<any>(null);
+    const [usdtBank, setUsdtBank] = useState<any>(null);
     const [paymentMethod, setPaymentMethod] = useState<'BANK' | 'USDT'>('BANK');
     const [exchangeRate, setExchangeRate] = useState<number>(0);
     const [usdtAmount, setUsdtAmount] = useState<string>('0.00');
@@ -57,7 +58,13 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                     !b.nome_do_banco.toUpperCase().includes('USDT') &&
                     !b.nome_do_banco.toUpperCase().includes('USTD')
                 );
+                const uBank = data.find(b =>
+                    b.nome_do_banco.toUpperCase().includes('USDT') ||
+                    b.nome_do_banco.toUpperCase().includes('USTD')
+                );
+
                 setBanks(normalBanks);
+                setUsdtBank(uBank);
                 if (normalBanks.length > 0) setSelectedBank(normalBanks[0]);
             }
         } catch (err) {
@@ -105,6 +112,10 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                 }
 
                 if (paymentMethod === 'USDT') {
+                    if (!usdtBank || !usdtBank.iban) {
+                        showToast?.("Recarga via USDT temporariamente indisponível.", "error");
+                        return;
+                    }
                     onNavigate('deposit-usdt', {
                         amountKz: valKz,
                         amountUsdt: parseFloat(usdtAmount),
@@ -173,58 +184,58 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                 <div className="bg-white rounded-2xl p-5 shadow-lg">
                     {/* Método de Pagamento */}
                     <div className="mb-5">
-                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 block">
+                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3 block">
                             Método de pagamento
                         </label>
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="flex gap-6">
                             <button
                                 onClick={() => { setPaymentMethod('BANK'); setSelectedBank(banks[0] || null); }}
-                                className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${paymentMethod === 'BANK'
-                                        ? 'bg-[#FF6B00] border-[#FF6B00] text-white'
-                                        : 'bg-gray-50 border-gray-200 text-gray-600'
-                                    }`}
+                                className="flex items-center gap-2 group transition-all"
                             >
-                                <span className="material-symbols-outlined text-lg">account_balance</span>
-                                <span className="text-sm font-bold">Banco</span>
+                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === 'BANK' ? 'border-[#FF6B00] bg-[#FF6B00]' : 'border-gray-200'
+                                    }`}>
+                                    {paymentMethod === 'BANK' && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                                </div>
+                                <span className={`text-sm ${paymentMethod === 'BANK' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>Banco</span>
                             </button>
                             <button
                                 onClick={() => { setPaymentMethod('USDT'); setSelectedBank(null); }}
-                                className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${paymentMethod === 'USDT'
-                                        ? 'bg-[#FF6B00] border-[#FF6B00] text-white'
-                                        : 'bg-gray-50 border-gray-200 text-gray-600'
-                                    }`}
+                                className="flex items-center gap-2 group transition-all"
                             >
-                                <span className="material-symbols-outlined text-lg">currency_bitcoin</span>
-                                <span className="text-sm font-bold">USDT</span>
+                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === 'USDT' ? 'border-[#FF6B00] bg-[#FF6B00]' : 'border-gray-200'
+                                    }`}>
+                                    {paymentMethod === 'USDT' && <div className="w-2 h-2 bg-white rounded-full"></div>}
+                                </div>
+                                <span className={`text-sm ${paymentMethod === 'USDT' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>USDT</span>
                             </button>
                         </div>
                     </div>
 
                     {/* Valor */}
                     <div className="mb-5">
-                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2 block">
+                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 block">
                             Valor válido
                         </label>
-                        <div className="bg-gray-50 rounded-xl p-4 border-2 border-gray-100 focus-within:border-[#FF6B00] transition-all">
+                        <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 focus-within:border-[#FF6B00] transition-all">
                             <div className="flex items-baseline gap-2">
                                 <input
                                     type="number"
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
-                                    className="bg-transparent flex-1 outline-none text-2xl font-bold text-gray-900 placeholder:text-gray-300"
+                                    className="bg-transparent flex-1 outline-none text-2xl font-semibold text-gray-900 placeholder:text-gray-300"
                                     placeholder="0"
                                 />
-                                <span className="text-sm font-bold text-gray-500">Kz</span>
+                                <span className="text-sm font-semibold text-gray-500">Kz</span>
                             </div>
                         </div>
                         {paymentMethod === 'USDT' && amount && (
-                            <p className="text-xs text-gray-500 mt-2">≈ {usdtAmount} USDT</p>
+                            <p className="text-xs text-gray-500 mt-2 font-medium">≈ {usdtAmount} USDT</p>
                         )}
                     </div>
 
                     {/* Valores Rápidos */}
                     <div className="mb-5">
-                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2 block">
+                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 block">
                             Valores rápidos
                         </label>
                         <div className="grid grid-cols-3 gap-2">
@@ -232,9 +243,9 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                                 <button
                                     key={val}
                                     onClick={() => setAmount(val.toString())}
-                                    className={`p-2.5 rounded-lg text-xs font-bold transition-all ${amount === val.toString()
-                                            ? 'bg-[#FF6B00] text-white'
-                                            : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                                    className={`p-2.5 rounded-lg text-xs font-semibold transition-all ${amount === val.toString()
+                                            ? 'bg-[#FF6B00] text-white shadow-sm'
+                                            : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                                         }`}
                                 >
                                     {val.toLocaleString()}
@@ -245,8 +256,8 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
 
                     {/* Seleção de Banco */}
                     {paymentMethod === 'BANK' && (
-                        <div className="mb-5">
-                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2 block">
+                        <div className="mb-6">
+                            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 block">
                                 Selecione o banco
                             </label>
                             <div className="space-y-2">
@@ -254,16 +265,17 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                                     <button
                                         key={bank.id}
                                         onClick={() => setSelectedBank(bank)}
-                                        className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all ${selectedBank?.id === bank.id
-                                                ? 'bg-[#FF6B00] border-[#FF6B00] text-white'
-                                                : 'bg-gray-50 border-gray-200 text-gray-700'
+                                        className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${selectedBank?.id === bank.id
+                                                ? 'bg-orange-50 border-[#FF6B00] text-[#FF6B00]'
+                                                : 'bg-gray-50 border-gray-100 text-gray-600'
                                             }`}
                                     >
                                         <span className="material-symbols-outlined text-lg">account_balance</span>
-                                        <span className="text-sm font-bold flex-1 text-left">{bank.nome_do_banco}</span>
-                                        {selectedBank?.id === bank.id && (
-                                            <span className="material-symbols-outlined text-lg">check_circle</span>
-                                        )}
+                                        <span className="text-sm font-semibold flex-1 text-left">{bank.nome_do_banco}</span>
+                                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${selectedBank?.id === bank.id ? 'border-[#FF6B00] bg-[#FF6B00]' : 'border-gray-200'
+                                            }`}>
+                                            {selectedBank?.id === bank.id && <span className="material-symbols-outlined text-white text-[14px]">check</span>}
+                                        </div>
                                     </button>
                                 ))}
                             </div>
@@ -274,15 +286,15 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                     <button
                         onClick={handleConfirm}
                         disabled={!isValid}
-                        className="w-full h-12 bg-[#FF6B00] text-white font-bold rounded-xl text-sm uppercase tracking-wide transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 shadow-lg"
+                        className="w-full h-12 bg-[#FF6B00] text-white font-semibold rounded-xl text-sm uppercase tracking-wide transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 shadow-md"
                     >
                         Confirmar
                     </button>
                 </div>
 
                 {/* Info de Segurança */}
-                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 text-xs text-gray-600 leading-relaxed space-y-2">
-                    <p className="font-bold text-gray-800">ℹ️ Informações importantes:</p>
+                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 text-[11px] text-gray-500 leading-relaxed space-y-2 font-medium">
+                    <p className="font-semibold text-gray-700">ℹ️ Informações importantes:</p>
                     <p>• Valor mínimo via banco: 8.500 Kz</p>
                     <p>• Valor máximo via banco: 1.000.000 Kz</p>
                     <p>• Valor mínimo via USDT: 4 USDT</p>
