@@ -49,30 +49,29 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
   const filteredSubs = subordinates.filter(sub => (sub as any).level === activeTab);
 
   return (
-    <div className="bg-white font-sans text-black antialiased min-h-screen flex flex-col">
-      <header className="header-gradient-mixture pb-16 pt-4 px-4">
-
-        <div className="relative z-10 flex items-center justify-between">
+    <div className="bg-[#FF6B00] font-sans text-black antialiased min-h-screen flex flex-col">
+      <header className="pt-4 px-4 pb-6">
+        <div className="flex items-center justify-between">
           <button
             onClick={() => onNavigate('invite')}
-            className="w-11 h-11 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md transition-all active:scale-90"
+            className="w-10 h-10 flex items-center justify-center rounded-[4px] active:scale-95 transition-transform"
           >
             <span className="material-symbols-outlined text-white text-[28px]">arrow_back</span>
           </button>
-          <h1 className="text-xl font-black text-white tracking-tight">Minha Equipe</h1>
-          <div className="w-11"></div>
+          <h1 className="text-[18px] font-bold text-white tracking-tight">Minha Equipe</h1>
+          <div className="w-10"></div>
         </div>
       </header>
 
-      {/* Tabs / Level Selection */}
-      <div className="flex gap-2 p-4 pb-0 overflow-x-auto no-scrollbar">
+      {/* Tabs / Level Selection - Flat Style */}
+      <div className="flex gap-2 px-4 pb-6 overflow-x-auto no-scrollbar">
         {[1, 2, 3].map(level => (
           <button
             key={level}
             onClick={() => setActiveTab(level)}
-            className={`px-6 h-11 rounded-2xl font-black text-[13px] uppercase tracking-wider transition-all flex-1 whitespace-nowrap ${activeTab === level
-              ? 'bg-[#00C853] text-white border border-[#00C853]'
-              : 'bg-[#F8FAF8] text-gray-400 border border-gray-50'
+            className={`flex-1 h-10 rounded-[4px] font-bold text-[13px] uppercase tracking-wider transition-all whitespace-nowrap border ${activeTab === level
+                ? 'bg-white text-[#FF6B00] border-white'
+                : 'bg-[#FF6B00] text-white/70 border-white/30'
               }`}
           >
             Nível {level}
@@ -80,52 +79,58 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
         ))}
       </div>
 
-      <main className="flex-1 overflow-y-auto px-4 pt-6 pb-32 no-scrollbar">
+      <main className="flex-1 overflow-y-auto px-4 pb-32 no-scrollbar">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <SpokeSpinner size="w-10 h-10" color="text-[#00C853]" />
-            <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Verificando rede...</p>
+            <SpokeSpinner size="w-8 h-8" color="text-white" />
+            <p className="text-white/80 font-bold uppercase tracking-widest text-[10px]">Verificando rede...</p>
           </div>
         ) : (
           <>
-            {/* Summary Card */}
-            <div className="bg-white p-6 rounded-[32px] border border-gray-50 mb-8 shadow-sm">
-              <div className="flex justify-between items-start mb-6">
-                <div className="size-12 rounded-2xl bg-gray-50 flex items-center justify-center text-[#00C853] border border-gray-100">
-                  <span className="material-symbols-outlined text-[28px]">account_tree</span>
+            {/* Summary Card - Flat */}
+            <div className="bg-white p-5 rounded-[4px] mb-4">
+              <div className="flex justify-between items-start mb-4">
+                <div className="size-10 rounded-[4px] bg-[#FFF0E0] flex items-center justify-center text-[#FF6B00]">
+                  <span className="material-symbols-outlined text-[24px]">account_tree</span>
                 </div>
-                <div className="px-3 py-1 bg-green-50 text-[#00C853] rounded-full border border-green-100 text-[10px] font-black uppercase tracking-widest">NÍVEL {activeTab}</div>
+                <div className="px-3 py-1 bg-[#FFF0E0] text-[#FF6B00] rounded-[4px] text-[10px] font-black uppercase tracking-widest">
+                  NÍVEL {activeTab}
+                </div>
               </div>
               <div className="space-y-1">
-                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-widest">Membros na Camada</p>
-                <p className="text-4xl font-black text-[#111]">{filteredSubs.length}</p>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Membros na Camada</p>
+                <p className="text-3xl font-black text-[#111]">{filteredSubs.length}</p>
               </div>
             </div>
 
-            {/* List */}
-            <div className="flex flex-col gap-3">
-              <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-2 mb-2">Detalhes da Rede</h3>
+            {/* List - Flat */}
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[11px] font-bold text-white/80 uppercase tracking-[0.1em] px-1 mb-1">
+                Detalhes da Rede
+              </h3>
 
               {filteredSubs.length > 0 ? (
                 filteredSubs.map((sub: any) => (
-                  <div key={sub.id} className="bg-white p-4 rounded-[24px] border border-gray-50 flex items-center gap-4 shadow-sm">
-                    <div className="size-12 rounded-full bg-[#F8FAF8] flex items-center justify-center text-gray-400 border border-gray-50">
-                      <span className="material-symbols-outlined">person</span>
+                  <div key={sub.id} className="bg-white p-4 rounded-[4px] flex items-center gap-3">
+                    <div className="size-10 rounded-[4px] bg-[#F5F5F5] flex items-center justify-center text-gray-400">
+                      <span className="material-symbols-outlined text-[20px]">person</span>
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <p className="text-[#111] font-bold text-base tracking-tight">
+                      <p className="text-[#111] font-bold text-[14px] tracking-tight">
                         {sub.phone.replace(/(\d{3})(\d{3})(\d{3})/, '+$1 *** $3')}
                       </p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-gray-400 text-[10px] font-bold">Desde {new Date(sub.created_at).toLocaleDateString()}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-400 text-[10px] font-bold">
+                          Desde {new Date(sub.created_at).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <div className={`px-2 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter ${sub.reloaded_amount >= 3000
-                        ? 'bg-green-50 text-[#00C853] border border-green-100'
-                        : 'bg-red-50 text-red-400 border border-red-100'
+                      <div className={`px-2 py-1 rounded-[2px] text-[9px] font-black uppercase tracking-wide ${sub.reloaded_amount >= 3000
+                          ? 'bg-green-50 text-[#00C853]'
+                          : 'bg-red-50 text-red-400'
                         }`}>
                         {sub.reloaded_amount >= 3000 ? 'INVESTIDO' : 'SEM INVEST.'}
                       </div>
@@ -133,12 +138,14 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
                   </div>
                 ))
               ) : (
-                <div className="flex flex-col items-center justify-center py-20 bg-gray-50/30 rounded-[32px] border border-dashed border-gray-100">
-                  <div className="size-16 rounded-full bg-white flex items-center justify-center mb-4 border border-gray-100">
-                    <span className="material-symbols-outlined text-gray-200 text-4xl">diversity_3</span>
+                <div className="flex flex-col items-center justify-center py-16 bg-white/10 rounded-[4px] border border-white/20 border-dashed">
+                  <div className="size-12 rounded-[4px] bg-white/20 flex items-center justify-center mb-3">
+                    <span className="material-symbols-outlined text-white text-3xl">diversity_3</span>
                   </div>
-                  <p className="font-bold text-gray-300 text-sm">Camada vazia</p>
-                  <p className="text-[11px] text-gray-400 px-10 text-center mt-1 italic">Convide mais pessoas para expandir sua rede de nível {activeTab}.</p>
+                  <p className="font-bold text-white text-sm">Camada vazia</p>
+                  <p className="text-[11px] text-white/60 px-8 text-center mt-1 italic">
+                    Convide mais pessoas para expandir sua rede de nível {activeTab}.
+                  </p>
                 </div>
               )}
             </div>
