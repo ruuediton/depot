@@ -122,10 +122,10 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
         </header>
 
         {/* Main Content */}
-        <main className="flex-grow px-6 pt-4 space-y-6">
+        <main className="flex-grow px-6 pt-2 space-y-4">
           {/* Balance Card - Premium Glassmorphic feel */}
-          <div className="bg-white rounded-3xl p-6 shadow-2xl shadow-black/10 text-[#f27f0d] animate-in fade-in slide-in-from-top-4 duration-500">
-            <div className="flex justify-between items-start mb-6">
+          <div className="bg-white rounded-3xl p-5 shadow-2xl shadow-black/10 text-[#f27f0d] animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="flex justify-between items-start mb-4">
               <div>
                 <p className="text-[#f27f0d]/60 text-[10px] font-black uppercase tracking-[0.15em] mb-1">Balanço Total</p>
                 <div className="flex items-baseline gap-2">
@@ -139,7 +139,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
                 <span className="material-symbols-outlined text-[#f27f0d] text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>account_balance_wallet</span>
               </div>
             </div>
-            <div className="pt-5 border-t border-slate-50">
+            <div className="pt-4 border-t border-slate-50">
               <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Equivalente em Kwanzas</p>
               <p className="text-xl font-black text-slate-800 tracking-tight">
                 {balanceAOA.toLocaleString('pt-AO')} <span className="text-xs font-bold text-slate-500">AOA</span>
