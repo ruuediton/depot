@@ -7,6 +7,7 @@ import SpokeSpinner from './components/SpokeSpinner';
 import FloatingSupportButton from './components/FloatingSupportButton';
 import WelcomeModal from './components/WelcomeModal';
 import TaskPopup from './components/TaskPopup';
+import SplashScreen from './components/SplashScreen';
 
 // Config & Hooks
 import { PAGE_TITLES, PAGES_CONFIG } from './navigation';
@@ -24,6 +25,7 @@ const App: React.FC = () => {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [showTaskPopup, setShowTaskPopup] = useState(false);
   const [navigationData, setNavigationData] = useState<any>(null);
+  const [isAppLoading, setIsAppLoading] = useState(true);
 
   const handleShowToast = useCallback((message: string, type: 'success' | 'error' | 'warning' | 'info') => {
     switch (type) {
@@ -162,6 +164,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F4F7F6] max-w-md mx-auto shadow-premium overflow-x-hidden relative">
+      {isAppLoading && <SplashScreen onFinish={() => setIsAppLoading(false)} />}
       <main className="flex-1 overflow-y-auto no-scrollbar pb-20">
         <Suspense fallback={
           <div className="flex h-screen items-center justify-center bg-[#F4F7F6]">
