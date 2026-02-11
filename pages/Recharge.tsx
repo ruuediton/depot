@@ -8,11 +8,10 @@ interface DepositProps {
     showToast?: (message: string, type: any) => void;
 }
 
-const QUICK_AMOUNTS = [8500, 12000, 25000, 35000, 95000, 120000, 300000];
+const QUICK_AMOUNTS = [8500, 12000, 25000, 35000, 95000, 120000];
 
 const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
     const [amount, setAmount] = useState<string>('');
-    const [balance, setBalance] = useState<number>(0);
     const { withLoading } = useLoading();
     const [banks, setBanks] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -28,7 +27,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                 .then(data => {
                     if (data?.rates?.AOA) setExchangeRate(data.rates.AOA);
                 })
-                .catch(err => console.error("Rate error:", err));
+                .catch(() => showToast?.("Erro ao obter taxa de câmbio", "error"));
         }
     }, [paymentMethod]);
 
@@ -36,7 +35,6 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
         if (paymentMethod === 'USDT' && amount && exchangeRate > 0) {
             const valKz = parseFloat(amount);
             if (!isNaN(valKz)) {
-                // Formula: Kz / Rate = USD
                 const usd = valKz / exchangeRate;
                 setUsdtAmount(usd.toFixed(2));
             }
@@ -60,62 +58,48 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                     !b.nome_do_banco.toUpperCase().includes('USTD')
                 );
                 setBanks(normalBanks);
-            }
-
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('balance')
-                    .eq('id', user.id)
-                    .single();
-                if (profile) setBalance(profile.balance || 0);
+                if (normalBanks.length > 0) setSelectedBank(normalBanks[0]);
             }
         } catch (err) {
-            console.error('Erro ao carregar bancos:', err);
+            showToast?.("Erro ao carregar bancos", "error");
         } finally {
             setLoading(false);
         }
     };
 
-    const handleFinalConfirm = async () => {
-        const valKz = parseFloat(amount);
+    const validateAmount = (val: number): string | null => {
+        if (!val || isNaN(val) || val <= 0) return "Digite um valor válido";
 
-        if (!amount || isNaN(valKz)) {
-            showToast?.("Digite um valor válido.", "warning");
+        if (paymentMethod === 'BANK') {
+            if (val < 8500) return "Mínimo: 8.500 Kz";
+            if (val > 1000000) return "Máximo: 1.000.000 Kz";
+        } else {
+            const valUsd = parseFloat(usdtAmount);
+            if (valUsd < 4) return "Mínimo: 4 USDT";
+            if (valUsd > 10000) return "Máximo: 10.000 USDT";
+        }
+        return null;
+    };
+
+    const handleConfirm = async () => {
+        const valKz = parseFloat(amount);
+        const error = validateAmount(valKz);
+
+        if (error) {
+            showToast?.(error, "warning");
             return;
         }
 
-        if (paymentMethod === 'BANK') {
-            if (valKz < 8500) {
-                showToast?.("Recarga mínima via banco: 8.500 KZs", "warning");
-                return;
-            }
-            if (valKz > 1000000) {
-                showToast?.("Recarga máxima via banco: 1.000.000 KZs", "warning");
-                return;
-            }
-            if (!selectedBank) {
-                showToast?.("Por favor, selecione um banco.", "warning");
-                return;
-            }
-        } else {
-            const valUsd = parseFloat(usdtAmount);
-            if (valUsd < 4) {
-                showToast?.("Valor insuficiente. Mínimo aprox. 4 USDT", "warning");
-                return;
-            }
-            if (valUsd > 10000) {
-                showToast?.("Recarga máxima via USDT: 10.000 USDT", "warning");
-                return;
-            }
+        if (paymentMethod === 'BANK' && !selectedBank) {
+            showToast?.("Selecione um banco", "warning");
+            return;
         }
 
         try {
             await withLoading(async () => {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) {
-                    showToast?.("Sessão expirada. Faça login novamente.", "error");
+                    showToast?.("Sessão expirada", "error");
                     onNavigate('login');
                     return;
                 }
@@ -124,11 +108,10 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                     onNavigate('deposit-usdt', {
                         amountKz: valKz,
                         amountUsdt: parseFloat(usdtAmount),
-                        exchangeRate: exchangeRate
+                        exchangeRate
                     });
                     return;
                 }
-
 
                 const { data, error } = await supabase.rpc('create_deposit_request', {
                     p_amount: valKz,
@@ -147,165 +130,166 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                         }
                     });
                 }
-            }, "Gerando dados de recarga...");
+            }, "Processando...");
         } catch (err: any) {
-            showToast?.(err.message || "Opah algo deu errado", "error");
+            showToast?.(err.message || "Erro ao processar", "error");
         }
     };
 
     if (loading) return (
-        <div className="flex justify-center items-center h-screen bg-white">
-            <SpokeSpinner size="w-8 h-8" color="text-[#00C853]" />
+        <div className="flex justify-center items-center h-screen bg-[#FF6B00]">
+            <SpokeSpinner size="w-8 h-8" color="text-white" />
         </div>
     );
 
-    return (
-        <div className="bg-[#F4F7F6] min-h-screen font-display text-gray-900 pb-20 antialiased">
-            {/* Premium Header */}
-            <div className="bg-gradient-to-br from-[#0F1111] to-[#1A1C1C] pt-12 pb-24 px-6 rounded-b-[48px] shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-[#00C853]/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2 overflow-hidden pointer-events-none"></div>
-                <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#00C853]/5 blur-[80px] rounded-full translate-y-1/2 -translate-x-1/2 overflow-hidden pointer-events-none"></div>
+    const valKz = parseFloat(amount) || 0;
+    const validationError = validateAmount(valKz);
+    const isValid = !validationError && (paymentMethod === 'USDT' || selectedBank);
 
-                <div className="flex items-center justify-between relative z-10">
+    return (
+        <div className="bg-[#FF6B00] min-h-screen pb-20 font-sans">
+            {/* Header */}
+            <div className="bg-[#FF6B00] px-4 pt-4 pb-6 sticky top-0 z-50">
+                <div className="flex items-center justify-between mb-6">
                     <button
                         onClick={() => onNavigate('home')}
-                        className="size-11 flex items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md text-white border border-white/10 active:scale-90 transition-all"
+                        className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm active:scale-90 transition-all"
                     >
-                        <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+                        <span className="material-symbols-outlined text-white text-xl">arrow_back</span>
                     </button>
-                    <h1 className="text-white text-[18px] font-black tracking-tight">Recarregar</h1>
+                    <h1 className="text-white text-lg font-bold">Recarregar</h1>
                     <button
                         onClick={() => onNavigate('deposit-history')}
-                        className="size-11 flex items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md text-white border border-white/10 active:scale-90 transition-all"
+                        className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm active:scale-90 transition-all"
                     >
-                        <span className="material-symbols-outlined text-[20px]">history</span>
+                        <span className="material-symbols-outlined text-white text-xl">history</span>
                     </button>
                 </div>
             </div>
 
-            <main className="px-6 -mt-16 relative z-10 space-y-6">
-                {/* Quick Amounts - Moved to top */}
-                <div className="bg-white rounded-[36px] p-8 shadow-premium border border-white/50 relative overflow-hidden">
-                    <div className="absolute right-0 top-0 p-4 opacity-[0.03] pointer-events-none">
-                        <span className="material-symbols-outlined text-[120px]">payments</span>
+            {/* Main Content */}
+            <div className="px-4 space-y-4">
+                {/* Card Principal */}
+                <div className="bg-white rounded-2xl p-5 shadow-lg">
+                    {/* Método de Pagamento */}
+                    <div className="mb-5">
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 block">
+                            Método de pagamento
+                        </label>
+                        <div className="grid grid-cols-2 gap-3">
+                            <button
+                                onClick={() => { setPaymentMethod('BANK'); setSelectedBank(banks[0] || null); }}
+                                className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${paymentMethod === 'BANK'
+                                        ? 'bg-[#FF6B00] border-[#FF6B00] text-white'
+                                        : 'bg-gray-50 border-gray-200 text-gray-600'
+                                    }`}
+                            >
+                                <span className="material-symbols-outlined text-lg">account_balance</span>
+                                <span className="text-sm font-bold">Banco</span>
+                            </button>
+                            <button
+                                onClick={() => { setPaymentMethod('USDT'); setSelectedBank(null); }}
+                                className={`flex items-center justify-center gap-2 p-3 rounded-xl border-2 transition-all ${paymentMethod === 'USDT'
+                                        ? 'bg-[#FF6B00] border-[#FF6B00] text-white'
+                                        : 'bg-gray-50 border-gray-200 text-gray-600'
+                                    }`}
+                            >
+                                <span className="material-symbols-outlined text-lg">currency_bitcoin</span>
+                                <span className="text-sm font-bold">USDT</span>
+                            </button>
+                        </div>
                     </div>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-6">Valores Sugeridos</p>
-                    <div className="flex flex-wrap gap-2.5">
-                        {QUICK_AMOUNTS.map(val => {
-                            const isSelected = amount === val.toString();
-                            return (
+
+                    {/* Valor */}
+                    <div className="mb-5">
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2 block">
+                            Valor válido
+                        </label>
+                        <div className="bg-gray-50 rounded-xl p-4 border-2 border-gray-100 focus-within:border-[#FF6B00] transition-all">
+                            <div className="flex items-baseline gap-2">
+                                <input
+                                    type="number"
+                                    value={amount}
+                                    onChange={(e) => setAmount(e.target.value)}
+                                    className="bg-transparent flex-1 outline-none text-2xl font-bold text-gray-900 placeholder:text-gray-300"
+                                    placeholder="0"
+                                />
+                                <span className="text-sm font-bold text-gray-500">Kz</span>
+                            </div>
+                        </div>
+                        {paymentMethod === 'USDT' && amount && (
+                            <p className="text-xs text-gray-500 mt-2">≈ {usdtAmount} USDT</p>
+                        )}
+                    </div>
+
+                    {/* Valores Rápidos */}
+                    <div className="mb-5">
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2 block">
+                            Valores rápidos
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                            {QUICK_AMOUNTS.map(val => (
                                 <button
                                     key={val}
                                     onClick={() => setAmount(val.toString())}
-                                    className={`px-5 py-3 rounded-2xl text-[14px] font-black transition-all active:scale-95 border-2 ${isSelected
-                                        ? 'bg-gray-900 text-white border-gray-900 shadow-xl'
-                                        : 'bg-gray-50 text-gray-900 border-transparent hover:border-gray-200'
+                                    className={`p-2.5 rounded-lg text-xs font-bold transition-all ${amount === val.toString()
+                                            ? 'bg-[#FF6B00] text-white'
+                                            : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                                         }`}
                                 >
-                                    {val.toLocaleString('pt-AO')}
+                                    {val.toLocaleString()}
                                 </button>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                <section className="space-y-6">
-                    {/* Payment Method Selector */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <button
-                            onClick={() => { setPaymentMethod('BANK'); setSelectedBank(null); }}
-                            className={`relative overflow-hidden flex flex-col items-center gap-3 p-6 rounded-[32px] border-2 transition-all ${paymentMethod === 'BANK' ? 'bg-white border-[#00C853] shadow-xl' : 'bg-white border-transparent shadow-sm grayscale opacity-60'}`}
-                        >
-                            <div className={`size-12 rounded-2xl flex items-center justify-center transition-all ${paymentMethod === 'BANK' ? 'bg-[#EEFFF5] text-[#00C853]' : 'bg-gray-50 text-gray-400'}`}>
-                                <span className="material-symbols-outlined text-[28px]">account_balance</span>
-                            </div>
-                            <span className="text-[14px] font-black tracking-tight">Banco Nacional</span>
-                            {paymentMethod === 'BANK' && (
-                                <div className="absolute top-3 right-3">
-                                    <span className="material-symbols-outlined text-[#00C853] text-[20px]">check_circle</span>
-                                </div>
-                            )}
-                        </button>
-
-                        <button
-                            onClick={() => { setPaymentMethod('USDT'); setSelectedBank(null); }}
-                            className={`relative overflow-hidden flex flex-col items-center gap-3 p-6 rounded-[32px] border-2 transition-all ${paymentMethod === 'USDT' ? 'bg-white border-[#00C853] shadow-xl' : 'bg-white border-transparent shadow-sm grayscale opacity-60'}`}
-                        >
-                            <div className={`size-12 rounded-2xl flex items-center justify-center transition-all ${paymentMethod === 'USDT' ? 'bg-[#EEFFF5] text-[#00C853]' : 'bg-gray-50 text-gray-400'}`}>
-                                <span className="material-symbols-outlined text-[28px]">currency_bitcoin</span>
-                            </div>
-                            <span className="text-[14px] font-black tracking-tight">USDT (Crypto)</span>
-                            {paymentMethod === 'USDT' && (
-                                <div className="absolute top-3 right-3">
-                                    <span className="material-symbols-outlined text-[#00C853] text-[20px]">check_circle</span>
-                                </div>
-                            )}
-                        </button>
-                    </div>
-
-                    {/* Amount Input */}
-                    <div className="bg-white rounded-[32px] p-8 shadow-premium border border-white/50">
-                        <div className="flex justify-between items-center mb-4">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Valor do Deposito</label>
-                            {paymentMethod === 'USDT' && amount && (
-                                <span className="px-3 py-1 bg-[#EEFFF5] text-[#00C853] text-[10px] font-black rounded-full border border-[#00C853]/10">≈ {usdtAmount} USDT</span>
-                            )}
+                            ))}
                         </div>
-                        <div className="flex items-center gap-4 border-b-2 border-gray-50 focus-within:border-[#00C853] transition-all pb-4">
-                            <span className="text-[20px] font-black text-gray-400 tracking-tight">KZs</span>
-                            <input
-                                type="number"
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                                className="bg-transparent flex-1 outline-none text-[32px] font-black text-gray-900 placeholder:text-gray-100 tracking-tighter"
-                                placeholder="0,00"
-                            />
-                        </div>
-                        <p className="text-[11px] text-gray-400 font-medium mt-4">Digite o valor em Kwanzas angolanos (AOA)</p>
                     </div>
 
+                    {/* Seleção de Banco */}
                     {paymentMethod === 'BANK' && (
-                        <div className="space-y-3">
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Selecione o Banco</p>
-                            <div className="bg-white rounded-[24px] overflow-hidden shadow-premium p-2 border border-white/50">
-                                <div className="flex flex-col gap-1">
-                                    {banks.map(bank => (
-                                        <div
-                                            key={bank.id}
-                                            onClick={() => setSelectedBank(bank)}
-                                            className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all ${selectedBank?.id === bank.id ? 'bg-gray-900 text-white' : 'hover:bg-gray-50'}`}
-                                        >
-                                            <div className={`size-10 rounded-xl flex items-center justify-center ${selectedBank?.id === bank.id ? 'bg-white/10' : 'bg-gray-50 text-gray-400'}`}>
-                                                <span className="material-symbols-outlined">account_balance</span>
-                                            </div>
-                                            <span className="text-[14px] font-black flex-1 tracking-tight">{bank.nome_do_banco}</span>
-                                            {selectedBank?.id === bank.id && (
-                                                <span className="material-symbols-outlined text-[#00C853] text-[20px]">check_circle</span>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
+                        <div className="mb-5">
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2 block">
+                                Selecione o banco
+                            </label>
+                            <div className="space-y-2">
+                                {banks.map(bank => (
+                                    <button
+                                        key={bank.id}
+                                        onClick={() => setSelectedBank(bank)}
+                                        className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all ${selectedBank?.id === bank.id
+                                                ? 'bg-[#FF6B00] border-[#FF6B00] text-white'
+                                                : 'bg-gray-50 border-gray-200 text-gray-700'
+                                            }`}
+                                    >
+                                        <span className="material-symbols-outlined text-lg">account_balance</span>
+                                        <span className="text-sm font-bold flex-1 text-left">{bank.nome_do_banco}</span>
+                                        {selectedBank?.id === bank.id && (
+                                            <span className="material-symbols-outlined text-lg">check_circle</span>
+                                        )}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     )}
 
-                    <div className="pt-6">
-                        <button
-                            onClick={handleFinalConfirm}
-                            disabled={
-                                loading ||
-                                !amount ||
-                                (paymentMethod === 'BANK' && (!selectedBank || parseFloat(amount) < 3000)) ||
-                                (paymentMethod === 'USDT' && parseFloat(usdtAmount) < 4)
-                            }
-                            className="w-full h-[64px] bg-[#00C853] text-white font-black rounded-[24px] text-[15px] uppercase tracking-widest transition-all disabled:opacity-50 disabled:grayscale flex items-center justify-center shadow-[0_16px_32px_-8px_rgba(0,200,83,0.5)] active:scale-[0.97]"
-                        >
-                            {loading ? <SpokeSpinner size="w-6 h-6" color="text-white" /> : 'Confirmar Recarga'}
-                        </button>
-                        <p className="text-[10px] text-center text-gray-400 mt-6 uppercase tracking-[0.2em] font-black opacity-30">Transação Segura 256-bit</p>
-                    </div>
-                </section>
-            </main>
+                    {/* Botão Confirmar */}
+                    <button
+                        onClick={handleConfirm}
+                        disabled={!isValid}
+                        className="w-full h-12 bg-[#FF6B00] text-white font-bold rounded-xl text-sm uppercase tracking-wide transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 shadow-lg"
+                    >
+                        Confirmar
+                    </button>
+                </div>
+
+                {/* Info de Segurança */}
+                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 text-xs text-gray-600 leading-relaxed space-y-2">
+                    <p className="font-bold text-gray-800">ℹ️ Informações importantes:</p>
+                    <p>• Valor mínimo via banco: 8.500 Kz</p>
+                    <p>• Valor máximo via banco: 1.000.000 Kz</p>
+                    <p>• Valor mínimo via USDT: 4 USDT</p>
+                    <p>• Confirmação em até 10 minutos</p>
+                    <p>• Transação 100% segura e criptografada</p>
+                </div>
+            </div>
         </div>
     );
 };
