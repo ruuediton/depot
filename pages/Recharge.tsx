@@ -133,7 +133,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                 if (error) throw error;
 
                 if (data.success) {
-                    onNavigate('confirmar-deposito', {
+                    onNavigate('detalhes-pay', {
                         deposit: {
                             ...data.data,
                             nome_destinatario: selectedBank.nome_destinatario,

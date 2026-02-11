@@ -82,7 +82,7 @@ const DepositUSDT: React.FC<Props> = ({ onNavigate, showToast, data }) => {
           nome_destinatario: recipientName
         };
 
-        onNavigate('confirmar-deposito', {
+        onNavigate('detalhes-pay', {
           deposit: {
             ...depositData,
             nome_destinatario: recipientName, // Ensure these are set for display

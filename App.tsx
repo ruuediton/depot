@@ -105,7 +105,7 @@ const App: React.FC = () => {
 
     localStorage.setItem('currentPage', page);
 
-    const heavyPages = ['historico-conta', 'withdrawal-history', 'purchase-history', 'shop'];
+    const heavyPages = ['withdrawal-history', 'purchase-history', 'shop'];
     if (heavyPages.includes(page)) {
       withLoading(async () => {
         await new Promise(r => setTimeout(r, 100)); // Perceived performance delay for heavy load
@@ -131,24 +131,20 @@ const App: React.FC = () => {
       'deposit': PAGES_CONFIG.Recharge,
       'purchase-history': PAGES_CONFIG.PurchaseHistory,
       'change-password': PAGES_CONFIG.ChangePassword,
-      'historico-conta': PAGES_CONFIG.AccountHistory,
       'register': PAGES_CONFIG.Register,
       'retirada': PAGES_CONFIG.Withdraw,
       'login': PAGES_CONFIG.Login,
       'security-verify': PAGES_CONFIG.SecurityVerify,
-      'ganhos-tarefas': PAGES_CONFIG.Rewards,
       'gift-chest': PAGES_CONFIG.GiftChest,
       'reward-claim': PAGES_CONFIG.RewardClaim,
       'deposit-usdt': PAGES_CONFIG.DepositUSDT,
       'deposit-usdt-history': PAGES_CONFIG.DepositUSDTHistory,
-      'info': PAGES_CONFIG.Info,
-      'about-bp': PAGES_CONFIG.AboutBP,
       'subordinate-list': PAGES_CONFIG.SubordinateList,
       'deposit-history': PAGES_CONFIG.WalletHistory,
       'withdrawal-history': PAGES_CONFIG.WithdrawalHistory,
       'invite-page': PAGES_CONFIG.InvitePage,
-      'guia-indicacao': PAGES_CONFIG.GuiaIndicacao,
-      'tasks': PAGES_CONFIG.Tasks
+      'tasks': PAGES_CONFIG.Tasks,
+      'detalhes-pay': PAGES_CONFIG.DetalhesPay
     };
 
     const Component = pages[currentPage] || PAGES_CONFIG.Home;
