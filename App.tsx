@@ -185,7 +185,7 @@ const App: React.FC = () => {
       )}
 
       {/* Bottom Navigation */}
-      {session && ['home', 'shop', 'profile', 'tasks', 'subordinate-list', 'gift-chest'].includes(currentPage) && (
+      {session && ['home', 'shop', 'profile', 'tasks', 'gift-chest'].includes(currentPage) && (
         <nav className="fixed bottom-4 left-4 right-4 max-w-[calc(448px-2rem)] mx-auto glass-panel rounded-[28px] py-3 px-6 z-40 shadow-glass">
           <div className="flex justify-between items-center bg-transparent">
             {[

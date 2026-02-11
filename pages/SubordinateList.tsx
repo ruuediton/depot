@@ -56,7 +56,7 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
             onClick={() => onNavigate('invite')}
             className="w-10 h-10 flex items-center justify-center rounded-[4px] active:scale-95 transition-transform"
           >
-            <span className="material-symbols-outlined text-white text-[28px]">arrow_back</span>
+            <span className="material-symbols-outlined text-white text-[32px]">chevron_left</span>
           </button>
           <h1 className="text-[18px] font-bold text-white tracking-tight">Minha Equipe</h1>
           <div className="w-10"></div>
@@ -110,8 +110,12 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
               </h3>
 
               {filteredSubs.length > 0 ? (
-                filteredSubs.map((sub: any) => (
-                  <div key={sub.id} className="bg-white px-3 py-2.5 rounded-[4px] flex items-center gap-3 shadow-sm border-b border-gray-50/50">
+                filteredSubs.map((sub: any, index: number) => (
+                  <div
+                    key={sub.id}
+                    className="bg-white px-3 py-2.5 rounded-[4px] flex items-center gap-3 shadow-sm border-b border-gray-50/50 animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-backwards"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
                     <div className="size-9 rounded-[4px] bg-[#F5F7FA] flex items-center justify-center text-[#9DA3AE]">
                       <span className="material-symbols-outlined text-[20px]">person</span>
                     </div>
@@ -127,8 +131,8 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
 
                     <div className="text-right">
                       <div className={`px-2 py-[2px] rounded-[2px] text-[9px] font-black uppercase tracking-wide ${sub.reloaded_amount >= 3000
-                          ? 'bg-[#E8F5E9] text-[#2E7D32]'
-                          : 'bg-[#FFEBEE] text-[#D32F2F]'
+                        ? 'bg-[#E8F5E9] text-[#2E7D32]'
+                        : 'bg-[#FFEBEE] text-[#D32F2F]'
                         }`}>
                         {sub.reloaded_amount >= 3000 ? 'INVESTIDO' : 'SEM INVEST.'}
                       </div>
@@ -136,7 +140,7 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
                   </div>
                 ))
               ) : (
-                <div className="flex flex-col items-center justify-center py-16 bg-white/10 rounded-[4px] border border-white/20 border-dashed">
+                <div className="flex flex-col items-center justify-center py-16 bg-white/10 rounded-[4px] border border-white/20 border-dashed animate-in fade-in zoom-in duration-500">
                   <div className="size-12 rounded-[4px] bg-white/20 flex items-center justify-center mb-3">
                     <span className="material-symbols-outlined text-white text-3xl">diversity_3</span>
                   </div>
