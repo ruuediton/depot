@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bp-commerce-v1';
+const CACHE_NAME = 'the-home-depot-v1';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
