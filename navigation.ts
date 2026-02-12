@@ -14,6 +14,7 @@ export const PAGE_TITLES: Record<string, string> = {
   'subordinate-list': 'Equipe',
   'tasks': 'Tarefas',
   'detalhes-pay': 'Detalhespayment',
+  'records-financeiro': 'Registros Financeiros',
 };
 
 export const DEFAULT_APP_TITLE = 'TheDepot';
@@ -40,4 +41,5 @@ export const PAGES_CONFIG = {
   InvitePage: lazy(() => import('./pages/InvitePage')),
   Tasks: lazy(() => import('./pages/Tasks')),
   DetalhesPay: lazy(() => import('./pages/DetalhesPay')),
+  RecordsFinanceiro: lazy(() => import('./pages/RecordsFinanceiro')),
 };

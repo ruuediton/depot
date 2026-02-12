@@ -171,7 +171,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                     </button>
                     <h1 className="text-white text-lg font-bold">Recarregar</h1>
                     <button
-                        onClick={() => onNavigate('deposit-history')}
+                        onClick={() => onNavigate('records-financeiro')}
                         className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm active:scale-90 transition-all"
                     >
                         <span className="material-symbols-outlined text-white text-xl">history</span>

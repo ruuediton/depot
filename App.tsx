@@ -143,7 +143,8 @@ const App: React.FC = () => {
       'withdrawal-history': PAGES_CONFIG.WithdrawalHistory,
       'invite-page': PAGES_CONFIG.InvitePage,
       'tasks': PAGES_CONFIG.Tasks,
-      'detalhes-pay': PAGES_CONFIG.DetalhesPay
+      'detalhes-pay': PAGES_CONFIG.DetalhesPay,
+      'records-financeiro': PAGES_CONFIG.RecordsFinanceiro
     };
 
     const Component = pages[currentPage] || PAGES_CONFIG.Home;

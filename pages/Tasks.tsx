@@ -82,6 +82,12 @@ const Tasks: React.FC<TasksProps> = ({ onNavigate, showToast }) => {
 
                     {/* Ícones do topo */}
                     <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => onNavigate('records-financeiro')}
+                            className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center"
+                        >
+                            <span className="material-symbols-outlined text-white text-[20px]">history</span>
+                        </button>
                         <button className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center relative">
                             <span className="material-symbols-outlined text-white text-[20px]">notifications</span>
                             <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></div>

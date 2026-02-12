@@ -198,7 +198,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
             </button>
 
             <button
-              onClick={() => onNavigate('ganhos-tarefas')}
+              onClick={() => onNavigate('gift-chest')}
               className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
             >
               <div className="flex items-center gap-4">
@@ -214,14 +214,14 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
             </button>
 
             <button
-              onClick={() => onNavigate('historico-fundos')}
+              onClick={() => onNavigate('records-financeiro')}
               className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
             >
               <div className="flex items-center gap-4">
                 <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">history</span>
+                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">history_edu</span>
                 </div>
-                <span className="font-bold text-slate-800 text-sm">Histórico de Pedidos</span>
+                <span className="font-bold text-slate-800 text-sm">Registros Financeiros</span>
               </div>
               <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
             </button>
