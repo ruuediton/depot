@@ -102,9 +102,8 @@ const App: React.FC = () => {
     if (page === currentPage) return;
     setNavigationData(data);
 
-    if (page === 'home' && !sessionStorage.getItem('welcome_shown')) {
+    if (page === 'home') {
       setShowWelcomeModal(true);
-      sessionStorage.setItem('welcome_shown', 'true');
     }
 
     localStorage.setItem('currentPage', page);
