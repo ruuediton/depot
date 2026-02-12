@@ -51,7 +51,7 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
                 <div className="bg-[#fdebd3] rounded-[24px] p-6 border border-white/20 flex items-center justify-between relative overflow-hidden">
                     {/* Left Balance (AOA) */}
                     <div className="flex flex-col items-center text-center gap-1">
-                        <span className="text-[10px] font-bold text-orange-900/40 uppercase tracking-widest">AOA</span>
+                        <span className="text-[10px] font-bold text-orange-900/40 tracking-widest">Aoa</span>
                         <span className="text-2xl font-black text-slate-900 tracking-tighter">{balanceKZ.toLocaleString('pt-AO')}</span>
                     </div>
 
@@ -62,7 +62,7 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
 
                     {/* Right Balance (USDT) */}
                     <div className="flex flex-col items-center text-center gap-1">
-                        <span className="text-[10px] font-bold text-orange-900/40 uppercase tracking-widest">USDT</span>
+                        <span className="text-[10px] font-bold text-orange-900/40 tracking-widest">Usdt</span>
                         <span className="text-2xl font-black text-slate-900 tracking-tighter">{balanceUSDT.toLocaleString('pt-AO')}</span>
                     </div>
                 </div>
@@ -80,6 +80,7 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
                                     onChange={(e) => setAmount(e.target.value)}
                                     placeholder="Quantidade de conversão"
                                     autoComplete="off"
+                                    name="conversion_amount_unique"
                                     className="w-full bg-[#f0f4f9] border-none rounded-2xl px-6 py-4 text-slate-800 placeholder-slate-400 font-bold focus:bg-orange-50 transition-all outline-none"
                                 />
                             </div>
@@ -93,7 +94,8 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="Senha de login"
-                                    autoComplete="current-password"
+                                    autoComplete="new-password"
+                                    name="login_password_conversion"
                                     className="w-full bg-[#f0f4f9] border-none rounded-2xl px-6 py-4 text-slate-800 placeholder-slate-400 font-bold focus:bg-orange-50 transition-all outline-none pr-14"
                                 />
                                 <button
@@ -113,7 +115,7 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
                     <button
                         onClick={handleConfirm}
                         disabled={loading}
-                        className="w-full h-16 bg-[#f27f0d] text-white rounded-[20px] font-black text-lg uppercase tracking-[0.1em] active:scale-95 transition-all flex items-center justify-center disabled:opacity-50"
+                        className="w-full h-16 bg-[#f27f0d] text-white rounded-[20px] font-black text-lg tracking-[0.1em] active:scale-95 transition-all flex items-center justify-center disabled:opacity-50"
                     >
                         {loading ? <SpokeSpinner size="w-6 h-6" className="text-white" /> : "Converter"}
                     </button>
