@@ -14,8 +14,7 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    // For now, we use the balance from profile. 
-    // In the future, this will come from balance_usdt
+    // Source of truth will be balance_usdt and balance (KZ/AOA)
     const balanceUSDT = profile?.balance_usdt || 0;
     const balanceKZ = profile?.balance || 0;
 
@@ -25,12 +24,12 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
             return;
         }
         if (!password) {
-            showToast?.("Insira sua senha de segurança.", "warning");
+            showToast?.("Insira sua senha de login.", "warning");
             return;
         }
 
         // Logic implementation will be done later as requested
-        showToast?.("Funcionalidade em desenvolvimento. Aguarde as próximas atualizações.", "info");
+        showToast?.("Conversão em processamento... (Simulação)", "info");
     };
 
     return (
@@ -43,43 +42,45 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
                 >
                     <span className="material-symbols-outlined text-2xl font-bold">chevron_left</span>
                 </button>
-                <h1 className="text-xl font-bold tracking-tight">Transferir</h1>
+                <h1 className="text-xl font-bold tracking-tight">Conversão</h1>
                 <div className="w-10"></div> {/* Spacer */}
             </header>
 
-            <main className="flex-1 px-6 pt-2 space-y-6">
-                {/* Balance Cards Container */}
-                <div className="bg-gradient-to-r from-[#ffe4d1] to-[#fdebd3] rounded-[24px] p-6 shadow-xl shadow-orange-950/20 border border-white/30 flex items-center justify-between relative overflow-hidden">
-                    {/* Left Balance */}
+            <main className="flex-1 px-6 pt-2 space-y-4">
+                {/* Balance Cards Container - Flat Design */}
+                <div className="bg-[#fdebd3] rounded-[24px] p-6 border border-white/20 flex items-center justify-between relative overflow-hidden">
+                    {/* Left Balance (AOA) */}
                     <div className="flex flex-col items-center text-center gap-1">
-                        <span className="text-[10px] font-bold text-orange-900/60 uppercase tracking-widest">Conta de retirada</span>
-                        <span className="text-2xl font-black text-slate-900 tracking-tighter">{balanceUSDT.toLocaleString('pt-AO')}</span>
+                        <span className="text-[10px] font-bold text-orange-900/40 uppercase tracking-widest">AOA</span>
+                        <span className="text-2xl font-black text-slate-900 tracking-tighter">{balanceKZ.toLocaleString('pt-AO')}</span>
                     </div>
 
-                    {/* Transfer Icon Circle */}
-                    <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center shadow-lg transform active:rotate-180 transition-transform duration-500">
+                    {/* Transfer Icon Circle - Flat */}
+                    <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center transform active:rotate-180 transition-transform duration-500">
                         <span className="material-symbols-outlined text-white text-[24px] font-bold">swap_horiz</span>
                     </div>
 
-                    {/* Right Balance */}
+                    {/* Right Balance (USDT) */}
                     <div className="flex flex-col items-center text-center gap-1">
-                        <span className="text-[10px] font-bold text-orange-900/60 uppercase tracking-widest">Conta básica</span>
-                        <span className="text-2xl font-black text-slate-900 tracking-tighter">{balanceKZ.toLocaleString('pt-AO')}</span>
+                        <span className="text-[10px] font-bold text-orange-900/40 uppercase tracking-widest">USDT</span>
+                        <span className="text-2xl font-black text-slate-900 tracking-tighter">{balanceUSDT.toLocaleString('pt-AO')}</span>
                     </div>
                 </div>
 
-                {/* Form Container */}
-                <div className="bg-white rounded-[32px] p-8 shadow-2xl shadow-orange-950/10 space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-500">
+                {/* Form Container - Flat */}
+                <div className="bg-white rounded-[32px] p-8 mt-2 space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-500">
                     <div className="space-y-4">
                         {/* Amount Input */}
                         <div className="space-y-2">
                             <div className="relative group">
                                 <input
                                     type="number"
+                                    inputMode="decimal"
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
                                     placeholder="Quantidade de conversão"
-                                    className="w-full bg-[#fff9f4] border-none rounded-2xl px-6 py-4 text-slate-800 placeholder-slate-300 font-bold focus:ring-4 focus:ring-orange-100 transition-all outline-none"
+                                    autoComplete="off"
+                                    className="w-full bg-[#f0f4f9] border-none rounded-2xl px-6 py-4 text-slate-800 placeholder-slate-400 font-bold focus:bg-orange-50 transition-all outline-none"
                                 />
                             </div>
                         </div>
@@ -91,10 +92,12 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Senha"
-                                    className="w-full bg-[#fff9f4] border-none rounded-2xl px-6 py-4 text-slate-800 placeholder-slate-300 font-bold focus:ring-4 focus:ring-orange-100 transition-all outline-none pr-14"
+                                    placeholder="Senha de login"
+                                    autoComplete="current-password"
+                                    className="w-full bg-[#f0f4f9] border-none rounded-2xl px-6 py-4 text-slate-800 placeholder-slate-400 font-bold focus:bg-orange-50 transition-all outline-none pr-14"
                                 />
                                 <button
+                                    type="button"
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 active:text-[#f27f0d] transition-colors"
                                 >
@@ -106,13 +109,13 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
                         </div>
                     </div>
 
-                    {/* Confirm Button */}
+                    {/* Confirm Button - Flat */}
                     <button
                         onClick={handleConfirm}
                         disabled={loading}
-                        className="w-full h-16 bg-[#f27f0d] text-white rounded-[20px] font-black text-lg uppercase tracking-[0.1em] shadow-xl shadow-orange-900/30 active:scale-95 transition-all flex items-center justify-center disabled:opacity-50"
+                        className="w-full h-16 bg-[#f27f0d] text-white rounded-[20px] font-black text-lg uppercase tracking-[0.1em] active:scale-95 transition-all flex items-center justify-center disabled:opacity-50"
                     >
-                        {loading ? <SpokeSpinner size="w-6 h-6" className="text-white" /> : "Confirme"}
+                        {loading ? <SpokeSpinner size="w-6 h-6" className="text-white" /> : "Converter"}
                     </button>
                 </div>
             </main>

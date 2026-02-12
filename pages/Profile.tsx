@@ -137,7 +137,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
             { label: 'Converter cupons em dinheiro', icon: 'redeem', page: 'gift-chest' },
             { label: 'Informações de retirada', icon: 'account_balance', page: 'add-bank' },
             { label: 'Retirar dinheiro', icon: 'payments', page: 'retirada' },
-            { label: 'Transferir USDT', icon: 'swap_horiz', page: 'transfer' },
+            { label: 'Conversão', icon: 'swap_horiz', page: 'transfer' },
             { label: 'Convide amigos', icon: 'person_add', page: 'invite-page' },
             { label: 'Segurança da conta', icon: 'lock', page: 'change-password' },
             { label: 'Sobre nós', icon: 'info', page: 'about-bp' },
