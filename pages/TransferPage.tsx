@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import SpokeSpinner from '../components/SpokeSpinner';
 
@@ -13,10 +13,33 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [exchangeRate, setExchangeRate] = useState<number>(0);
+    const [convertedAmount, setConvertedAmount] = useState<number>(0);
 
-    // Source of truth will be balance_usdt and balance (KZ/AOA)
     const balanceUSDT = profile?.balance_usdt || 0;
     const balanceKZ = profile?.balance || 0;
+
+    // Fetch real-time exchange rate
+    useEffect(() => {
+        fetch('https://api.exchangerate-api.com/v4/latest/USD')
+            .then(res => res.json())
+            .then(data => {
+                if (data?.rates?.AOA) {
+                    setExchangeRate(data.rates.AOA);
+                }
+            })
+            .catch(() => showToast?.("Erro ao obter taxa de câmbio.", "error"));
+    }, [showToast]);
+
+    // Update converted amount in real-time
+    useEffect(() => {
+        const val = parseFloat(amount);
+        if (!isNaN(val) && exchangeRate > 0) {
+            setConvertedAmount(val * exchangeRate);
+        } else {
+            setConvertedAmount(0);
+        }
+    }, [amount, exchangeRate]);
 
     const handleConfirm = async () => {
         if (!amount || Number(amount) <= 0) {
@@ -31,8 +54,9 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
         setLoading(true);
         try {
             const { data, error } = await supabase.rpc('convert_usdt_to_kz', {
-                p_amount: Number(amount),
-                p_password: password
+                p_amount_usdt: Number(amount),
+                p_password: password,
+                p_exchange_rate: exchangeRate
             });
 
             if (error) throw error;
@@ -82,12 +106,25 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
                         <span className="material-symbols-outlined text-white text-[24px] font-bold">swap_horiz</span>
                     </div>
 
-                    {/* Right Balance (USDT) */}
+                    {/* Right Balance (Saldo Ativo em Kz) */}
                     <div className="flex flex-col items-center text-center gap-1">
-                        <span className="text-[10px] font-bold text-orange-900/40 tracking-widest">Usdt</span>
-                        <span className="text-2xl font-black text-slate-900 tracking-tighter">{balanceUSDT.toLocaleString('pt-AO')}</span>
+                        <span className="text-[10px] font-bold text-orange-900/40 tracking-widest uppercase">Ativo</span>
+                        <span className="text-2xl font-black text-slate-900 tracking-tighter">
+                            {balanceUSDT.toLocaleString('pt-AO')}
+                        </span>
+                        <span className="text-[10px] font-bold text-[#f27f0d]">
+                            ≈ {exchangeRate > 0 ? (balanceUSDT / exchangeRate).toFixed(2) : '0.00'} USDT
+                        </span>
                     </div>
                 </div>
+
+                {/* Live Exchange Rate Header */}
+                {exchangeRate > 0 && (
+                    <div className="bg-white/10 mx-6 rounded-xl p-2 flex items-center justify-center gap-2 border border-white/10 animate-pulse">
+                        <span className="material-symbols-outlined text-white/60 text-sm">trending_up</span>
+                        <span className="text-[10px] text-white font-bold uppercase tracking-widest">Taxa de mercado: 1 USDT = {exchangeRate.toLocaleString('pt-AO')} Kz</span>
+                    </div>
+                )}
 
                 {/* Form Container - Flat */}
                 <div className="bg-white rounded-[32px] p-8 mt-2 space-y-6 animate-in fade-in slide-in-from-bottom-8 duration-500">
@@ -100,11 +137,16 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
                                     inputMode="decimal"
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
-                                    placeholder="Quantidade de conversão"
+                                    placeholder="0.00"
                                     autoComplete="off"
                                     name="conversion_amount_unique"
                                     className="w-full bg-[#f0f4f9] border-none rounded-2xl px-6 py-4 text-slate-800 placeholder-slate-400 font-bold focus:bg-orange-50 transition-all outline-none"
                                 />
+                                {convertedAmount > 0 && (
+                                    <p className="text-xs text-[#f27f0d] font-bold mt-2 ml-1">
+                                        ≈ {convertedAmount.toLocaleString('pt-AO', { minimumFractionDigits: 2 })} Aoa
+                                    </p>
+                                )}
                             </div>
                         </div>
 

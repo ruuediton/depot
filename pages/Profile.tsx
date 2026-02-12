@@ -17,7 +17,18 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
     totalIncome: 0,
     teamIncome: 0,
   });
+  const [exchangeRate, setExchangeRate] = useState<number>(950); // Default fallback rate
   const [loading, setLoading] = useState(true);
+
+  // Fetch rate for visual conversion
+  useEffect(() => {
+    fetch('https://api.exchangerate-api.com/v4/latest/USD')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.rates?.AOA) setExchangeRate(data.rates.AOA);
+      })
+      .catch(() => { });
+  }, []);
 
   const fetchStats = useCallback(async () => {
     if (!profile?.id) return;
@@ -107,10 +118,20 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
       <div className="px-4 -mt-2 space-y-2">
         <div className="bg-[#fff9f3] border-b border-orange-100/50 p-4 flex justify-between items-center rounded-t-xl group active:bg-orange-50 transition-colors"
           onClick={() => onNavigate('records-financeiro')}>
-          <span className="text-sm font-semibold text-slate-700">Saldo Ativo (Usdt)</span>
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-900">{stats.balance_usdt.toLocaleString('pt-AO', { minimumFractionDigits: 2 })}</span>
-            <span className="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold text-slate-700">Saldo Ativo</span>
+            <span className="text-[10px] text-slate-400 font-medium tracking-tight">Ganhos e Depósitos</span>
+          </div>
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-slate-900 text-lg">
+                {stats.balance_usdt.toLocaleString('pt-AO')} Kz
+              </span>
+              <span className="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+            </div>
+            <span className="text-[10px] text-[#f27f0d] font-bold uppercase tracking-wider">
+              ≈ {(stats.balance_usdt / exchangeRate).toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Usdt
+            </span>
           </div>
         </div>
         <div className="bg-[#fff9f3] border-b border-orange-100/50 p-4 flex justify-between items-center group active:bg-orange-50 transition-colors"
