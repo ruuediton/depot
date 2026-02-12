@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../supabase';
 import SpokeSpinner from '../components/SpokeSpinner';
 
@@ -9,83 +9,50 @@ interface ProfileProps {
   profile: any;
 }
 
-const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showToast }) => {
+const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
   const [currentProfile, setCurrentProfile] = useState<any>(profile);
-  const [exchangeRate, setExchangeRate] = useState<number>(1000); // Default or fetch
   const [stats, setStats] = useState<any>({
     balance: profile?.balance || 0,
-    totalDeposit: 0,
-    totalWithdrawal: 0,
-    todayEarnings: 0,
-    pending: 0,
+    totalIncome: 0,
+    teamIncome: 0,
   });
   const [loading, setLoading] = useState(true);
+
+  const fetchStats = useCallback(async () => {
+    if (!profile?.id) return;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const [tasksRes, bonusRes, teamRes] = await Promise.all([
+        supabase.from('tarefas_diarias').select('renda_coletada').eq('user_id', user.id),
+        supabase.from('bonus_transacoes').select('valor_recebido').eq('user_id', user.id),
+        supabase.from('bonus_transacoes').select('valor_recebido').eq('user_id', user.id).neq('origem_bonus', 'Resgate de código')
+      ]);
+
+      const totalIncome = (tasksRes.data?.reduce((acc, curr) => acc + Number(curr.renda_coletada || 0), 0) || 0) +
+        (bonusRes.data?.reduce((acc, curr) => acc + Number(curr.valor_recebido || 0), 0) || 0);
+
+      const teamIncome = teamRes.data?.reduce((acc, curr) => acc + Number(curr.valor_recebido || 0), 0) || 0;
+
+      setStats({
+        balance: profile.balance || 0,
+        totalIncome,
+        teamIncome,
+      });
+      setLoading(false);
+    } catch (err) {
+      console.error("Error:", err);
+      setLoading(false);
+    }
+  }, [profile]);
 
   useEffect(() => {
     if (profile) {
       setCurrentProfile(profile);
       fetchStats();
     }
-  }, [profile]);
-
-  const fetchStats = async () => {
-    if (!currentProfile?.id) return;
-
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      // 1. Fetch Exchange Rate (Parallel or fallback)
-      fetch('https://api.exchangerate-api.com/v4/latest/USD')
-        .then(res => res.json())
-        .then(data => { if (data?.rates?.AOA) setExchangeRate(data.rates.AOA); })
-        .catch(() => console.log("Using default rate"));
-
-      // 2. Fetch Aggregated Data
-      const [
-        depositsRes,
-        depositsUsdtRes,
-        withdrawalsRes,
-        tasksRes,
-        bonusRes
-      ] = await Promise.all([
-        supabase.from('depositos_clientes').select('valor_deposito, estado_de_pagamento').eq('user_id', user.id),
-        supabase.from('depositos_usdt').select('amount_kz, status').eq('user_id', user.id),
-        supabase.from('retirada_clientes').select('valor_solicitado, estado_da_retirada').eq('user_id', user.id),
-        supabase.from('tarefas_diarias').select('renda_coletada, data_atribuicao').eq('user_id', user.id),
-        supabase.from('bonus_transacoes').select('valor_recebido, data_recebimento').eq('user_id', user.id)
-      ]);
-
-      // Calculations
-      const totalDeposit = (depositsRes.data?.filter(d => ['sucedido', 'completo', 'sucesso', 'concluido'].includes(d.estado_de_pagamento.toLowerCase())).reduce((acc, curr) => acc + Number(curr.valor_deposito || 0), 0) || 0) +
-        (depositsUsdtRes.data?.filter(d => ['sucedido', 'completo', 'sucesso', 'concluido'].includes(d.status.toLowerCase())).reduce((acc, curr) => acc + Number(curr.amount_kz || 0), 0) || 0);
-
-      const totalWithdrawal = withdrawalsRes.data?.filter(w => ['sucedido', 'completo', 'sucesso', 'concluido'].includes(w.estado_da_retirada.toLowerCase())).reduce((acc, curr) => acc + Number(curr.valor_solicitado || 0), 0) || 0;
-
-      const pending = (depositsRes.data?.filter(d => d.estado_de_pagamento === 'pendente').reduce((acc, curr) => acc + Number(curr.valor_deposito || 0), 0) || 0) +
-        (withdrawalsRes.data?.filter(w => w.estado_da_retirada === 'pendente').reduce((acc, curr) => acc + Number(curr.valor_solicitado || 0), 0) || 0);
-
-      // Today's Earnings (Simplified: sum of tasks and bonuses today)
-      const today = new Date().toISOString().split('T')[0];
-      const taskEarnings = tasksRes.data?.filter(t => t.data_atribuicao.startsWith(today)).reduce((acc, curr) => acc + Number(curr.renda_coletada || 0), 0) || 0;
-      const bonusEarnings = bonusRes.data?.filter(b => b.data_recebimento.startsWith(today)).reduce((acc, curr) => acc + Number(curr.valor_recebido || 0), 0) || 0;
-
-      setStats({
-        balance: currentProfile.balance || 0,
-        totalDeposit,
-        totalWithdrawal,
-        todayEarnings: taskEarnings + bonusEarnings,
-        pending,
-      });
-
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching stats:", err);
-      setLoading(false);
-    }
-  };
-
-  const balanceAOA = stats.balance * exchangeRate;
+  }, [profile, fetchStats]);
 
   if (loading) return (
     <div className="flex justify-center items-center h-screen bg-[#f27f0d]">
@@ -94,165 +61,106 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
   );
 
   return (
-    <div className="bg-[#f27f0d] font-display text-slate-800 antialiased min-h-screen flex justify-center pb-32">
-      <div className="w-full max-w-[430px] bg-[#f27f0d] min-h-screen relative flex flex-col">
-        {/* Header */}
-        <header className="pt-12 px-6 pb-4 flex justify-between items-center bg-[#f27f0d]">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/30 shrink-0 bg-white/20">
+    <div className="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen flex flex-col pb-32">
+      {/* Top Banner with Pattern */}
+      <div className="bg-white px-6 pt-14 pb-8 relative overflow-hidden">
+        {/* Simple Map Pattern Background Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0h100v100H0z" fill="none" />
+            <path d="M10 10h80v80H10z" fill="currentColor" />
+          </svg>
+        </div>
+
+        <div className="flex justify-between items-start relative z-10">
+          <div className="flex gap-4">
+            {/* Logo/Avatar Square */}
+            <div className="w-20 h-20 bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden flex items-center justify-center p-1">
               <img
-                alt="User"
-                className="w-full h-full object-cover"
                 src={currentProfile?.avatar_url || "https://lh3.googleusercontent.com/a/default-user=s120-c"}
+                alt="Logo"
+                className="w-full h-full object-cover rounded-lg"
               />
             </div>
-            <div>
-              <h2 className="text-sm font-semibold text-white tracking-tight">
-                {currentProfile?.phone || 'Usuário'}
+            <div className="flex flex-col justify-center">
+              <h2 className="text-xl font-bold text-slate-800 tracking-tight">
+                {currentProfile?.phone || 'Tesla power bank'}
               </h2>
-              <p className="text-[10px] text-orange-100/70 uppercase font-bold tracking-widest">
-                ID: {currentProfile?.id?.substring(0, 8).toUpperCase()}
+              <p className="text-sm font-medium text-slate-500 mt-1">
+                ID: {currentProfile?.id?.substring(0, 11).replace(/-/g, '') || '244927104392'}
               </p>
             </div>
           </div>
-          <button className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center relative backdrop-blur-md active:scale-90 transition-all border border-white/10">
-            <span className="material-symbols-outlined text-white text-[22px]">notifications</span>
-            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#f27f0d]"></span>
+
+          <button
+            onClick={onLogout}
+            className="w-10 h-10 flex items-center justify-center text-[#f27f0d] active:scale-90 transition-all"
+          >
+            <span className="material-symbols-outlined text-3xl">logout</span>
           </button>
-        </header>
-
-        {/* Main Content */}
-        <main className="flex-grow px-6 pt-2 space-y-4">
-          {/* Balance Card - Premium Glassmorphic feel */}
-          <div className="bg-white rounded-3xl p-5 shadow-2xl shadow-black/10 text-[#f27f0d] animate-in fade-in slide-in-from-top-4 duration-500">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <p className="text-[#f27f0d]/60 text-[10px] font-bold uppercase tracking-[0.15em] mb-1">Balanço Total</p>
-                <div className="flex items-baseline gap-2">
-                  <h3 className="text-4xl font-bold text-slate-900 tracking-tighter">
-                    {stats.balance.toLocaleString('pt-AO')}
-                  </h3>
-                  <span className="text-sm font-semibold text-slate-400">USDT</span>
-                </div>
-              </div>
-              <div className="bg-[#f27f0d]/10 w-11 h-11 rounded-2xl flex items-center justify-center">
-                <span className="material-symbols-outlined text-[#f27f0d] text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>account_balance_wallet</span>
-              </div>
-            </div>
-            <div className="pt-4 border-t border-slate-50">
-              <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-widest mb-1">Equivalente em Kwanzas</p>
-              <p className="text-xl font-bold text-slate-800 tracking-tight">
-                {balanceAOA.toLocaleString('pt-AO')} <span className="text-xs font-semibold text-slate-500">AOA</span>
-              </p>
-            </div>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
-              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-[0.1em] mb-1">Total Depósito</p>
-              <p className="font-bold text-green-600 text-sm tracking-tight">{stats.totalDeposit.toLocaleString()} Kz</p>
-            </div>
-            <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
-              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-[0.1em] mb-1">Total Saques</p>
-              <p className="font-bold text-red-500 text-sm tracking-tight">{stats.totalWithdrawal.toLocaleString()} Kz</p>
-            </div>
-            <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
-              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-[0.1em] mb-1">Ganhos Hoje</p>
-              <p className="font-bold text-[#f27f0d] text-sm tracking-tight">+{stats.todayEarnings.toLocaleString()} Kz</p>
-            </div>
-            <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
-              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-[0.1em] mb-1">Pendente</p>
-              <p className="font-bold text-orange-500 text-sm tracking-tight">{stats.pending.toLocaleString()} Kz</p>
-            </div>
-          </div>
-
-          {/* Settings Section */}
-          <div className="mt-8 space-y-2">
-            <h3 className="text-[10px] font-black text-white/90 uppercase tracking-[0.2em] mb-3 px-1 drop-shadow-sm">Configurações da Conta</h3>
-
-            <button
-              onClick={() => onNavigate('add-bank')}
-              className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">account_balance</span>
-                </div>
-                <span className="font-bold text-slate-800 text-sm">Adicionar Conta</span>
-              </div>
-              <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
-            </button>
-
-            <button
-              onClick={() => onNavigate('security-verify')}
-              className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">lock_person</span>
-                </div>
-                <span className="font-bold text-slate-800 text-sm">Segurança & Senha</span>
-              </div>
-              <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
-            </button>
-
-            <button
-              onClick={() => onNavigate('gift-chest')}
-              className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">redeem</span>
-                </div>
-                <span className="font-bold text-slate-800 text-sm">Recompensas Diárias</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="bg-red-500 text-white text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider">Novo</span>
-                <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
-              </div>
-            </button>
-
-            <button
-              onClick={() => onNavigate('records-financeiro')}
-              className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">history_edu</span>
-                </div>
-                <span className="font-bold text-slate-800 text-sm">Registros Financeiros</span>
-              </div>
-              <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
-            </button>
-
-            <button
-              onClick={() => onNavigate('about-bp')}
-              className="w-full flex items-center justify-between h-14 px-5 bg-white hover:bg-white/95 rounded-2xl transition-all group shadow-md active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-9 h-9 bg-[#f27f0d]/10 rounded-xl flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[#f27f0d] text-[20px]">info</span>
-                </div>
-                <span className="font-bold text-slate-800 text-sm">Sobre Nós</span>
-              </div>
-              <span className="material-symbols-outlined text-slate-300 group-hover:text-[#f27f0d] transition-colors text-xl">chevron_right</span>
-            </button>
-
-            <button
-              onClick={onLogout}
-              className="w-full flex items-center justify-between h-16 px-5 bg-white/10 hover:bg-white/20 rounded-2xl transition-all group mt-6 border border-white/20 active:scale-[0.98]"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/30">
-                  <span className="material-symbols-outlined text-white text-[20px] font-bold">logout</span>
-                </div>
-                <span className="font-bold text-white text-sm uppercase tracking-widest">Sair da Conta</span>
-              </div>
-            </button>
-          </div>
-        </main>
+        </div>
       </div>
+
+      {/* Middle Stats Section - Row Based */}
+      <div className="px-4 -mt-2 space-y-2">
+        <div className="bg-[#fff9f3] border-b border-orange-100/50 p-4 flex justify-between items-center rounded-t-xl group active:bg-orange-50 transition-colors"
+          onClick={() => onNavigate('records-financeiro')}>
+          <span className="text-sm font-semibold text-slate-700">saldo atual</span>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-slate-900">{stats.balance.toLocaleString('pt-AO', { minimumFractionDigits: 2 })}</span>
+            <span className="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+          </div>
+        </div>
+        <div className="bg-[#fff9f3] border-b border-orange-100/50 p-4 flex justify-between items-center group active:bg-orange-50 transition-colors">
+          <span className="text-sm font-semibold text-slate-700">Receita de equipamento</span>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-slate-900">{stats.totalIncome.toLocaleString('pt-AO', { minimumFractionDigits: 2 })}</span>
+            <span className="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+          </div>
+        </div>
+        <div className="bg-[#fff9f3] p-4 flex justify-between items-center rounded-b-xl group active:bg-orange-50 transition-colors">
+          <span className="text-sm font-semibold text-slate-700">renda da equipe</span>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-slate-900">{stats.teamIncome.toLocaleString('pt-AO', { minimumFractionDigits: 2 })}</span>
+            <span className="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Unified Menu List */}
+      <main className="px-4 mt-6">
+        <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden">
+          {[
+            { label: 'recarrega', icon: 'account_balance_wallet', page: 'recharge' },
+            { label: 'Converter cupons em dinheiro', icon: 'redeem', page: 'gift-chest' },
+            { label: 'Informações de retirada', icon: 'account_balance', page: 'add-bank' },
+            { label: 'Retirar dinheiro', icon: 'payments', page: 'withdraw' },
+            { label: 'Convide amigos', icon: 'person_add', page: 'invite-page' },
+            { label: 'Segurança da conta', icon: 'lock', page: 'security-verify' },
+            { label: 'Sobre nós', icon: 'info', page: 'about-bp' },
+          ].map((item, index) => (
+            <button
+              key={item.label}
+              onClick={() => onNavigate(item.page)}
+              className={`w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-all border-b border-slate-50 last:border-0 group`}
+            >
+              <div className="flex items-center gap-4">
+                <span className="material-symbols-outlined text-[#f27f0d] text-[24px]">
+                  {item.icon}
+                </span>
+                <span className="text-[14px] font-semibold text-slate-700 group-active:text-[#f27f0d]">{item.label}</span>
+              </div>
+              <span className="material-symbols-outlined text-slate-300 text-xl">chevron_right</span>
+            </button>
+          ))}
+        </div>
+      </main>
+
+      <style>{`
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        }
+      `}</style>
     </div>
   );
 };
