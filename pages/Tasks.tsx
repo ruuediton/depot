@@ -77,7 +77,7 @@ const Tasks: React.FC<TasksProps> = ({ onNavigate, showToast }) => {
                             <rect width="28" height="28" fill="white" rx="4" />
                             <path d="M8 10L14 6L20 10V20H8V10Z" fill="#FF6B00" />
                         </svg>
-                        <span className="text-white font-black text-[16px] tracking-wide">The Home Depot</span>
+                        <span className="text-white font-bold text-[16px] tracking-wide">The Home Depot</span>
                     </div>
 
                     {/* Ícones do topo */}
@@ -110,11 +110,11 @@ const Tasks: React.FC<TasksProps> = ({ onNavigate, showToast }) => {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="text-center">
                             <p className="text-gray-700 text-sm font-medium mb-1">Todas as tarefas de hoje</p>
-                            <p className="text-gray-900 text-3xl font-black">{stats.today_tasks}</p>
+                            <p className="text-gray-900 text-3xl font-bold">{stats.today_tasks}</p>
                         </div>
                         <div className="text-center">
                             <p className="text-gray-700 text-sm font-medium mb-1">As tarefas restantes de hoje</p>
-                            <p className="text-gray-900 text-3xl font-black">{stats.remaining_tasks}</p>
+                            <p className="text-gray-900 text-3xl font-bold">{stats.remaining_tasks}</p>
                         </div>
                     </div>
                 </div>
@@ -162,23 +162,23 @@ const Tasks: React.FC<TasksProps> = ({ onNavigate, showToast }) => {
                                     <div
                                         key={index}
                                         className="bg-gray-50 rounded-xl p-4 flex items-center gap-4 hover:bg-gray-100 transition-all cursor-pointer"
-                                        onClick={() => onNavigate('purchase-history')}
+                                        onClick={() => onNavigate('records-financeiro')}
                                     >
                                         <div className="w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center">
                                             <span className="material-symbols-outlined text-[#FF6B00] text-3xl">task_alt</span>
                                         </div>
                                         <div className="flex-1">
-                                            <p className="text-gray-900 font-bold text-sm">
+                                            <p className="text-gray-900 font-semibold text-sm">
                                                 Tarefa #{task.id?.toString().slice(-6)}
                                             </p>
                                             <p className="text-gray-500 text-xs mt-1">
                                                 {new Date(task.data_compra).toLocaleDateString('pt-BR')}
                                             </p>
-                                            <p className="text-[#FF6B00] font-bold text-sm mt-1">
+                                            <p className="text-[#FF6B00] font-semibold text-sm mt-1">
                                                 {task.preco_produto?.toLocaleString('pt-AO')} Kz
                                             </p>
                                         </div>
-                                        <div className={`px-3 py-1 rounded-full text-xs font-bold ${task.estado_compra === 'concluido' || task.estado_compra === 'completo'
+                                        <div className={`px-3 py-1 rounded-full text-xs font-semibold ${task.estado_compra === 'concluido' || task.estado_compra === 'completo'
                                             ? 'bg-green-100 text-green-700'
                                             : 'bg-yellow-100 text-yellow-700'
                                             }`}>

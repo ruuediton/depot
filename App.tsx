@@ -42,17 +42,21 @@ const App: React.FC = () => {
   // --- Initialization & Auth ---
   useEffect(() => {
     const initializeApp = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        setSession(session);
 
-      if (session) {
-        await fetchProfile(session.user.id);
-      } else {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('ref')) setCurrentPage('register');
+        if (session) {
+          await fetchProfile(session.user.id);
+        } else {
+          const params = new URLSearchParams(window.location.search);
+          if (params.get('ref')) setCurrentPage('register');
+        }
+      } catch (err) {
+        console.error('Initialization error:', err);
+      } finally {
+        document.body.classList.add('app-loaded');
       }
-
-      document.body.classList.add('app-loaded');
     };
 
     initializeApp();
@@ -105,7 +109,7 @@ const App: React.FC = () => {
 
     localStorage.setItem('currentPage', page);
 
-    const heavyPages = ['withdrawal-history', 'purchase-history', 'shop'];
+    const heavyPages = ['records-financeiro', 'shop'];
     if (heavyPages.includes(page)) {
       withLoading(async () => {
         await new Promise(r => setTimeout(r, 100)); // Perceived performance delay for heavy load
@@ -137,14 +141,12 @@ const App: React.FC = () => {
       'gift-chest': PAGES_CONFIG.GiftChest,
       'reward-claim': PAGES_CONFIG.RewardClaim,
       'deposit-usdt': PAGES_CONFIG.DepositUSDT,
-      'deposit-usdt-history': PAGES_CONFIG.DepositUSDTHistory,
       'subordinate-list': PAGES_CONFIG.SubordinateList,
-      'deposit-history': PAGES_CONFIG.WalletHistory,
-      'withdrawal-history': PAGES_CONFIG.WithdrawalHistory,
       'invite-page': PAGES_CONFIG.InvitePage,
       'tasks': PAGES_CONFIG.Tasks,
       'detalhes-pay': PAGES_CONFIG.DetalhesPay,
-      'records-financeiro': PAGES_CONFIG.RecordsFinanceiro
+      'records-financeiro': PAGES_CONFIG.RecordsFinanceiro,
+      'about-bp': PAGES_CONFIG.AboutBP
     };
 
     const Component = pages[currentPage] || PAGES_CONFIG.Home;
@@ -208,7 +210,7 @@ const App: React.FC = () => {
                     {item.icon}
                   </span>
                 </div>
-                <span className="text-[10px] font-bold tracking-tight">{item.label}</span>
+                <span className="text-[10px] font-medium tracking-tight">{item.label}</span>
               </button>
             )
           ))}

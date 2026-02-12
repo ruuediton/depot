@@ -205,7 +205,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
         </div>
 
         <div className="absolute top-6 right-6 z-20">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/10 text-white backdrop-blur-sm text-[12px] font-bold active:scale-95 transition-all">
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/10 text-white backdrop-blur-sm text-[12px] font-semibold active:scale-95 transition-all">
             <span className="material-symbols-outlined text-[18px]">language</span>
             Português
             <span className="material-symbols-outlined text-[14px]">expand_more</span>
@@ -216,12 +216,12 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
         <div className="relative z-10 flex flex-col items-center">
           <div className="w-24 h-24 bg-white p-2 rounded-xl rotate-0 flex items-center justify-center shadow-2xl mb-4 border-2 border-primary/20">
             <div className="flex flex-col items-center leading-none text-primary">
-              <span className="text-[10px] font-black italic tracking-tighter">THE</span>
-              <span className="text-[18px] font-black tracking-tightest">HOME</span>
-              <span className="text-[14px] font-black italic tracking-tighter">DEPOT</span>
+              <span className="text-[10px] font-semibold italic tracking-tighter">THE</span>
+              <span className="text-[18px] font-semibold tracking-tightest">HOME</span>
+              <span className="text-[14px] font-semibold italic tracking-tighter">DEPOT</span>
             </div>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-widest uppercase drop-shadow-md">The Home Depot</h1>
+          <h1 className="text-2xl font-semibold text-white tracking-widest uppercase drop-shadow-md">The Home Depot</h1>
         </div>
       </div>
 
@@ -231,7 +231,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
           {/* Tab Header */}
           <div className="flex">
             <div className="bg-white px-8 py-4 rounded-tr-[32px] relative">
-              <span className="text-primary font-black text-[15px]">Cadastre-se por telefone</span>
+              <span className="text-primary font-semibold text-[15px]">Cadastre-se por telefone</span>
             </div>
             <div className="flex-1 bg-transparent"></div>
           </div>
@@ -240,9 +240,9 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
           <form className="p-8 pt-4 flex flex-col gap-5" onSubmit={handleRegister}>
             {/* Phone Input Group */}
             <div className="space-y-2">
-              <label className="text-[14px] font-bold text-text-main ml-1">Número de telefone</label>
+              <label className="text-[14px] font-semibold text-text-main ml-1">Número de telefone</label>
               <div className="bg-input-bg rounded-[16px] h-[58px] flex items-center px-4 gap-3 focus-within:ring-2 ring-primary/20 transition-all border border-primary/5">
-                <span className="text-text-main font-bold text-[14px]">+244</span>
+                <span className="text-text-main font-semibold text-[14px]">+244</span>
                 <input
                   type="tel"
                   placeholder="Número de telefone"
@@ -256,7 +256,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
 
             {/* Captcha Field (Integrated into UI) */}
             <div className="space-y-2">
-              <label className="text-[14px] font-bold text-text-main ml-1 text-glow">Código de Verificação</label>
+              <label className="text-[14px] font-semibold text-text-main ml-1 text-glow">Código de Verificação</label>
               <div className="bg-input-bg rounded-[16px] h-[58px] flex items-center px-4 gap-3 focus-within:ring-2 ring-primary/20 transition-all border border-primary/5">
                 <input
                   type="text"
@@ -274,7 +274,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
 
             {/* Password Input Group */}
             <div className="space-y-2">
-              <label className="text-[14px] font-bold text-text-main ml-1">Senha</label>
+              <label className="text-[14px] font-semibold text-text-main ml-1">Senha</label>
               <div className="bg-input-bg rounded-[16px] h-[58px] flex items-center px-4 gap-3 focus-within:ring-2 ring-primary/20 transition-all border border-primary/5">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -294,7 +294,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
 
             {/* Confirm Password Input Group */}
             <div className="space-y-2">
-              <label className="text-[14px] font-bold text-text-main ml-1">Digite novamente a senha</label>
+              <label className="text-[14px] font-semibold text-text-main ml-1">Digite novamente a senha</label>
               <div className="bg-input-bg rounded-[16px] h-[58px] flex items-center px-4 gap-3 focus-within:ring-2 ring-primary/20 transition-all border border-primary/5">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
@@ -314,7 +314,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
 
             {/* Invitation Code Group */}
             <div className="space-y-2">
-              <label className="text-[14px] font-bold text-text-main ml-1">Código de Convite</label>
+              <label className="text-[14px] font-semibold text-text-main ml-1">Código de Convite</label>
               <div className="bg-input-bg rounded-[16px] h-[58px] flex items-center px-4 gap-3 focus-within:ring-2 ring-primary/20 transition-all border border-primary/5">
                 <input
                   type="text"
@@ -339,7 +339,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
                 className={`size-5 rounded-md flex shrink-0 items-center justify-center border transition-all duration-300 ${agreedToTerms ? 'bg-primary border-primary' : 'border-gray-300 bg-white'}`}
                 onClick={() => setAgreedToTerms(!agreedToTerms)}
               >
-                {agreedToTerms && <span className="material-symbols-outlined text-white text-[14px] font-black">check</span>}
+                {agreedToTerms && <span className="material-symbols-outlined text-white text-[14px] font-bold">check</span>}
               </div>
               <p className="text-[12px] text-text-secondary font-medium">
                 Concordar com os <span className="text-primary cursor-pointer border-b border-primary/20">Termos e Regras</span>
@@ -359,7 +359,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
               <button
                 type="button"
                 onClick={handleInstallPWA}
-                className="w-full h-[54px] bg-[#1a1c1e] text-white font-bold rounded-[14px] text-[14px] uppercase tracking-wide flex items-center justify-center gap-3 active:scale-[0.98] transition-all"
+                className="w-full h-[54px] bg-[#1a1c1e] text-white font-semibold rounded-[14px] text-[14px] uppercase tracking-wide flex items-center justify-center gap-3 active:scale-[0.98] transition-all"
               >
                 <span className="material-symbols-outlined text-[20px]">install_mobile</span>
                 Baixar Aplicativo
@@ -369,7 +369,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
             <button
               type="button"
               onClick={() => onNavigate('login')}
-              className="w-full h-[54px] bg-white text-primary border-2 border-primary/40 font-bold rounded-[14px] text-[16px] hover:bg-primary/5 active:scale-[0.98] transition-all"
+              className="w-full h-[54px] bg-white text-primary border-2 border-primary/40 font-semibold rounded-[14px] text-[16px] hover:bg-primary/5 active:scale-[0.98] transition-all"
             >
               Entrar
             </button>

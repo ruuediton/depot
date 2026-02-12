@@ -122,11 +122,11 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                 <div className="flex items-center gap-2">
                     <div className="bg-white rounded px-1.5 py-1 w-9 h-9 flex items-center justify-center shadow-sm">
                         <div className="flex flex-col leading-none">
-                            <span className="text-[#FF6B00] font-black text-[9px] text-center uppercase">THE</span>
-                            <span className="text-[#FF6B00] font-black text-[8px] text-center uppercase">HOME</span>
+                            <span className="text-[#FF6B00] font-bold text-[9px] text-center uppercase">THE</span>
+                            <span className="text-[#FF6B00] font-bold text-[8px] text-center uppercase">HOME</span>
                         </div>
                     </div>
-                    <h1 className="text-white font-black text-lg tracking-tight">The Home Depot</h1>
+                    <h1 className="text-white font-bold text-lg tracking-tight">The Home Depot</h1>
                 </div>
                 <div className="flex items-center gap-3">
                     <button className="text-white/90 active:scale-95 transition-transform">
@@ -137,7 +137,7 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                     </button>
                     <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 border border-white/10">
                         <span className="material-symbols-outlined text-white text-[16px]">language</span>
-                        <span className="text-white text-[11px] font-bold">Português</span>
+                        <span className="text-white text-[11px] font-semibold">Português</span>
                         <span className="material-symbols-outlined text-white text-[14px]">expand_more</span>
                     </div>
                 </div>
@@ -148,11 +148,11 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                 <div className="bg-white rounded-[24px] p-6 shadow-xl space-y-6">
                     <div className="text-center space-y-5">
                         <div className="bg-gray-50 rounded-2xl p-5 relative border border-gray-100 flex flex-col items-center">
-                            <p className="text-gray-400 text-[11px] font-black uppercase tracking-widest mb-1">Código de Convite</p>
-                            <p className="text-4xl font-black tracking-[0.2em] text-[#FF6B00] font-mono">{inviteCode || '------'}</p>
+                            <p className="text-gray-400 text-[11px] font-bold uppercase tracking-widest mb-1">Código de Convite</p>
+                            <p className="text-4xl font-bold tracking-[0.2em] text-[#FF6B00] font-mono">{inviteCode || '------'}</p>
                             <button
                                 onClick={handleCopyCode}
-                                className="absolute top-3 right-3 bg-black text-white text-[10px] px-4 py-1.5 rounded-full font-black uppercase tracking-wider active:scale-90 transition-all"
+                                className="absolute top-3 right-3 bg-black text-white text-[10px] px-4 py-1.5 rounded-full font-bold uppercase tracking-wider active:scale-90 transition-all"
                             >
                                 cópia
                             </button>
@@ -166,7 +166,7 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                                 </p>
                                 <button
                                     onClick={handleCopyLink}
-                                    className="bg-black text-white text-[10px] px-4 py-2 rounded-full font-black uppercase tracking-wider whitespace-nowrap active:scale-90 transition-all"
+                                    className="bg-black text-white text-[10px] px-4 py-2 rounded-full font-bold uppercase tracking-wider whitespace-nowrap active:scale-90 transition-all"
                                 >
                                     cópia
                                 </button>
@@ -190,7 +190,7 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                 </div>
 
                 {/* Date Filter Label */}
-                <div className="flex items-center gap-2 text-white font-black text-sm px-2">
+                <div className="flex items-center gap-2 text-white font-bold text-sm px-2">
                     <span className="material-symbols-outlined text-[18px]">calendar_today</span>
                     <span className="uppercase tracking-widest text-[11px]">Período de seleção</span>
                 </div>
@@ -206,8 +206,8 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                         { label: 'Primeira retirada', value: stats.first_withdraw }
                     ].map((item, idx) => (
                         <div key={idx} className="space-y-1">
-                            <p className="text-[9px] text-gray-600 font-black uppercase leading-tight tracking-tighter px-1">{item.label}</p>
-                            <p className="text-[17px] font-black text-gray-900 tracking-tight">{item.value}</p>
+                            <p className="text-[9px] text-gray-600 font-bold uppercase leading-tight tracking-tighter px-1">{item.label}</p>
+                            <p className="text-[17px] font-bold text-gray-900 tracking-tight">{item.value}</p>
                         </div>
                     ))}
                 </div>
@@ -226,29 +226,29 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                             </div>
 
                             {/* Tilted Badge */}
-                            <div className="absolute top-0 left-0 bg-white/20 py-1.5 px-10 text-[10px] font-black uppercase -rotate-45 -translate-x-7 translate-y-2 border-b border-white/30 backdrop-blur-sm z-20">
+                            <div className="absolute top-0 left-0 bg-white/20 py-1.5 px-10 text-[10px] font-bold uppercase -rotate-45 -translate-x-7 translate-y-2 border-b border-white/30 backdrop-blur-sm z-20">
                                 NÍVEL {lvl.level}
                             </div>
 
                             <div className="flex justify-between items-center ml-10 relative z-10 pt-2">
                                 <div className="flex-1 grid grid-cols-2 gap-x-8 gap-y-4">
                                     <div className="text-center">
-                                        <p className="text-[9px] font-bold opacity-70 uppercase tracking-widest mb-1">Registro/Válido</p>
-                                        <p className="text-xl font-black">{lvl.reg}</p>
+                                        <p className="text-[9px] font-semibold opacity-70 uppercase tracking-widest mb-1">Registro/Válido</p>
+                                        <p className="text-xl font-bold">{lvl.reg}</p>
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-[9px] font-bold opacity-70 uppercase tracking-widest mb-1">Comissão</p>
-                                        <p className="text-xl font-black">{lvl.comission}</p>
+                                        <p className="text-[9px] font-semibold opacity-70 uppercase tracking-widest mb-1">Comissão</p>
+                                        <p className="text-xl font-bold">{lvl.comission}</p>
                                     </div>
                                     <div className="col-span-2 text-center pt-2">
-                                        <p className="text-[9px] font-bold opacity-70 uppercase tracking-widest mb-1">Renda total</p>
-                                        <p className="text-2xl font-black text-yellow-300">Kz {lvl.earnings.toLocaleString()}</p>
+                                        <p className="text-[9px] font-semibold opacity-70 uppercase tracking-widest mb-1">Renda total</p>
+                                        <p className="text-2xl font-bold text-yellow-300">Kz {lvl.earnings.toLocaleString()}</p>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={() => onNavigate('subordinate-list')}
-                                    className="bg-black/30 hover:bg-black/50 transition-all text-white text-[11px] font-black px-5 py-2 rounded-full border border-white/10 uppercase tracking-widest ml-4 shadow-lg active:scale-95"
+                                    className="bg-black/30 hover:bg-black/50 transition-all text-white text-[11px] font-bold px-5 py-2 rounded-full border border-white/10 uppercase tracking-widest ml-4 shadow-lg active:scale-95"
                                 >
                                     Detalhes
                                 </button>

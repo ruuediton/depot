@@ -207,18 +207,18 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
       <div className="bg-background-dark font-display text-black antialiased min-h-screen flex flex-col items-center justify-center px-6 py-12">
         <div className="flex flex-col items-center text-center gap-6 w-full max-w-sm">
           <div className="size-20 rounded-full bg-primary/20 flex items-center justify-center border-4 border-primary/30">
-            <span className="material-symbols-outlined text-primary" style={{ fontSize: '48px', fontWeight: 'bold' }}>verified_user</span>
+            <span className="material-symbols-outlined text-primary" style={{ fontSize: '48px', fontWeight: 'semibold' }}>verified_user</span>
           </div>
 
           <div className="space-y-1">
-            <h1 className="text-2xl font-black text-black">Conta Verificada</h1>
+            <h1 className="text-2xl font-bold text-black">Conta Verificada</h1>
             {isBlurred ? (
               <p className="text-red-400 text-sm font-medium animate-pulse">
                 Por questões de segurança, o tempo de leitura terminou.
               </p>
             ) : (
               <p className="text-text-secondary text-sm font-medium">
-                Sua identidade foi confirmada. As imagens serão ocultadas em <span className="text-primary font-bold">{timeLeft}s</span>.
+                Sua identidade foi confirmada. As imagens serão ocultadas em <span className="text-primary font-semibold">{timeLeft}s</span>.
               </p>
             )}
           </div>
@@ -226,7 +226,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
           {/* Imagens do BI com efeito de Blur */}
           <div className="grid grid-cols-1 gap-4 w-full">
             <div className="relative group">
-              <p className="text-left text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">BI Frente</p>
+              <p className="text-left text-xs font-semibold text-gray-500 mb-2 uppercase tracking-widest">BI Frente</p>
               <div className={`aspect-[1.6/1] rounded-2xl overflow-hidden border-2 border-gray-200 bg-surface-dark transition-all duration-700 ${isBlurred ? 'blur-xl scale-95 opacity-50' : ''}`}>
                 {biUrls?.frente ? (
                   <img loading="lazy" decoding="async" src={biUrls.frente} alt="Frente" className="w-full h-full object-cover contrast-[1.05] brightness-[1.02] saturate-[1.05]" />
@@ -239,7 +239,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
             </div>
 
             <div className="relative group">
-              <p className="text-left text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">BI Verso</p>
+              <p className="text-left text-xs font-semibold text-gray-500 mb-2 uppercase tracking-widest">BI Verso</p>
               <div className={`aspect-[1.6/1] rounded-2xl overflow-hidden border-2 border-gray-200 bg-surface-dark transition-all duration-700 ${isBlurred ? 'blur-xl scale-95 opacity-50' : ''}`}>
                 {biUrls?.verso ? (
                   <img loading="lazy" decoding="async" src={biUrls.verso} alt="Verso" className="w-full h-full object-cover contrast-[1.05] brightness-[1.02] saturate-[1.05]" />
@@ -254,7 +254,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
 
           <button
             onClick={() => onNavigate('profile')}
-            className={`w-full mt-4 bg-primary hover:bg-green-400 text-white font-black text-lg py-4 rounded-2xl transition-all shadow-xl shadow-primary/20 active:scale-[0.98]`}
+            className={`w-full mt-4 bg-primary hover:bg-green-400 text-white font-bold text-lg py-4 rounded-2xl transition-all shadow-xl shadow-primary/20 active:scale-[0.98]`}
           >
             Sair
           </button>
@@ -283,7 +283,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
             >
               <span className="material-symbols-outlined text-white text-[28px]">arrow_back</span>
             </button>
-            <h1 className="text-xl font-black text-white tracking-tight">Verificação</h1>
+            <h1 className="text-xl font-bold text-white tracking-tight">Verificação</h1>
             <div className="w-11"></div>
           </div>
         </header>
@@ -295,7 +295,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
             <div className="h-1.5 w-10 rounded-full bg-primary"></div>
             <div className="h-1.5 w-10 rounded-full bg-primary"></div>
           </div>
-          <p className="text-xs font-bold text-gray-500 mt-3 uppercase tracking-widest">Finalizando</p>
+          <p className="text-xs font-semibold text-gray-500 mt-3 uppercase tracking-widest">Finalizando</p>
         </div>
 
         {/* Headline & Body */}
@@ -310,7 +310,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
         <div className="flex flex-col gap-6 px-6 flex-1">
           {/* Upload Section: BI Frente */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-lg font-bold leading-tight tracking-tight">BI Frente</h3>
+            <h3 className="text-lg font-semibold leading-tight tracking-tight">BI Frente</h3>
             <label className="group relative flex flex-col items-center justify-center w-full h-48 rounded-2xl border-2 border-dashed border-gray-700 bg-surface-dark/50 hover:bg-primary/5 hover:border-primary transition-all cursor-pointer overflow-hidden">
               {frentePreview ? (
                 <img loading="lazy" decoding="async" src={frentePreview} alt="Preview" className="w-full h-full object-cover contrast-[1.05] brightness-[1.02] saturate-[1.05]" />
@@ -320,7 +320,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
                     <span className="material-symbols-outlined text-primary" style={{ fontSize: '28px' }}>add_a_photo</span>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-bold text-black">Toque para carregar</p>
+                    <p className="text-sm font-semibold text-black">Toque para carregar</p>
                     <p className="text-xs text-gray-500 mt-1.5 font-medium">PNG, JPG ou PDF (max. 5MB)</p>
                   </div>
                 </div>
@@ -336,7 +336,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
 
           {/* Upload Section: BI Verso */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-lg font-bold leading-tight tracking-tight">BI Verso</h3>
+            <h3 className="text-lg font-semibold leading-tight tracking-tight">BI Verso</h3>
             <label className="group relative flex flex-col items-center justify-center w-full h-48 rounded-2xl border-2 border-dashed border-gray-700 bg-surface-dark/50 hover:bg-primary/5 hover:border-primary transition-all cursor-pointer overflow-hidden">
               {versoPreview ? (
                 <img loading="lazy" decoding="async" src={versoPreview} alt="Preview" className="w-full h-full object-cover contrast-[1.05] brightness-[1.02] saturate-[1.05]" />
@@ -346,7 +346,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
                     <span className="material-symbols-outlined text-primary" style={{ fontSize: '28px' }}>add_a_photo</span>
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-bold text-black">Toque para carregar</p>
+                    <p className="text-sm font-semibold text-black">Toque para carregar</p>
                     <p className="text-xs text-gray-500 mt-1.5 font-medium">PNG, JPG ou PDF (max. 5MB)</p>
                   </div>
                 </div>
@@ -378,7 +378,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className={`w-full flex items-center justify-center gap-3 bg-primary hover:bg-green-400 text-white font-black text-lg py-4 rounded-2xl transition-all shadow-xl shadow-primary/20 active:scale-[0.98] ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full flex items-center justify-center gap-3 bg-primary hover:bg-green-400 text-white font-bold text-lg py-4 rounded-2xl transition-all shadow-xl shadow-primary/20 active:scale-[0.98] ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {loading ? (
               <SpokeSpinner size="w-6 h-6" className="text-black" />
@@ -392,7 +392,7 @@ const SecurityVerify: React.FC<Props> = ({ onNavigate, showToast }) => {
 
           <div className="flex items-center justify-center gap-2 mt-5 opacity-40">
             <span className="material-symbols-outlined text-[16px]">lock</span>
-            <span className="text-[10px] font-black uppercase tracking-[0.1em]">Encriptação de ponta a ponta</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.1em]">Encriptação de ponta a ponta</span>
           </div>
         </div>
       </div>

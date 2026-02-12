@@ -138,7 +138,7 @@ const GiftChest: React.FC<Props> = ({ onNavigate, onOpenSupport, showToast }) =>
         </div>
 
         {/* HeadlineText */}
-        <h1 className="text-[#111] tracking-tight text-[26px] font-black leading-tight px-4 text-center pb-2">
+        <h1 className="text-[#111] tracking-tight text-[26px] font-bold leading-tight px-4 text-center pb-2">
           {isOpen ? 'Presente Resgatado!' : 'Tens um presente para abrir!'}
         </h1>
 
@@ -161,7 +161,7 @@ const GiftChest: React.FC<Props> = ({ onNavigate, onOpenSupport, showToast }) =>
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                 disabled={loading || isOpening}
-                className="bg-transparent flex-1 h-full outline-none text-[#111] font-bold placeholder:text-gray-400 text-[15px]"
+                className="bg-transparent flex-1 h-full outline-none text-[#111] font-semibold placeholder:text-gray-400 text-[15px]"
               />
             </div>
           </div>
@@ -203,7 +203,7 @@ const GiftChest: React.FC<Props> = ({ onNavigate, onOpenSupport, showToast }) =>
                   <div className="absolute inset-0 flex flex-col items-center justify-center animate-reveal-reward overflow-visible">
                     <div className="absolute inset-0 bg-gradient-to-t from-[#00C853]/20 via-transparent to-transparent"></div>
                     <span className="material-symbols-outlined text-yellow-400 text-5xl mb-1 animate-bounce drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]">payments</span>
-                    <p className="text-white text-xl font-black tracking-tight">+Kz {lastReward?.toLocaleString()}</p>
+                    <p className="text-white text-xl font-bold tracking-tight">+Kz {lastReward?.toLocaleString()}</p>
                   </div>
                 )}
               </div>
@@ -214,7 +214,7 @@ const GiftChest: React.FC<Props> = ({ onNavigate, onOpenSupport, showToast }) =>
               ${isOpen ? 'scale-110 -translate-y-4 -translate-x-4 rotate-0' : 'rotate-12 hover:rotate-0'}`}>
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>monetization_on</span>
-                <span className="text-xl font-black">Kz</span>
+                <span className="text-xl font-bold">Kz</span>
               </div>
             </div>
 
@@ -269,7 +269,7 @@ const GiftChest: React.FC<Props> = ({ onNavigate, onOpenSupport, showToast }) =>
         {/* Redeemed Gifts History */}
         <div className="w-full mt-14 px-2">
           <div className="flex items-center justify-between mb-6 px-3">
-            <h3 className="text-[#111] text-lg font-black tracking-tight">Presentes Resgatados</h3>
+            <h3 className="text-[#111] text-lg font-bold tracking-tight">Presentes Resgatados</h3>
             <button onClick={() => onNavigate('reward-claim')} className="text-[#00C853] text-[13px] font-bold hover:underline">Ver todos</button>
           </div>
 
@@ -309,7 +309,7 @@ const GiftChest: React.FC<Props> = ({ onNavigate, onOpenSupport, showToast }) =>
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className={`font-black block ${item.status === 'success' ? 'text-green-600' : 'text-red-400'}`}>
+                    <span className={`font-bold block ${item.status === 'success' ? 'text-green-600' : 'text-red-400'}`}>
                       {item.status === 'success' ? `+ Kz ${item.valor_recebido || 0}` : 'Inválido'}
                     </span>
                     <span className="text-[10px] text-black/40 font-bold uppercase">{new Date(item.data_recebimento).toLocaleDateString()}</span>

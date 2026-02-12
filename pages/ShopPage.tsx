@@ -119,7 +119,7 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
               return (
                 <div key={product.id} className="relative bg-white rounded-[4px] p-5 transition-all animate-fade-in border border-white/10">
                   {/* Vip Level Badge */}
-                  <div className="absolute top-0 right-0 bg-[#FF6B00] px-3 py-1 rounded-tr-[4px] rounded-bl-[4px] text-[10px] font-semibold text-white z-10">
+                  <div className="absolute top-0 right-0 bg-[#FF6B00] px-3 py-1 rounded-tr-[4px] rounded-bl-[4px] text-[10px] font-medium text-white z-10">
                     Vip {vipLevel}
                   </div>
 
@@ -159,7 +159,7 @@ const Shop: React.FC<ShopProps> = ({ onNavigate, showToast, balance }) => {
                       {/* Preço e Botão */}
                       <div className="flex items-end justify-between mt-1 pt-3 border-t border-gray-50">
                         <div>
-                          <p className="text-[10px] text-gray-400 font-semibold leading-none mb-1">Preço</p>
+                          <p className="text-[10px] text-gray-400 font-medium leading-none mb-1">Preço</p>
                           <p className="text-base font-semibold text-gray-900">
                             {product.price.toLocaleString('pt-AO')} Kz
                           </p>

@@ -138,10 +138,10 @@ const AddBank: React.FC<AddBankProps> = ({ onNavigate, showToast }) => {
             {/* Header do Card */}
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight">Dados Bancários</h2>
+                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 leading-tight">Dados Bancários</h2>
                 <p className="text-gray-500 text-sm font-medium">Vincule sua conta para receber</p>
               </div>
-              <div className="w-10 h-10 bg-[#FF6B00] rounded-md flex items-center justify-center text-white text-[8px] font-black text-center p-1 leading-none uppercase">
+              <div className="w-10 h-10 bg-[#FF6B00] rounded-md flex items-center justify-center text-white text-[8px] font-semibold text-center p-1 leading-none uppercase">
                 Store Logo
               </div>
             </div>
@@ -218,7 +218,7 @@ const AddBank: React.FC<AddBankProps> = ({ onNavigate, showToast }) => {
             <button
               onClick={handleSaveBank}
               disabled={loading}
-              className="w-full bg-[#FF6B00] text-white py-4 rounded-xl font-bold text-lg active:scale-[0.98] transition-transform disabled:opacity-50"
+              className="w-full bg-[#FF6B00] text-white py-4 rounded-xl font-semibold text-lg active:scale-[0.98] transition-transform disabled:opacity-50"
             >
               {loading ? 'Salvando...' : mode === 'edit' ? 'Atualizar Dados' : 'Salvar Dados'}
             </button>

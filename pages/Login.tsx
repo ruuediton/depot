@@ -87,7 +87,7 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
               </div>
             </div>
           </div>
-          <h1 className="text-[26px] font-[900] text-white tracking-[0.05em] uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">THE HOME-VIP</h1>
+          <h1 className="text-[26px] font-semibold text-white tracking-[0.05em] uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">THE HOME-VIP</h1>
         </div>
       </div>
 
@@ -108,7 +108,7 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
                 <input
                   type="tel"
                   placeholder="Número de telefone"
-                  className="bg-transparent flex-1 h-full outline-none text-[#27153E] font-bold placeholder:text-[#27153E]/20 text-[17px]"
+                  className="bg-transparent flex-1 h-full outline-none text-[#27153E] font-semibold placeholder:text-[#27153E]/20 text-[17px]"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   required
@@ -123,7 +123,7 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Senha"
-                  className="bg-transparent flex-1 h-full outline-none text-[#27153E] font-bold placeholder:text-[#27153E]/20 text-[17px]"
+                  className="bg-transparent flex-1 h-full outline-none text-[#27153E] font-semibold placeholder:text-[#27153E]/20 text-[17px]"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -140,7 +140,7 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
               {/* Botão Entrar */}
               <button
                 type="submit"
-                className="w-full h-[64px] bg-[#F96302] text-white font-black rounded-[22px] text-[19px] shadow-[0_12px_30px_rgba(249,99,2,0.25)] hover:brightness-110 active:scale-[0.98] transition-all"
+                className="w-full h-[64px] bg-[#F96302] text-white font-bold rounded-[22px] text-[19px] shadow-[0_12px_30px_rgba(249,99,2,0.25)] hover:brightness-110 active:scale-[0.98] transition-all"
               >
                 Entrar
               </button>
@@ -149,7 +149,7 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
               <button
                 type="button"
                 onClick={() => onNavigate('register')}
-                className="w-full h-[64px] bg-white text-[#F96302] border-2 border-[#FDEEE7] font-black rounded-[22px] text-[19px] hover:bg-[#FFF6F0] active:scale-[0.98] transition-all"
+                className="w-full h-[64px] bg-white text-[#F96302] border-2 border-[#FDEEE7] font-semibold rounded-[22px] text-[19px] hover:bg-[#FFF6F0] active:scale-[0.98] transition-all"
               >
                 Inscrever-se
               </button>

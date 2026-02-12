@@ -171,7 +171,7 @@ const Withdraw: React.FC<Props> = ({ onNavigate, showToast }) => {
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 leading-tight">Conta de retirada</h2>
                 <p className="text-red-500 text-sm">Retirada em 24 horas</p>
               </div>
-              <div className="w-10 h-10 bg-[#FF6B00] rounded-md flex items-center justify-center text-white text-[8px] font-black text-center p-1 leading-none uppercase">
+              <div className="w-10 h-10 bg-[#FF6B00] rounded-md flex items-center justify-center text-white text-[8px] font-bold text-center p-1 leading-none uppercase">
                 Store Logo
               </div>
             </div>

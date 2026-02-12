@@ -6,8 +6,8 @@ const SplashScreen: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false);
-      setTimeout(onFinish, 1000); // Wait for fade out animation
-    }, 2500);
+      setTimeout(onFinish, 500); // Wait for fade out animation
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, [onFinish]);

@@ -9,7 +9,7 @@ interface Props {
     showToast?: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
 }
 
-type TabType = 'bank_deposit' | 'usdt_deposit' | 'withdrawal' | 'gifts' | 'tasks';
+type TabType = 'bank_deposit' | 'usdt_deposit' | 'withdrawal' | 'gifts' | 'tasks' | 'p2p_transfer';
 
 const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
     const [activeTab, setActiveTab] = useState<TabType>('bank_deposit');
@@ -64,6 +64,13 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                         .eq('user_id', user.id)
                         .order('data_compra', { ascending: false });
                     break;
+                case 'p2p_transfer':
+                    query = supabase
+                        .from('transacoes_p2p')
+                        .select('*')
+                        .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+                        .order('created_at', { ascending: false });
+                    break;
             }
 
             const { data: result, error } = await query;
@@ -105,15 +112,15 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                                 <span className="material-symbols-outlined">account_balance</span>
                             </div>
                             <div>
-                                <p className="font-bold text-slate-900 text-sm">{item.nome_banco || 'Depósito Bancário'}</p>
+                                <p className="font-semibold text-slate-900 text-sm">{item.nome_banco || 'Depósito Bancário'}</p>
                                 <p className="text-[10px] text-slate-400 font-medium">
                                     {new Date(item.created_at).toLocaleDateString('pt-AO')} às {new Date(item.created_at).toLocaleTimeString('pt-AO', { hour: '2-digit', minute: '2-digit' })}
                                 </p>
                             </div>
                         </div>
                         <div className="text-right">
-                            <p className="font-black text-[#f27f0d] text-sm">+ {item.valor_deposito?.toLocaleString()} Kz</p>
-                            <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase border ${getStatusStyle(item.estado_de_pagamento, activeTab)}`}>
+                            <p className="font-bold text-[#f27f0d] text-sm">+ {item.valor_deposito?.toLocaleString()} Kz</p>
+                            <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border ${getStatusStyle(item.estado_de_pagamento, activeTab)}`}>
                                 {item.estado_de_pagamento}
                             </span>
                         </div>
@@ -128,11 +135,11 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                                     <span className="material-symbols-outlined">currency_exchange</span>
                                 </div>
                                 <div>
-                                    <p className="font-bold text-slate-900 text-sm">{item.amount_usdt} USDT</p>
-                                    <p className="text-[10px] text-slate-400 font-medium">Equiv: {item.amount_kz?.toLocaleString()} Kz</p>
+                                    <p className="font-semibold text-slate-900 text-sm">{item.amount_usdt} USDT</p>
+                                    <p className="text-[10px] text-slate-400 font-semibold">Equiv: {item.amount_kz?.toLocaleString()} Kz</p>
                                 </div>
                             </div>
-                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase border ${getStatusStyle(item.status, activeTab)}`}>
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border ${getStatusStyle(item.status, activeTab)}`}>
                                 {item.status || 'Pendente'}
                             </span>
                         </div>
@@ -152,20 +159,20 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                                     <span className="material-symbols-outlined">payments</span>
                                 </div>
                                 <div>
-                                    <p className="font-bold text-slate-900 text-sm">{item.nome_do_banco}</p>
+                                    <p className="font-semibold text-slate-900 text-sm">{item.nome_do_banco}</p>
                                     <p className="text-[10px] text-slate-400 font-medium">{item.iban?.slice(0, 8)}...</p>
                                 </div>
                             </div>
                             <div className="text-right">
-                                <p className="font-black text-red-500 text-sm">- {item.valor_solicitado?.toLocaleString()} Kz</p>
-                                <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase border ${getStatusStyle(item.estado_da_retirada, activeTab)}`}>
+                                <p className="font-bold text-red-500 text-sm">- {item.valor_solicitado?.toLocaleString()} Kz</p>
+                                <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border ${getStatusStyle(item.estado_da_retirada, activeTab)}`}>
                                     {item.estado_da_retirada}
                                 </span>
                             </div>
                         </div>
                         <div className="flex justify-between items-center bg-slate-50 p-2 rounded-lg">
                             <span className="text-[10px] text-slate-500 font-bold uppercase">Líquido:</span>
-                            <span className="text-xs font-black text-green-600">{liq.toLocaleString()} Kz</span>
+                            <span className="text-xs font-bold text-green-600">{liq.toLocaleString()} Kz</span>
                         </div>
                     </div>
                 );
@@ -177,12 +184,12 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                                 <span className="material-symbols-outlined">redeem</span>
                             </div>
                             <div>
-                                <p className="font-bold text-slate-900 text-sm">Resgate de Código</p>
+                                <p className="font-semibold text-slate-900 text-sm">Resgate de Código</p>
                                 <p className="text-[10px] text-slate-400 font-medium">#{item.codigo_presente}</p>
                             </div>
                         </div>
                         <div className="text-right">
-                            <p className="font-black text-green-600 text-sm">+ {item.valor_recebido?.toLocaleString()} Kz</p>
+                            <p className="font-bold text-green-600 text-sm">+ {item.valor_recebido?.toLocaleString()} Kz</p>
                             <p className="text-[9px] text-slate-400 font-bold uppercase">{new Date(item.data_recebimento).toLocaleDateString('pt-AO')}</p>
                         </div>
                     </div>
@@ -195,15 +202,38 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                                 <span className="material-symbols-outlined">task_alt</span>
                             </div>
                             <div>
-                                <p className="font-bold text-slate-900 text-sm">Comissão de Tarefa</p>
+                                <p className="font-semibold text-slate-900 text-sm">Comissão de Tarefa</p>
                                 <p className="text-[10px] text-slate-400 font-medium">Pedido: #{item.id?.toString().slice(-6)}</p>
                             </div>
                         </div>
                         <div className="text-right">
-                            <p className="font-black text-slate-900 text-sm">{item.preco_produto?.toLocaleString()} Kz</p>
-                            <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase border ${getStatusStyle(item.estado_compra, activeTab)}`}>
+                            <p className="font-semibold text-slate-900 text-sm">{item.preco_produto?.toLocaleString()} Kz</p>
+                            <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border ${getStatusStyle(item.estado_compra, activeTab)}`}>
                                 {item.estado_compra || 'Concluído'}
                             </span>
+                        </div>
+                    </div>
+                );
+            case 'p2p_transfer':
+                const isSender = item.sender_id === item.user_id; // Need to handle current user ID properly
+                return (
+                    <div key={item.id} className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex justify-between items-center active:scale-[0.98] transition-all">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+                                <span className="material-symbols-outlined">sync_alt</span>
+                            </div>
+                            <div>
+                                <p className="font-semibold text-slate-900 text-sm">{item.sender_id ? (item.amount > 0 ? 'Recebido P2P' : 'Enviado P2P') : 'Transferência'}</p>
+                                <p className="text-[10px] text-slate-400 font-medium">
+                                    {new Date(item.created_at).toLocaleDateString()}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <p className={`font-bold text-sm ${item.amount > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                {item.amount > 0 ? '+' : ''} {item.amount?.toLocaleString()} Kz
+                            </p>
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">P2P</span>
                         </div>
                     </div>
                 );
@@ -216,6 +246,7 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
         { id: 'withdrawal', label: 'Retiradas', icon: 'payments' },
         { id: 'gifts', label: 'Brindes', icon: 'redeem' },
         { id: 'tasks', label: 'Tarefas', icon: 'task' },
+        { id: 'p2p_transfer', label: 'Transferências', icon: 'sync_alt' },
     ];
 
     return (
@@ -229,7 +260,7 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                     >
                         <span className="material-symbols-outlined">arrow_back</span>
                     </button>
-                    <h1 className="text-xl font-black text-white tracking-tight">Registros Financeiros</h1>
+                    <h1 className="text-xl font-bold text-white tracking-tight">Registros Financeiros</h1>
                     <button className="w-10 h-10 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center text-white active:scale-90 transition-all border border-white/10">
                         <span className="material-symbols-outlined">tune</span>
                     </button>
@@ -242,8 +273,8 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl whitespace-nowrap transition-all duration-300 ${activeTab === tab.id
-                                    ? 'bg-white text-[#f27f0d] shadow-lg shadow-orange-900/20 font-black'
-                                    : 'bg-white/10 text-white/70 font-bold border border-white/5'
+                                ? 'bg-white text-[#f27f0d] shadow-lg shadow-orange-900/20 font-bold'
+                                : 'bg-white/10 text-white/70 font-semibold border border-white/5'
                                 }`}
                         >
                             <span className="material-symbols-outlined text-[18px]">{tab.icon}</span>

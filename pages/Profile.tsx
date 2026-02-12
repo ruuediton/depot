@@ -107,7 +107,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
               />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-white tracking-tight">
+              <h2 className="text-sm font-semibold text-white tracking-tight">
                 {currentProfile?.phone || 'Usuário'}
               </h2>
               <p className="text-[10px] text-orange-100/70 uppercase font-bold tracking-widest">
@@ -127,12 +127,12 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
           <div className="bg-white rounded-3xl p-5 shadow-2xl shadow-black/10 text-[#f27f0d] animate-in fade-in slide-in-from-top-4 duration-500">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <p className="text-[#f27f0d]/60 text-[10px] font-black uppercase tracking-[0.15em] mb-1">Balanço Total</p>
+                <p className="text-[#f27f0d]/60 text-[10px] font-bold uppercase tracking-[0.15em] mb-1">Balanço Total</p>
                 <div className="flex items-baseline gap-2">
-                  <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
+                  <h3 className="text-4xl font-bold text-slate-900 tracking-tighter">
                     {stats.balance.toLocaleString('pt-AO')}
                   </h3>
-                  <span className="text-sm font-bold text-slate-400">USDT</span>
+                  <span className="text-sm font-semibold text-slate-400">USDT</span>
                 </div>
               </div>
               <div className="bg-[#f27f0d]/10 w-11 h-11 rounded-2xl flex items-center justify-center">
@@ -140,9 +140,9 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
               </div>
             </div>
             <div className="pt-4 border-t border-slate-50">
-              <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Equivalente em Kwanzas</p>
-              <p className="text-xl font-black text-slate-800 tracking-tight">
-                {balanceAOA.toLocaleString('pt-AO')} <span className="text-xs font-bold text-slate-500">AOA</span>
+              <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-widest mb-1">Equivalente em Kwanzas</p>
+              <p className="text-xl font-bold text-slate-800 tracking-tight">
+                {balanceAOA.toLocaleString('pt-AO')} <span className="text-xs font-semibold text-slate-500">AOA</span>
               </p>
             </div>
           </div>
@@ -150,20 +150,20 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
-              <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.1em] mb-1">Total Depósito</p>
-              <p className="font-black text-green-600 text-sm tracking-tight">{stats.totalDeposit.toLocaleString()} Kz</p>
+              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-[0.1em] mb-1">Total Depósito</p>
+              <p className="font-bold text-green-600 text-sm tracking-tight">{stats.totalDeposit.toLocaleString()} Kz</p>
             </div>
             <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
-              <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.1em] mb-1">Total Saques</p>
-              <p className="font-black text-red-500 text-sm tracking-tight">{stats.totalWithdrawal.toLocaleString()} Kz</p>
+              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-[0.1em] mb-1">Total Saques</p>
+              <p className="font-bold text-red-500 text-sm tracking-tight">{stats.totalWithdrawal.toLocaleString()} Kz</p>
             </div>
             <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
-              <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.1em] mb-1">Ganhos Hoje</p>
-              <p className="font-black text-[#f27f0d] text-sm tracking-tight">+{stats.todayEarnings.toLocaleString()} Kz</p>
+              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-[0.1em] mb-1">Ganhos Hoje</p>
+              <p className="font-bold text-[#f27f0d] text-sm tracking-tight">+{stats.todayEarnings.toLocaleString()} Kz</p>
             </div>
             <div className="bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/20">
-              <p className="text-slate-400 text-[9px] font-black uppercase tracking-[0.1em] mb-1">Pendente</p>
-              <p className="font-black text-orange-500 text-sm tracking-tight">{stats.pending.toLocaleString()} Kz</p>
+              <p className="text-slate-400 text-[9px] font-bold uppercase tracking-[0.1em] mb-1">Pendente</p>
+              <p className="font-bold text-orange-500 text-sm tracking-tight">{stats.pending.toLocaleString()} Kz</p>
             </div>
           </div>
 
@@ -247,7 +247,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile, showTo
                 <div className="w-10 h-10 bg-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/30">
                   <span className="material-symbols-outlined text-white text-[20px] font-bold">logout</span>
                 </div>
-                <span className="font-black text-white text-sm uppercase tracking-widest">Sair da Conta</span>
+                <span className="font-bold text-white text-sm uppercase tracking-widest">Sair da Conta</span>
               </div>
             </button>
           </div>

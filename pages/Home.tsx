@@ -61,9 +61,9 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
       <div className="bg-[#FF6B00] px-4 pt-4 pb-2 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-            <span className="material-symbols-outlined text-primary text-xl font-bold">home</span>
+            <span className="material-symbols-outlined text-primary text-xl font-semibold">home</span>
           </div>
-          <h1 className="text-xl font-black tracking-tight italic">The Home Depot</h1>
+          <h1 className="text-xl font-bold tracking-tight italic">The Home Depot</h1>
         </div>
 
         {/* Ícones do topo */}
@@ -116,7 +116,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
-                  <h2 className="text-2xl font-black italic tracking-tighter text-white">
+                  <h2 className="text-2xl font-bold italic tracking-tighter text-white">
                     {slide.title.split(' ').map((word, i) =>
                       word === 'FROM' ? (
                         <span key={i} className="text-primary font-bold"> {word} </span>
@@ -170,7 +170,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
           <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
             <span className="material-symbols-outlined text-3xl">account_balance_wallet</span>
           </div>
-          <span className="text-xs font-semibold leading-tight">Recarrega</span>
+          <span className="text-xs font-medium leading-tight">Recarrega</span>
         </button>
 
         {/* Retirar */}
@@ -181,7 +181,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
           <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
             <span className="material-symbols-outlined text-3xl">payments</span>
           </div>
-          <span className="text-xs font-semibold leading-tight">Retirar</span>
+          <span className="text-xs font-medium leading-tight">Retirar</span>
         </button>
 
         {/* Perfil de companhia */}
@@ -192,7 +192,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
           <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
             <span className="material-symbols-outlined text-3xl">corporate_fare</span>
           </div>
-          <span className="text-xs font-semibold leading-tight">Perfil de companhia</span>
+          <span className="text-xs font-medium leading-tight">Perfil de companhia</span>
         </button>
 
         {/* Convidar amigos */}
@@ -203,7 +203,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
           <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
             <span className="material-symbols-outlined text-3xl">person_add</span>
           </div>
-          <span className="text-xs font-semibold leading-tight">Convidar amigos</span>
+          <span className="text-xs font-medium leading-tight">Convidar amigos</span>
         </button>
 
         {/* Cooperação de Agência */}
@@ -214,7 +214,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
           <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
             <span className="material-symbols-outlined text-3xl">handshake</span>
           </div>
-          <span className="text-xs font-semibold leading-tight">Cooperação de Agência</span>
+          <span className="text-xs font-medium leading-tight">Cooperação de Agência</span>
         </button>
 
         {/* Recompensas Diárias */}
@@ -225,7 +225,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
           <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
             <span className="material-symbols-outlined text-3xl text-yellow-400">card_giftcard</span>
           </div>
-          <span className="text-xs font-semibold leading-tight">Recompensas Diárias</span>
+          <span className="text-xs font-medium leading-tight">Recompensas Diárias</span>
         </button>
       </div>
 
@@ -274,7 +274,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <div className="text-primary font-bold text-lg">$10.00</div>
+                  <div className="text-primary font-semibold text-lg">$10.00</div>
                   <div className="text-[10px] text-gray-400 dark:text-gray-500 mb-1">Preço</div>
                   <p className="text-xs text-slate-800 dark:text-slate-200 line-clamp-2 leading-snug">50pcs Resistor 0.25W 5% 3.3 - 3.3M Ohm Carbon Film resistors</p>
                 </div>

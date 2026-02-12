@@ -58,7 +58,7 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
           >
             <span className="material-symbols-outlined text-white text-[32px]">chevron_left</span>
           </button>
-          <h1 className="text-[18px] font-bold text-white tracking-tight">Minha Equipe</h1>
+          <h1 className="text-[18px] font-semibold text-white tracking-tight">Minha Equipe</h1>
           <div className="w-10"></div>
         </div>
       </header>
@@ -69,7 +69,7 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
           <button
             key={level}
             onClick={() => setActiveTab(level)}
-            className={`flex-1 h-10 rounded-[4px] font-bold text-[13px] uppercase tracking-wider transition-all whitespace-nowrap border ${activeTab === level
+            className={`flex-1 h-10 rounded-[4px] font-semibold text-[13px] uppercase tracking-wider transition-all whitespace-nowrap border ${activeTab === level
               ? 'bg-white text-[#FF6B00] border-white'
               : 'bg-[#FF6B00] text-white/70 border-white/30'
               }`}
@@ -93,19 +93,19 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
                 <div className="size-10 rounded-[4px] bg-[#FFF0E0] flex items-center justify-center text-[#FF6B00]">
                   <span className="material-symbols-outlined text-[24px]">account_tree</span>
                 </div>
-                <div className="px-3 py-1 bg-[#FFF0E0] text-[#FF6B00] rounded-[4px] text-[10px] font-black uppercase tracking-widest">
+                <div className="px-3 py-1 bg-[#FFF0E0] text-[#FF6B00] rounded-[4px] text-[10px] font-bold uppercase tracking-widest">
                   NÍVEL {activeTab}
                 </div>
               </div>
               <div className="space-y-1">
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Membros na Camada</p>
-                <p className="text-3xl font-black text-[#111]">{filteredSubs.length}</p>
+                <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-widest">Membros na Camada</p>
+                <p className="text-3xl font-bold text-[#111]">{filteredSubs.length}</p>
               </div>
             </div>
 
             {/* List - Flat */}
             <div className="flex flex-col gap-2">
-              <h3 className="text-[11px] font-bold text-white/80 uppercase tracking-[0.1em] px-1 mb-1">
+              <h3 className="text-[11px] font-semibold text-white/80 uppercase tracking-[0.1em] px-1 mb-1">
                 Detalhes da Rede
               </h3>
 
@@ -121,16 +121,16 @@ const SubordinateList: React.FC<Props> = ({ onNavigate }) => {
                     </div>
 
                     <div className="flex-1 min-w-0 flex flex-col justify-center">
-                      <p className="text-[#111] font-black text-[13px] tracking-tight leading-tight">
+                      <p className="text-[#111] font-bold text-[13px] tracking-tight leading-tight">
                         {sub.phone.replace(/(\d{3})(\d{3})(\d{3})/, '+$1 *** $3')}
                       </p>
-                      <span className="text-gray-400 text-[10px] font-bold mt-0.5">
+                      <span className="text-gray-400 text-[10px] font-semibold mt-0.5">
                         Desde {new Date(sub.created_at).toLocaleDateString()}
                       </span>
                     </div>
 
                     <div className="text-right">
-                      <div className={`px-2 py-[2px] rounded-[2px] text-[9px] font-black uppercase tracking-wide ${sub.reloaded_amount >= 3000
+                      <div className={`px-2 py-[2px] rounded-[2px] text-[9px] font-bold uppercase tracking-wide ${sub.reloaded_amount >= 3000
                         ? 'bg-[#E8F5E9] text-[#2E7D32]'
                         : 'bg-[#FFEBEE] text-[#D32F2F]'
                         }`}>

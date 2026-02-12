@@ -48,7 +48,7 @@ const DetalhesPay: React.FC<Props> = ({ onNavigate, data, showToast }) => {
                 >
                     <span className="material-symbols-outlined text-white">chevron_left</span>
                 </button>
-                <h1 className="text-lg font-bold text-white">Detalhes da Transferência</h1>
+                <h1 className="text-lg font-semibold text-white">Detalhes da Transferência</h1>
                 <button
                     onClick={() => showToast?.('Funcionalidade de partilha em breve!', 'info')}
                     className="p-2 -mr-2 hover:bg-white/10 rounded-full transition-colors"
@@ -66,8 +66,8 @@ const DetalhesPay: React.FC<Props> = ({ onNavigate, data, showToast }) => {
                             <span className="material-symbols-outlined text-[#f27f0d] text-3xl font-bold">check</span>
                         </div>
                     </div>
-                    <p className="text-white/90 font-bold mb-1 uppercase tracking-wider text-[10px]">Depósito Solicitado</p>
-                    <h2 className="text-4xl font-black text-white tracking-tight">
+                    <p className="text-white/90 font-semibold mb-1 uppercase tracking-wider text-[10px]">Depósito Solicitado</p>
+                    <h2 className="text-4xl font-bold text-white tracking-tight">
                         {amount.toLocaleString('pt-AO')} Kz
                     </h2>
                     <p className="text-white/80 text-xs font-semibold mt-2">{formatDate(deposit?.created_at)}</p>
@@ -78,22 +78,22 @@ const DetalhesPay: React.FC<Props> = ({ onNavigate, data, showToast }) => {
                     {/* Recipient Information */}
                     <div className="space-y-4">
                         <div className="border-b border-white/20 pb-2">
-                            <h3 className="text-[10px] font-bold text-white/70 uppercase tracking-widest">Informações do Destinatário</h3>
+                            <h3 className="text-[10px] font-semibold text-white/70 uppercase tracking-widest">Informações do Destinatário</h3>
                         </div>
 
                         <div className="space-y-4">
                             <div className="flex justify-between items-center">
                                 <span className="text-white/80 text-sm font-medium">Nome do Beneficiário</span>
-                                <span className="font-bold text-white text-sm text-right">The Home Depot (SU), LDA</span>
+                                <span className="font-semibold text-white text-sm text-right">The Home Depot (SU), LDA</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-white/80 text-sm font-medium">Banco</span>
-                                <span className="font-bold text-white text-sm">{deposit?.nome_banco || 'Carregando...'}</span>
+                                <span className="font-semibold text-white text-sm">{deposit?.nome_banco || 'Carregando...'}</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-white/80 text-sm font-medium">IBAN</span>
                                 <div className="flex items-center gap-2">
-                                    <span className="font-mono font-bold text-white text-xs tracking-tight">{deposit?.iban || '...'}</span>
+                                    <span className="font-mono font-semibold text-white text-xs tracking-tight">{deposit?.iban || '...'}</span>
                                     <button
                                         onClick={() => deposit?.iban && handleCopy(deposit.iban)}
                                         className="bg-white/20 hover:bg-white/30 p-1.5 rounded text-white transition-colors active:scale-95"
@@ -108,14 +108,14 @@ const DetalhesPay: React.FC<Props> = ({ onNavigate, data, showToast }) => {
                     {/* Transaction Metadata */}
                     <div className="space-y-4">
                         <div className="border-b border-white/20 pb-2 pt-4">
-                            <h3 className="text-[10px] font-bold text-white/70 uppercase tracking-widest">Metadados da Transação</h3>
+                            <h3 className="text-[10px] font-semibold text-white/70 uppercase tracking-widest">Metadados da Transação</h3>
                         </div>
 
                         <div className="space-y-4">
                             <div className="flex justify-between items-center">
                                 <span className="text-white/80 text-sm font-medium">ID da Transação</span>
                                 <div className="flex items-center gap-2">
-                                    <span className="font-bold text-white text-sm">{deposit?.id?.substring(0, 12)}...</span>
+                                    <span className="font-semibold text-white text-sm">{deposit?.id?.substring(0, 12)}...</span>
                                     <button
                                         onClick={() => deposit?.id && handleCopy(deposit.id)}
                                         className="bg-white/20 hover:bg-white/30 p-1.5 rounded text-white transition-colors active:scale-95"
@@ -126,12 +126,12 @@ const DetalhesPay: React.FC<Props> = ({ onNavigate, data, showToast }) => {
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-white/80 text-sm font-medium">Método de Pagamento</span>
-                                <span className="font-bold text-white text-sm">{deposit?.payment_method === 'USDT' ? 'USDT (TRC20)' : 'Transferência Bancária'}</span>
+                                <span className="font-semibold text-white text-sm">{deposit?.payment_method === 'USDT' ? 'USDT (TRC20)' : 'Transferência Bancária'}</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-white/80 text-sm font-medium">Valor Pago</span>
                                 <div className="flex items-center gap-2">
-                                    <span className="font-black text-white text-base text-shadow-sm">{amount.toLocaleString('pt-AO')} Kz</span>
+                                    <span className="font-semibold text-white text-base text-shadow-sm">{amount.toLocaleString('pt-AO')} Kz</span>
                                     <button
                                         onClick={() => handleCopy(amount.toString())}
                                         className="bg-white/20 hover:bg-white/30 p-1.5 rounded text-white transition-colors active:scale-95"
@@ -145,7 +145,7 @@ const DetalhesPay: React.FC<Props> = ({ onNavigate, data, showToast }) => {
 
                     {/* Note Section */}
                     <div className="mt-8 p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 flex flex-col gap-1">
-                        <span className="text-[10px] font-bold text-white/70 uppercase tracking-widest">Nota Importante</span>
+                        <span className="text-[10px] font-semibold text-white/70 uppercase tracking-widest">Nota Importante</span>
                         <p className="text-xs text-white/90 font-medium leading-relaxed">
                             Por favor, anexe o comprovativo de transferência na seção de histórico de depósitos caso o valor não seja creditado em até 30 minutos.
                         </p>

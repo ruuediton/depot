@@ -113,7 +113,7 @@ const DepositUSDT: React.FC<Props> = ({ onNavigate, showToast, data }) => {
           >
             <span className="material-symbols-outlined text-white text-[28px]">arrow_back</span>
           </button>
-          <h1 className="text-xl font-black text-white tracking-tight">Recarregar USDT</h1>
+          <h1 className="text-xl font-bold text-white tracking-tight">Recarregar USDT</h1>
           <button
             onClick={() => onNavigate('records-financeiro')}
             className="w-11 h-11 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md transition-all active:scale-90"
@@ -129,33 +129,33 @@ const DepositUSDT: React.FC<Props> = ({ onNavigate, showToast, data }) => {
           <div className="size-16 bg-[#26a17b]/10 rounded-full flex items-center justify-center mb-4 ring-2 ring-[#26a17b]/20">
             <span className="material-symbols-outlined text-[#26a17b]" style={{ fontSize: '32px', fontVariationSettings: "'FILL' 1" }}>currency_bitcoin</span>
           </div>
-          <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-black">Depósito Cripto</h1>
+          <h1 className="text-2xl font-bold tracking-tight mb-2 text-black">Depósito Cripto</h1>
           <p className="text-text-secondary text-sm leading-relaxed max-w-[280px]">
-            Recarregue sua conta usando USDT na rede <span className="text-black font-bold">TRON (TRC20)</span>.
+            Recarregue sua conta usando USDT na rede <span className="text-black font-semibold">TRON (TRC20)</span>.
           </p>
         </div>
 
         {/* Amount Input Section */}
         {/* Amount Read-Only Section */}
         <div className="bg-gray-50 rounded-2xl p-6 mb-6 border border-gray-100 text-center">
-          <p className="text-gray-400 text-[11px] font-bold uppercase tracking-widest mb-1">Valor a enviar</p>
+          <p className="text-gray-400 text-[11px] font-semibold uppercase tracking-widest mb-1">Valor a enviar</p>
           <div className="flex items-center justify-center gap-1">
-            <span className="text-3xl font-black text-[#00C853]">{amountUsdt.toFixed(2)}</span>
-            <span className="text-sm font-bold text-[#00C853] mt-2">USDT</span>
+            <span className="text-3xl font-bold text-[#00C853]">{amountUsdt.toFixed(2)}</span>
+            <span className="text-sm font-semibold text-[#00C853] mt-2">USDT</span>
           </div>
           <div className="mt-2 text-[12px] text-gray-400 font-medium bg-gray-100 rounded-full py-1 px-3 inline-block">
-            Equivalente a <span className="text-[#0F1111] font-bold">{amountKz.toLocaleString('pt-AO')} Kz</span>
+            Equivalente a <span className="text-[#0F1111] font-semibold">{amountKz.toLocaleString('pt-AO')} Kz</span>
           </div>
         </div>
 
         {/* Payment Details Section */}
         <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-          <h3 className="text-xs font-bold text-gray-800 uppercase tracking-widest mb-6 text-center">Dados para Transferência</h3>
+          <h3 className="text-xs font-semibold text-gray-800 uppercase tracking-widest mb-6 text-center">Dados para Transferência</h3>
 
           {/* Recipient Name */}
           <div className="flex flex-col gap-1 mb-4 text-center">
-            <label className="text-[10px] font-bold text-gray-700 uppercase tracking-widest">Destinatário</label>
-            <p className="text-black font-bold text-sm tracking-wide">{recipientName}</p>
+            <label className="text-[10px] font-semibold text-gray-700 uppercase tracking-widest">Destinatário</label>
+            <p className="text-black font-semibold text-sm tracking-wide">{recipientName}</p>
           </div>
 
           {/* QR Code Placeholder */}
@@ -170,16 +170,16 @@ const DepositUSDT: React.FC<Props> = ({ onNavigate, showToast, data }) => {
                 />
               </div>
               <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-2xl flex items-center justify-center">
-                <span className="material-symbols-outlined text-black font-black">zoom_in</span>
+                <span className="material-symbols-outlined text-black font-bold">zoom_in</span>
               </div>
             </div>
           </div>
 
           {/* Wallet Address */}
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-bold text-gray-700 uppercase tracking-widest text-center">Endereço da Carteira (TRC20)</label>
+            <label className="text-[10px] font-semibold text-gray-700 uppercase tracking-widest text-center">Endereço da Carteira (TRC20)</label>
             <div className="flex items-center gap-2 bg-background-dark p-3 rounded-xl border border-brand-border">
-              <p className="flex-1 text-[13px] font-mono font-bold text-text-primary truncate text-center select-all">{walletAddress}</p>
+              <p className="flex-1 text-[13px] font-mono font-semibold text-text-primary truncate text-center select-all">{walletAddress}</p>
               <button
                 onClick={handleCopy}
                 className="size-10 bg-primary rounded-lg flex items-center justify-center text-text-primary active:scale-90 transition-transform"
@@ -195,9 +195,9 @@ const DepositUSDT: React.FC<Props> = ({ onNavigate, showToast, data }) => {
           <div className="flex gap-3">
             <span className="material-symbols-outlined text-orange-500">warning</span>
             <div className="flex flex-col">
-              <p className="text-black text-xs font-bold uppercase tracking-tight">Aviso Importante</p>
+              <p className="text-black text-xs font-semibold uppercase tracking-tight">Aviso Importante</p>
               <p className="text-gray-900/80 text-[11px] leading-relaxed mt-1">
-                Envie apenas <span className="font-bold text-black underline">USDT via rede TRC20</span>. O envio para outras redes ou moedas resultará na perda definitiva dos fundos.
+                Envie apenas <span className="font-semibold text-black underline">USDT via rede TRC20</span>. O envio para outras redes ou moedas resultará na perda definitiva dos fundos.
               </p>
             </div>
           </div>

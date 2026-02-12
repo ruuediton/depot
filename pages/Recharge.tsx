@@ -169,7 +169,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                     >
                         <span className="material-symbols-outlined text-white text-xl">arrow_back</span>
                     </button>
-                    <h1 className="text-white text-lg font-bold">Recarregar</h1>
+                    <h1 className="text-white text-lg font-semibold">Recarregar</h1>
                     <button
                         onClick={() => onNavigate('records-financeiro')}
                         className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 backdrop-blur-sm active:scale-90 transition-all"
@@ -185,7 +185,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                 <div className="bg-white rounded-2xl p-5 shadow-lg">
                     {/* Método de Pagamento */}
                     <div className="mb-5">
-                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3 block">
+                        <label className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-3 block">
                             Método de pagamento
                         </label>
                         <div className="flex gap-6">
@@ -197,7 +197,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                                     }`}>
                                     {paymentMethod === 'BANK' && <div className="w-2 h-2 bg-white rounded-full"></div>}
                                 </div>
-                                <span className={`text-sm ${paymentMethod === 'BANK' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>Banco</span>
+                                <span className={`text-sm ${paymentMethod === 'BANK' ? 'text-gray-900 font-semibold' : 'text-gray-500 font-medium'}`}>Banco</span>
                             </button>
                             <button
                                 onClick={() => { setPaymentMethod('USDT'); setSelectedBank(null); }}
@@ -207,14 +207,14 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                                     }`}>
                                     {paymentMethod === 'USDT' && <div className="w-2 h-2 bg-white rounded-full"></div>}
                                 </div>
-                                <span className={`text-sm ${paymentMethod === 'USDT' ? 'text-gray-900 font-semibold' : 'text-gray-500'}`}>USDT</span>
+                                <span className={`text-sm ${paymentMethod === 'USDT' ? 'text-gray-900 font-semibold' : 'text-gray-500 font-medium'}`}>USDT</span>
                             </button>
                         </div>
                     </div>
 
                     {/* Valor */}
                     <div className="mb-5">
-                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 block">
+                        <label className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2 block">
                             Valor válido
                         </label>
                         <div className="bg-[#FEF7F2] rounded-xl px-4 h-[50px] flex items-center border border-[#FDEEE3] focus-within:border-[#FF6B00]/30 transition-all">
@@ -226,7 +226,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                                     className="bg-transparent flex-1 outline-none text-xl font-semibold text-gray-900 placeholder:text-gray-300"
                                     placeholder="0"
                                 />
-                                <span className="text-sm font-semibold text-gray-400">Kz</span>
+                                <span className="text-sm font-medium text-gray-400">Kz</span>
                             </div>
                         </div>
                         {paymentMethod === 'USDT' && amount && (
@@ -236,7 +236,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
 
                     {/* Valores Rápidos */}
                     <div className="mb-5">
-                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 block">
+                        <label className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2 block">
                             Valores rápidos
                         </label>
                         <div className="grid grid-cols-3 gap-2">
@@ -258,7 +258,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
                     {/* Seleção de Banco */}
                     {paymentMethod === 'BANK' && (
                         <div className="mb-6">
-                            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2 block">
+                            <label className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2 block">
                                 Selecione o banco
                             </label>
                             <div className="space-y-2">
@@ -295,7 +295,7 @@ const Recharge: React.FC<DepositProps> = ({ onNavigate, showToast }) => {
 
                 {/* Info de Segurança */}
                 <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 text-[11px] text-gray-500 leading-relaxed space-y-2 font-medium">
-                    <p className="font-semibold text-gray-700">ℹ️ Informações importantes:</p>
+                    <p className="font-bold text-gray-700">ℹ️ Informações importantes:</p>
                     <p>• Valor mínimo via banco: 8.500 Kz</p>
                     <p>• Valor máximo via banco: 1.000.000 Kz</p>
                     <p>• Valor mínimo via USDT: 4 USDT</p>

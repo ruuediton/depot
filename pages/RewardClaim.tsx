@@ -40,12 +40,12 @@ const RewardClaim: React.FC<Props> = ({ onNavigate, onOpenSupport }) => {
 
         {/* Text Header */}
         <div className="text-center z-10 mb-8 animate-in fade-in zoom-in duration-500">
-          <h2 className="text-primary text-5xl font-black tracking-tight mb-3">Parabéns!</h2>
+          <h2 className="text-primary text-5xl font-bold tracking-tight mb-3">Parabéns!</h2>
           <div className="flex flex-col items-center">
-            <span className="text-black text-xs font-black opacity-50 uppercase tracking-[0.3em] mb-2">Recebeste</span>
+            <span className="text-black text-xs font-bold opacity-50 uppercase tracking-[0.3em] mb-2">Recebeste</span>
             <div className="flex items-baseline gap-3">
-              <span className="text-primary text-7xl font-black">500</span>
-              <span className="text-primary text-3xl font-black">Kz</span>
+              <span className="text-primary text-7xl font-bold">500</span>
+              <span className="text-primary text-3xl font-bold">Kz</span>
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@ const RewardClaim: React.FC<Props> = ({ onNavigate, onOpenSupport }) => {
                 alert("Sucesso! 500 Kz resgatados.");
                 onNavigate('wallet');
               }}
-              className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-2xl h-16 bg-primary text-white text-xl font-black tracking-wide active:scale-95 transition-transform"
+              className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-2xl h-16 bg-primary text-white text-xl font-bold tracking-wide active:scale-95 transition-transform"
             >
               <span className="truncate uppercase tracking-wider">Resgatar Agora</span>
             </button>

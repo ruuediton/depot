@@ -2,3 +2,9 @@ node_modules
 .env*
 dist
 .DS_Store
+.agent
+*.log
+.temp_ag_kit
+.vercel
+build
+package-lock.json.tmp
