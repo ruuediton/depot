@@ -82,7 +82,10 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
       </div>
 
       {/* Banner de alerta com animação */}
-      <div className="mx-4 mt-2 mb-4 bg-white/20 rounded-full py-1.5 px-4 flex items-center gap-2 overflow-hidden">
+      <div
+        onClick={() => onNavigate('gift-chest')}
+        className="mx-4 mt-2 mb-4 bg-white/20 rounded-full py-1.5 px-4 flex items-center gap-2 overflow-hidden cursor-pointer active:scale-[0.98] transition-all"
+      >
         <span className="material-symbols-outlined text-sm shrink-0">notifications</span>
         <div className="text-xs font-medium overflow-hidden whitespace-nowrap">
           <div className="scrolling-text">
@@ -212,6 +215,17 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
             <span className="material-symbols-outlined text-3xl">handshake</span>
           </div>
           <span className="text-xs font-semibold leading-tight">Cooperação de Agência</span>
+        </button>
+
+        {/* Recompensas Diárias */}
+        <button
+          onClick={() => onNavigate('gift-chest')}
+          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+        >
+          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
+            <span className="material-symbols-outlined text-3xl text-yellow-400">card_giftcard</span>
+          </div>
+          <span className="text-xs font-semibold leading-tight">Recompensas Diárias</span>
         </button>
       </div>
 

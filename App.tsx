@@ -179,12 +179,12 @@ const App: React.FC = () => {
 
       {/* Bottom Navigation */}
       {session && ['home', 'shop', 'profile', 'tasks', 'gift-chest', 'invite-page'].includes(currentPage) && (
-        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 backdrop-blur-lg border-t border-slate-100 px-4 pb-6 pt-3 flex justify-between items-center z-50">
+        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 backdrop-blur-lg border-t border-slate-100 px-4 pb-4 pt-2 flex justify-between items-center z-50">
           {[
-            { id: 'home', icon: 'grid_view', label: 'Home' },
+            { id: 'home', icon: 'home', label: 'Home' },
             { id: 'tasks', icon: 'schedule', label: 'Tarefas' },
             { id: 'shop', icon: 'add', isFab: true },
-            { id: 'invite-page', icon: 'groups', label: 'Convite' },
+            { id: 'invite-page', icon: 'groups', label: 'Equipe' },
             { id: 'profile', icon: 'person', label: 'Meu' }
           ].map((item) => (
             item.isFab ? (
