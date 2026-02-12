@@ -13,22 +13,10 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
   const [currentProfile, setCurrentProfile] = useState<any>(profile);
   const [stats, setStats] = useState<any>({
     balance: profile?.balance || 0,
-    balance_usdt: profile?.balance_usdt || 0,
     totalIncome: 0,
     teamIncome: 0,
   });
-  const [exchangeRate, setExchangeRate] = useState<number>(950); // Default fallback rate
   const [loading, setLoading] = useState(true);
-
-  // Fetch rate for visual conversion
-  useEffect(() => {
-    fetch('https://api.exchangerate-api.com/v4/latest/USD')
-      .then(res => res.json())
-      .then(data => {
-        if (data?.rates?.AOA) setExchangeRate(data.rates.AOA);
-      })
-      .catch(() => { });
-  }, []);
 
   const fetchStats = useCallback(async () => {
     if (!profile?.id) return;
@@ -49,7 +37,6 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
 
       setStats({
         balance: profile.balance || 0,
-        balance_usdt: profile.balance_usdt || 0,
         totalIncome,
         teamIncome,
       });
@@ -114,34 +101,22 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
         </div>
       </div>
 
-      {/* Middle Stats Section - Row Based */}
+      {/* Middle Stats Section */}
       <div className="px-4 -mt-2 space-y-2">
-        <div className="bg-[#fff9f3] border-b border-orange-100/50 p-4 flex justify-between items-center rounded-t-xl group active:bg-orange-50 transition-colors"
+        <div className="bg-[#fff9f3] border-b border-orange-100/50 p-6 flex justify-between items-center rounded-xl group active:bg-orange-50 transition-colors"
           onClick={() => onNavigate('records-financeiro')}>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-slate-700">Saldo Ativo</span>
-            <span className="text-[10px] text-slate-400 font-medium tracking-tight">Ganhos e Depósitos</span>
+            <span className="text-sm font-semibold text-slate-700">Saldo Total</span>
+            <span className="text-[10px] text-slate-400 font-medium tracking-tight">Kzs Disponíveis</span>
           </div>
-          <div className="flex flex-col items-end">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-900 text-lg">
-                {stats.balance_usdt.toLocaleString('pt-AO')} Kz
-              </span>
-              <span className="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
-            </div>
-            <span className="text-[10px] text-[#f27f0d] font-bold uppercase tracking-wider">
-              ≈ {(stats.balance_usdt / exchangeRate).toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Usdt
-            </span>
-          </div>
-        </div>
-        <div className="bg-[#fff9f3] border-b border-orange-100/50 p-4 flex justify-between items-center group active:bg-orange-50 transition-colors"
-          onClick={() => onNavigate('transfer')}>
-          <span className="text-sm font-semibold text-slate-700">Saldo de Retirada (Aoa)</span>
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-900">{stats.balance.toLocaleString('pt-AO', { minimumFractionDigits: 2 })}</span>
+            <span className="font-bold text-slate-900 text-2xl">
+              {stats.balance.toLocaleString('pt-AO')} Kz
+            </span>
             <span className="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
           </div>
         </div>
+
         <div className="bg-[#fff9f3] border-b border-orange-100/50 p-4 flex justify-between items-center group active:bg-orange-50 transition-colors"
           onClick={() => onNavigate('records-financeiro')}>
           <span className="text-sm font-semibold text-slate-700">Receita de equipamento</span>
@@ -168,33 +143,27 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
             { label: 'Converter cupons em dinheiro', icon: 'redeem', page: 'gift-chest' },
             { label: 'Informações de retirada', icon: 'account_balance', page: 'add-bank' },
             { label: 'Retirar dinheiro', icon: 'payments', page: 'retirada' },
-            { label: 'Conversão', icon: 'swap_horiz', page: 'transfer' },
             { label: 'Convide amigos', icon: 'person_add', page: 'invite-page' },
             { label: 'Segurança da conta', icon: 'lock', page: 'change-password' },
             { label: 'Sobre nós', icon: 'info', page: 'about-bp' },
-          ].map((item, index) => (
+          ].map((item, idx, arr) => (
             <button
               key={item.label}
               onClick={() => onNavigate(item.page)}
-              className={`w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-all border-b border-slate-50 last:border-0 group`}
+              className={`w-full flex items-center justify-between p-5 active:bg-slate-50 transition-colors ${idx !== arr.length - 1 ? 'border-b border-slate-50' : ''
+                }`}
             >
               <div className="flex items-center gap-4">
-                <span className="material-symbols-outlined text-[#f27f0d] text-[24px]">
-                  {item.icon}
-                </span>
-                <span className="text-[14px] font-semibold text-slate-700 group-active:text-[#f27f0d]">{item.label}</span>
+                <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-[#f27f0d]">
+                  <span className="material-symbols-outlined">{item.icon}</span>
+                </div>
+                <span className="font-semibold text-slate-700 capitalize">{item.label}</span>
               </div>
-              <span className="material-symbols-outlined text-slate-300 text-xl">chevron_right</span>
+              <span className="material-symbols-outlined text-slate-300">chevron_right</span>
             </button>
           ))}
         </div>
       </main>
-
-      <style>{`
-        .material-symbols-outlined {
-          font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
-        }
-      `}</style>
     </div>
   );
 };

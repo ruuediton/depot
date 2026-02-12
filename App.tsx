@@ -132,7 +132,6 @@ const App: React.FC = () => {
       'profile': PAGES_CONFIG.Profile,
       'add-bank': PAGES_CONFIG.AddBank,
       'deposit': PAGES_CONFIG.Recharge,
-      'purchase-history': PAGES_CONFIG.PurchaseHistory,
       'change-password': PAGES_CONFIG.ChangePassword,
       'register': PAGES_CONFIG.Register,
       'retirada': PAGES_CONFIG.Withdraw,
@@ -146,7 +145,6 @@ const App: React.FC = () => {
       'detalhes-pay': PAGES_CONFIG.DetalhesPay,
       'records-financeiro': PAGES_CONFIG.RecordsFinanceiro,
       'about-bp': PAGES_CONFIG.AboutBP,
-      'transfer': PAGES_CONFIG.Transfer
     };
 
     const Component = pages[currentPage] || PAGES_CONFIG.Home;

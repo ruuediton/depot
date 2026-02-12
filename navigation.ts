@@ -14,7 +14,6 @@ export const PAGE_TITLES: Record<string, string> = {
   'detalhes-pay': 'Detalhespayment',
   'records-financeiro': 'Registros Financeiros',
   'about-bp': 'Sobre Nós',
-  'transfer': 'Transferir',
 };
 
 export const DEFAULT_APP_TITLE = 'TheDepot';
@@ -38,5 +37,4 @@ export const PAGES_CONFIG = {
   DetalhesPay: lazy(() => import('./pages/DetalhesPay')),
   RecordsFinanceiro: lazy(() => import('./pages/RecordsFinanceiro')),
   AboutBP: lazy(() => import('./pages/AboutBP')),
-  Transfer: lazy(() => import('./pages/TransferPage')),
 };

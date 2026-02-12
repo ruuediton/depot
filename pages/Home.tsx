@@ -66,7 +66,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
         <span className="material-symbols-outlined text-sm shrink-0">notifications</span>
         <div className="text-xs font-medium overflow-hidden whitespace-nowrap">
           <div className="scrolling-text">
-            ip1 é 13USDT e a recompensa diária é 8USDT. Benefícios por 60 dias. Recompensa de indicação nível 1: 10%...
+            VIP 1 é 12.000 Kz e a recompensa diária é 8.000 Kz. Benefícios por 60 dias. Recompensa de indicação nível 1: 10%...
           </div>
         </div>
       </div>
