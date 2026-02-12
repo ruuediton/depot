@@ -145,7 +145,8 @@ const App: React.FC = () => {
       'tasks': PAGES_CONFIG.Tasks,
       'detalhes-pay': PAGES_CONFIG.DetalhesPay,
       'records-financeiro': PAGES_CONFIG.RecordsFinanceiro,
-      'about-bp': PAGES_CONFIG.AboutBP
+      'about-bp': PAGES_CONFIG.AboutBP,
+      'transfer': PAGES_CONFIG.Transfer
     };
 
     const Component = pages[currentPage] || PAGES_CONFIG.Home;
