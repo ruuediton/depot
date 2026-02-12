@@ -116,32 +116,7 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
     );
 
     return (
-        <div className="bg-[#FF6B00] min-h-screen pb-32 font-sans antialiased text-gray-900 overflow-x-hidden">
-            {/* Custom Header */}
-            <header className="sticky top-0 z-50 bg-[#FF6B00] px-4 py-3 flex items-center justify-between border-b border-white/10">
-                <div className="flex items-center gap-2">
-                    <div className="bg-white rounded px-1.5 py-1 w-9 h-9 flex items-center justify-center shadow-sm">
-                        <div className="flex flex-col leading-none">
-                            <span className="text-[#FF6B00] font-bold text-[9px] text-center uppercase">THE</span>
-                            <span className="text-[#FF6B00] font-bold text-[8px] text-center uppercase">HOME</span>
-                        </div>
-                    </div>
-                    <h1 className="text-white font-bold text-lg tracking-tight">The Home Depot</h1>
-                </div>
-                <div className="flex items-center gap-3">
-                    <button className="text-white/90 active:scale-95 transition-transform">
-                        <span className="material-symbols-outlined text-[24px]">notifications</span>
-                    </button>
-                    <button className="text-white/90 active:scale-95 transition-transform" onClick={() => onNavigate('support')}>
-                        <span className="material-symbols-outlined text-[24px]">headset_mic</span>
-                    </button>
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 border border-white/10">
-                        <span className="material-symbols-outlined text-white text-[16px]">language</span>
-                        <span className="text-white text-[11px] font-semibold">Português</span>
-                        <span className="material-symbols-outlined text-white text-[14px]">expand_more</span>
-                    </div>
-                </div>
-            </header>
+        <div className="bg-[#FF6B00] min-h-screen pb-32 font-sans antialiased text-gray-900 overflow-x-hidden pt-4">
 
             <main className="px-4 space-y-5 pt-4">
                 {/* Invite Card */}

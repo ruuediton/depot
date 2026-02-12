@@ -56,30 +56,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
   }, [carouselImages.length]);
 
   return (
-    <div className="bg-[#FF6B00] min-h-screen pb-20 font-sans antialiased">
-      {/* Header laranja com logo e ícones */}
-      <div className="bg-[#FF6B00] px-4 pt-4 pb-2 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-            <span className="material-symbols-outlined text-primary text-xl font-semibold">home</span>
-          </div>
-          <h1 className="text-xl font-bold tracking-tight italic">The Home Depot</h1>
-        </div>
-
-        {/* Ícones do topo */}
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <span className="material-symbols-outlined text-2xl">mail</span>
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border-2 border-primary rounded-full"></span>
-          </div>
-          <span className="material-symbols-outlined text-2xl">support_agent</span>
-          <div className="flex items-center gap-1 border border-white/40 rounded-full px-2 py-0.5 text-xs bg-white/10">
-            <span className="material-symbols-outlined text-sm">language</span>
-            <span>Português</span>
-            <span className="material-symbols-outlined text-xs">keyboard_arrow_down</span>
-          </div>
-        </div>
-      </div>
+    <div className="bg-[#FF6B00] min-h-screen pb-20 font-sans antialiased pt-4">
 
       {/* Banner de alerta com animação */}
       <div
