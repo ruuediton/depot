@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import SpokeSpinner from './SpokeSpinner';
 
 const SplashScreen: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -35,17 +36,9 @@ const SplashScreen: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
           <div className="w-12 h-1 bg-white/50 rounded-full mt-2 animate-width-grow"></div>
         </div>
 
-        <div className="absolute bottom-12 flex flex-col items-center gap-2">
-          <div className="flex gap-1.5">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="w-2 h-2 bg-white rounded-full animate-bounce"
-                style={{ animationDelay: `${i * 0.2}s` }}
-              ></div>
-            ))}
-          </div>
-          <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em]">Loading Experience</p>
+        <div className="absolute bottom-16 flex flex-col items-center gap-4">
+          <SpokeSpinner size="w-8 h-8" className="text-white/80" />
+          <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] ml-1">Carregando</p>
         </div>
       </div>
 

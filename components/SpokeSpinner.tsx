@@ -11,10 +11,10 @@ const SpokeSpinner: React.FC<SpokeSpinnerProps> = ({ className = "text-black/60"
             {[...Array(12)].map((_, i) => (
                 <div
                     key={i}
-                    className="absolute left-[48.5%] top-0 h-[30%] w-[3%] bg-current rounded-full animate-ios-spinner"
+                    className="absolute left-[44%] top-0 h-[28%] w-[12%] bg-current rounded-full animate-ios-spinner"
                     style={{
                         transform: `rotate(${i * 30}deg)`,
-                        transformOrigin: '50% 166.6%',
+                        transformOrigin: '50% 178%',
                         animationDelay: `${-1.1 + i * 0.1}s`
                     }}
                 />
@@ -22,7 +22,7 @@ const SpokeSpinner: React.FC<SpokeSpinnerProps> = ({ className = "text-black/60"
             <style>{`
                 @keyframes ios-spinner {
                     0% { opacity: 1; }
-                    100% { opacity: 0.15; }
+                    100% { opacity: 0.2; }
                 }
                 .animate-ios-spinner {
                     animation: ios-spinner 1.2s linear infinite;

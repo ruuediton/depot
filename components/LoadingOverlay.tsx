@@ -6,20 +6,19 @@ const LoadingOverlay: React.FC<{ status: FeedbackStatus; message?: string }> = (
     if (status === 'idle') return null;
 
     return (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center px-6 pointer-events-none">
-            {/* Minimal Background Blur */}
-            <div className={`absolute inset-0 bg-black/10 backdrop-blur-[1px] transition-opacity duration-300 ${status !== 'idle' ? 'opacity-100' : 'opacity-0'}`} />
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center pointer-events-none">
+            {/* Background Blur */}
+            <div className={`absolute inset-0 bg-black/30 backdrop-blur-[2px] transition-opacity duration-300 ${status !== 'idle' ? 'opacity-100' : 'opacity-0'}`} />
 
-            <div className="bg-black/80 backdrop-blur-md rounded-2xl py-3 px-6 flex flex-col items-center justify-center shadow-lg relative z-10 pointer-events-auto animate-fade-up w-fit max-w-[85vw]">
+            <div className="relative z-10 flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300 pointer-events-auto">
                 {status === 'loading' ? (
-                    <div className="flex items-center gap-3">
-                        <SpokeSpinner size="w-5 h-5" color="text-white" />
-                        {message && <p className="text-[14px] font-medium text-white tracking-tight">{message}</p>}
-                    </div>
+                    <SpokeSpinner size="w-12 h-12" className="text-white" />
                 ) : (
-                    <p className="text-white text-[14px] font-medium text-center leading-relaxed">
-                        {message}
-                    </p>
+                    <div className="bg-white/95 backdrop-blur-md rounded-[28px] py-4 px-8 shadow-2xl border border-white/20">
+                        <p className="text-slate-800 text-[15px] font-bold text-center leading-relaxed tracking-tight">
+                            {message}
+                        </p>
+                    </div>
                 )}
             </div>
 
