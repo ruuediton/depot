@@ -6,7 +6,7 @@ import { Session } from '@supabase/supabase-js';
 import SpokeSpinner from './components/SpokeSpinner';
 import FloatingSupportButton from './components/FloatingSupportButton';
 import WelcomeModal from './components/WelcomeModal';
-import TaskPopup from './components/TaskPopup';
+
 import SplashScreen from './components/SplashScreen';
 
 // Config & Hooks
@@ -23,7 +23,7 @@ const App: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
-  const [showTaskPopup, setShowTaskPopup] = useState(false);
+
   const [navigationData, setNavigationData] = useState<any>(null);
   const [isAppLoading, setIsAppLoading] = useState(true);
 
@@ -171,9 +171,7 @@ const App: React.FC = () => {
         {session && <FloatingSupportButton />}
       </main>
 
-      {showTaskPopup && session && (
-        <TaskPopup onClose={() => setShowTaskPopup(false)} onNavigate={handleNavigate} />
-      )}
+
 
       {showWelcomeModal && session && currentPage === 'home' && (
         <WelcomeModal onClose={() => setShowWelcomeModal(false)} />

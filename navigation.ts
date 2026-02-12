@@ -3,20 +3,20 @@ import { lazy } from 'react';
 export const PAGE_TITLES: Record<string, string> = {
   'home': 'Início',
   'shop': 'Loja',
-  'register': 'Criar Conta',
-  'login': 'Acessar Conta',
-  'profile': 'Meu Perfil',
+  'register': 'registar',
+  'login': 'entrar',
+  'profile': 'Perfil',
   'deposit': 'Recarga',
   'retirada': 'Retirada',
-  'invite-page': 'Convidar Amigos',
+  'invite-page': 'Convite',
   'security-verify': 'Segurança',
-  'deposit-usdt-history': 'Histórico USDT',
+  'deposit-usdt-history': 'HistUSDT',
   'subordinate-list': 'Equipe',
-  'tasks': 'Minhas Tarefas',
-  'detalhes-pay': 'Detalhes da Transferência',
+  'tasks': 'Tarefas',
+  'detalhes-pay': 'Detalhespayment',
 };
 
-export const DEFAULT_APP_TITLE = 'The Home Depot';
+export const DEFAULT_APP_TITLE = 'TheDepot';
 
 export const PAGES_CONFIG = {
   Home: lazy(() => import('./pages/Home')),
