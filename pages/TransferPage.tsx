@@ -18,7 +18,7 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
     const balanceUSDT = profile?.balance_usdt || 0;
     const balanceKZ = profile?.balance || 0;
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         if (!amount || Number(amount) <= 0) {
             showToast?.("Insira um valor válido para conversão.", "warning");
             return;
@@ -28,8 +28,30 @@ const TransferPage: React.FC<TransferPageProps> = ({ onNavigate, profile, showTo
             return;
         }
 
-        // Logic implementation will be done later as requested
-        showToast?.("Conversão em processamento... (Simulação)", "info");
+        setLoading(true);
+        try {
+            const { data, error } = await supabase.rpc('convert_usdt_to_kz', {
+                p_amount: Number(amount),
+                p_password: password
+            });
+
+            if (error) throw error;
+
+            if (data?.success) {
+                showToast?.(data.message, "success");
+                setAmount('');
+                setPassword('');
+                // Request profile refresh if possible, or wait for automatic state update
+                setTimeout(() => onNavigate('profile'), 1500);
+            } else {
+                showToast?.(data?.message || "Erro na conversão.", "error");
+            }
+        } catch (err: any) {
+            console.error(err);
+            showToast?.(err.message || "Erro ao processar conversão.", "error");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
