@@ -61,21 +61,21 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
       {/* Banner de alerta com animação */}
       <div
         onClick={() => onNavigate('gift-chest')}
-        className="mx-4 mt-2 mb-4 bg-white/20 rounded-full py-1.5 px-4 flex items-center gap-2 overflow-hidden cursor-pointer active:scale-[0.98] transition-all"
+        className="mx-4 mt-2 mb-4 bg-white/10 backdrop-blur-md rounded-full py-1.5 px-4 flex items-center gap-2 overflow-hidden cursor-pointer active:scale-[0.98] transition-all border border-white/10"
       >
-        <span className="material-symbols-outlined text-sm shrink-0">notifications</span>
-        <div className="text-xs font-medium overflow-hidden whitespace-nowrap">
-          <div className="scrolling-text">
-            VIP 1 é 12.000 Kz e a recompensa diária é 8.000 Kz. Benefícios por 60 dias. Recompensa de indicação nível 1: 10%...
+        <span className="material-symbols-outlined text-[16px] shrink-0 text-white/80">notifications</span>
+        <div className="flex-1 overflow-hidden">
+          <div className="scrolling-text text-[11px] font-medium text-white/90 whitespace-nowrap">
+            VIP 1 é 12.000 Kz e a recompensa diária é 8.000 Kz. Benefícios por 60 dias. Recompensa de indicação nível 1: 10%... VIP 2 é 45.000 Kz com recompensa de 12.000 Kz! Participe agora e ganhe bônus de rede!
           </div>
         </div>
       </div>
 
       {/* Carrossel de Banners */}
       <div className="px-4">
-        <div className="rounded-xl overflow-hidden shadow-lg mb-6 bg-white relative">
-          {/* Container do carrossel */}
-          <div className="relative h-40 overflow-hidden">
+        <div className="rounded-2xl overflow-hidden shadow-2xl mb-5 bg-white relative border border-white/10">
+          {/* Container do carrossel - Aumentado conforme solicitado */}
+          <div className="relative h-56 overflow-hidden">
             {carouselImages.map((slide, index) => (
               <div
                 key={index}
@@ -137,72 +137,72 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
         </div>
       </div>
 
-      {/* Grid de ações principais (5 botões) */}
-      <div className="px-4 grid grid-cols-3 gap-3 mb-6">
+      {/* Grid de ações principais (6 botões) - Compactado */}
+      <div className="px-4 grid grid-cols-3 gap-2 mb-5">
         {/* Recarrega */}
         <button
           onClick={() => onNavigate('deposit')}
-          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+          className="glass-card rounded-xl p-3 flex flex-col items-center gap-1.5 text-center bg-white/10 backdrop-blur-md border border-white/10"
         >
-          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
-            <span className="material-symbols-outlined text-3xl">account_balance_wallet</span>
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <span className="material-symbols-outlined text-2xl">account_balance_wallet</span>
           </div>
-          <span className="text-xs font-medium leading-tight">Recarrega</span>
+          <span className="text-[10px] font-semibold leading-tight text-white uppercase tracking-tighter">Recarrega</span>
         </button>
 
         {/* Retirar */}
         <button
           onClick={() => onNavigate('retirada')}
-          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+          className="glass-card rounded-xl p-3 flex flex-col items-center gap-1.5 text-center bg-white/10 backdrop-blur-md border border-white/10"
         >
-          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
-            <span className="material-symbols-outlined text-3xl">payments</span>
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <span className="material-symbols-outlined text-2xl">payments</span>
           </div>
-          <span className="text-xs font-medium leading-tight">Retirar</span>
+          <span className="text-[10px] font-semibold leading-tight text-white uppercase tracking-tighter">Retirar</span>
         </button>
 
-        {/* Perfil de companhia */}
+        {/* Perfil */}
         <button
           onClick={() => onNavigate('about-bp')}
-          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+          className="glass-card rounded-xl p-3 flex flex-col items-center gap-1.5 text-center bg-white/10 backdrop-blur-md border border-white/10"
         >
-          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
-            <span className="material-symbols-outlined text-3xl">corporate_fare</span>
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <span className="material-symbols-outlined text-2xl">corporate_fare</span>
           </div>
-          <span className="text-xs font-medium leading-tight">Perfil de companhia</span>
+          <span className="text-[10px] font-semibold leading-tight text-white uppercase tracking-tighter whitespace-nowrap">Perfil</span>
         </button>
 
-        {/* Convidar amigos */}
+        {/* Convidar */}
         <button
           onClick={() => onNavigate('invite-page')}
-          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+          className="glass-card rounded-xl p-3 flex flex-col items-center gap-1.5 text-center bg-white/10 backdrop-blur-md border border-white/10"
         >
-          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
-            <span className="material-symbols-outlined text-3xl">person_add</span>
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <span className="material-symbols-outlined text-2xl">person_add</span>
           </div>
-          <span className="text-xs font-medium leading-tight">Convidar amigos</span>
+          <span className="text-[10px] font-semibold leading-tight text-white uppercase tracking-tighter">Convidar</span>
         </button>
 
-        {/* Cooperação de Agência */}
+        {/* Equipe */}
         <button
           onClick={() => onNavigate('subordinate-list')}
-          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+          className="glass-card rounded-xl p-3 flex flex-col items-center gap-1.5 text-center bg-white/10 backdrop-blur-md border border-white/10"
         >
-          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
-            <span className="material-symbols-outlined text-3xl">handshake</span>
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <span className="material-symbols-outlined text-2xl">handshake</span>
           </div>
-          <span className="text-xs font-medium leading-tight">Cooperação de Agência</span>
+          <span className="text-[10px] font-semibold leading-tight text-white uppercase tracking-tighter">Equipe</span>
         </button>
 
-        {/* Recompensas Diárias */}
+        {/* Prêmios */}
         <button
           onClick={() => onNavigate('gift-chest')}
-          className="glass-card rounded-2xl p-4 flex flex-col items-center gap-2 text-center"
+          className="glass-card rounded-xl p-3 flex flex-col items-center gap-1.5 text-center bg-white/10 backdrop-blur-md border border-white/10"
         >
-          <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center mb-1">
-            <span className="material-symbols-outlined text-3xl text-yellow-400">card_giftcard</span>
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <span className="material-symbols-outlined text-2xl text-yellow-300">card_giftcard</span>
           </div>
-          <span className="text-xs font-medium leading-tight">Recompensas Diárias</span>
+          <span className="text-[10px] font-semibold leading-tight text-white uppercase tracking-tighter">Prêmios</span>
         </button>
       </div>
 
@@ -217,88 +217,42 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
         </button>
       </div>
 
-      {/* Sala de Tarefas */}
-      <div className="bg-white dark:bg-card-dark rounded-t-3xl p-6 -mx-0">
-        <h3 className="text-black dark:text-white text-xl font-bold mb-4">Sala de Tarefas</h3>
-
-        <div className="space-y-4">
-          {loadingData ? (
-            <>
-              {[1, 2, 3].map(i => (
-                <div key={i} className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-3 flex gap-4 border border-slate-100 dark:border-zinc-700 shadow-sm animate-pulse">
-                  <div className="w-24 h-24 bg-gray-200 rounded-lg"></div>
-                  <div className="flex-1 space-y-2">
-                    <div className="h-5 bg-gray-200 rounded w-1/4"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/3"></div>
-                    <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                  </div>
-                </div>
-              ))}
-            </>
-          ) : (
-            <>
-              {/* Card de produto 1 - Resistor */}
-              <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-3 flex gap-4 border border-slate-100 dark:border-zinc-700 shadow-sm" onClick={() => onNavigate('shop')}>
-                <div className="relative w-24 h-24 bg-white dark:bg-zinc-700 rounded-lg overflow-hidden shrink-0">
-                  <img
-                    alt="Resistor Set"
-                    className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6zaV-cbAV7xxy7KJ60Hx5CeLLC0g0aD9wJa1QQkTb8l6VTjUQ_yWh3rDgOY1UJGQ3fSdw0tYv3We9aZ6ltmauDfRoigMFh8MBNB0m-VGYkAMmobLLaP9LzydH5mAA3e3Ja080cgckAM5Bh1OGXrKy20BlpOmCkeCC7XG7nKVhoZhhG4_ZOfott5g-2Q3KphYqthNa1ACUnH3Zm7RfVGbu3Uon9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-white text-3xl">lock</span>
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div className="text-primary font-semibold text-lg">$10.00</div>
-                  <div className="text-[10px] text-gray-400 dark:text-gray-500 mb-1">Preço</div>
-                  <p className="text-xs text-slate-800 dark:text-slate-200 line-clamp-2 leading-snug">50pcs Resistor 0.25W 5% 3.3 - 3.3M Ohm Carbon Film resistors</p>
-                </div>
-              </div>
-
-              {/* Card de produto 2 - Pen Set */}
-              <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-3 flex gap-4 border border-slate-100 dark:border-zinc-700 shadow-sm" onClick={() => onNavigate('shop')}>
-                <div className="relative w-24 h-24 bg-white dark:bg-zinc-700 rounded-lg overflow-hidden shrink-0">
-                  <img
-                    alt="Pen Set"
-                    className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuANftelW4IwDQtQ_F-qAlUO52Btrsa3N5EsLDoRo_kRJu51I6o6cythBDIpuULD1XISI-JsIiap4OEk2PyEmog2iLjseA7U-rxB2CdGzXI2NNH2yKmrhDvoMsVZMg0lGYV_bvHYQMbsoyGlJo7LNYB7jC_E7Q2vdnY7c_pTnXqfKpL-oGo8J-t_CDqoSAPL0UsHtN3e3Ja080cgckAM5Bh1OGXrKy20BlpOmCkeCC7XG7nKVhoZhhG4_ZOfott5g-2Q3KphYqthNa1ACUnH3Zm7RfVGbu3Uon9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-white text-3xl">lock</span>
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div className="text-primary font-bold text-lg">$15.80</div>
-                  <div className="text-[10px] text-gray-400 dark:text-gray-500 mb-1">Preço</div>
-                  <p className="text-xs text-slate-800 dark:text-slate-200 line-clamp-2 leading-snug">Faber-Castell RX Gel Colour Pen 0.7mm FC Rxgel Pen Bright Ink Gel RX Gel Color Set</p>
-                </div>
-              </div>
-
-              {/* Card de produto 3 - Lipstick Pen */}
-              <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-3 flex gap-4 border border-slate-100 dark:border-zinc-700 shadow-sm" onClick={() => onNavigate('shop')}>
-                <div className="relative w-24 h-24 bg-white dark:bg-zinc-700 rounded-lg overflow-hidden shrink-0">
-                  <img
-                    alt="Lipstick Pen"
-                    className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2R03IrwJqAkMwpvg6w3Pn3Gbn7T8ExTQDiuzmdaxy3NnRU1GMT0-ZxZSs2VpfQTQah0w9N5Lp_zCbCyOW3cGLha5__ZK-zY7nSv8LQi6aJgKw7DSEE6nQNTGYnOeBHhuAGZ7tYGNsMfVjbZenpmaWSzAo1Rbfqsh7JSUoGBIoy8r42IRhn9K3AnkWLlEubou1Haqsx7YRQZFd_esGXBxxo_B7lFbBbxbi6do7M"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-white text-3xl">lock</span>
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div className="text-primary font-bold text-lg">$29.90</div>
-                  <div className="text-[10px] text-gray-400 dark:text-gray-500 mb-1">Preço</div>
-                  <p className="text-xs text-slate-800 dark:text-slate-200 line-clamp-2 leading-snug">Glittering Lipstick Black Ink Pen 0.5mm For School and Office Use Gift</p>
-                </div>
-              </div>
-            </>
-          )}
+      {/* Reprodutor de Vídeo - Substitui Sala de Tarefas */}
+      <div className="bg-white dark:bg-[#1A1A1A] rounded-t-[40px] p-6 -mx-0 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-[#0F1111] dark:text-white text-xl font-black tracking-tight flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary">play_circle</span>
+            Apresentação
+          </h3>
+          <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-wider">Ao Vivo</span>
         </div>
+
+        <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-2xl bg-black group cursor-pointer border border-slate-100 dark:border-white/10">
+          {/* Mock Video Container */}
+          <img
+            src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1000"
+            alt="Video Preview"
+            className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="size-20 bg-primary rounded-full flex items-center justify-center shadow-2xl shadow-primary/40 group-hover:scale-110 transition-transform">
+              <span className="material-symbols-outlined text-white text-5xl font-bold ml-1">play_arrow</span>
+            </div>
+          </div>
+
+          {/* Video Overlay Controls Mock */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="size-2 bg-red-600 rounded-full animate-pulse" />
+              <span className="text-white text-[10px] font-bold uppercase tracking-widest">The Home Depot - Overview</span>
+            </div>
+            <span className="text-white/60 text-[10px]">04:20</span>
+          </div>
+        </div>
+
+        <p className="mt-4 text-slate-500 dark:text-slate-400 text-xs text-center font-medium leading-relaxed italic">
+          "Conheça mais sobre nossa estrutura e como estamos mudando o mercado de varejo residencial no mundo todo."
+        </p>
       </div>
 
       {/* Botão flutuante de presente */}

@@ -179,7 +179,7 @@ const App: React.FC = () => {
 
       {/* Bottom Navigation */}
       {session && ['home', 'shop', 'profile', 'tasks', 'gift-chest', 'invite-page'].includes(currentPage) && (
-        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 backdrop-blur-lg border-t border-slate-100 px-4 pb-4 pt-2 flex justify-between items-center z-50">
+        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 backdrop-blur-lg border-t border-slate-100 px-4 pb-2 pt-1.5 flex justify-between items-center z-50 h-[56px]">
           {[
             { id: 'home', icon: 'home', label: 'Home' },
             { id: 'tasks', icon: 'schedule', label: 'Tarefas' },
@@ -188,31 +188,31 @@ const App: React.FC = () => {
             { id: 'profile', icon: 'person', label: 'Meu' }
           ].map((item) => (
             item.isFab ? (
-              <div key={item.id} className="relative -top-8">
+              <div key={item.id} className="relative -top-5">
                 <button
                   onClick={() => handleNavigate(item.id)}
-                  className="w-14 h-14 bg-[#f27f0d] text-white rounded-full flex items-center justify-center shadow-lg shadow-orange-900/20 ring-4 ring-white active:scale-95 transition-all"
+                  className="w-12 h-12 bg-[#f27f0d] text-white rounded-full flex items-center justify-center shadow-lg shadow-orange-900/20 ring-4 ring-white active:scale-95 transition-all"
                 >
-                  <span className="material-symbols-outlined text-[32px] font-bold">add</span>
+                  <span className="material-symbols-outlined text-[28px] font-bold">add</span>
                 </button>
               </div>
             ) : (
               <button
                 key={item.id}
                 onClick={() => handleNavigate(item.id)}
-                className={`flex flex-col items-center gap-1 transition-all duration-300 ${currentPage === item.id ? 'text-[#f27f0d]' : 'text-slate-400'}`}
+                className={`flex flex-col items-center gap-0.5 transition-all duration-300 ${currentPage === item.id ? 'text-[#f27f0d]' : 'text-slate-400'}`}
               >
                 <div className="relative">
-                  <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: currentPage === item.id ? "'FILL' 1" : "'FILL' 0" }}>
+                  <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: currentPage === item.id ? "'FILL' 1" : "'FILL' 0" }}>
                     {item.icon}
                   </span>
                 </div>
-                <span className="text-[10px] font-medium tracking-tight">{item.label}</span>
+                <span className="text-[9px] font-semibold tracking-tight uppercase leading-none">{item.label}</span>
               </button>
             )
           ))}
-          {/* iOS Home Indicator */}
-          <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-100 rounded-full"></div>
+          {/* iOS Home Indicator - Smaller */}
+          <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-20 h-1 bg-slate-100/50 rounded-full"></div>
         </nav>
       )}
 
