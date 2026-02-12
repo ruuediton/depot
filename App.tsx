@@ -137,7 +137,6 @@ const App: React.FC = () => {
       'register': PAGES_CONFIG.Register,
       'retirada': PAGES_CONFIG.Withdraw,
       'login': PAGES_CONFIG.Login,
-      'security-verify': PAGES_CONFIG.SecurityVerify,
       'gift-chest': PAGES_CONFIG.GiftChest,
       'reward-claim': PAGES_CONFIG.RewardClaim,
       'deposit-usdt': PAGES_CONFIG.DepositUSDT,

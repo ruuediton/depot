@@ -111,14 +111,16 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
             <span className="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
           </div>
         </div>
-        <div className="bg-[#fff9f3] border-b border-orange-100/50 p-4 flex justify-between items-center group active:bg-orange-50 transition-colors">
+        <div className="bg-[#fff9f3] border-b border-orange-100/50 p-4 flex justify-between items-center group active:bg-orange-50 transition-colors"
+          onClick={() => onNavigate('records-financeiro')}>
           <span className="text-sm font-semibold text-slate-700">Receita de equipamento</span>
           <div className="flex items-center gap-2">
             <span className="font-bold text-slate-900">{stats.totalIncome.toLocaleString('pt-AO', { minimumFractionDigits: 2 })}</span>
             <span className="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
           </div>
         </div>
-        <div className="bg-[#fff9f3] p-4 flex justify-between items-center rounded-b-xl group active:bg-orange-50 transition-colors">
+        <div className="bg-[#fff9f3] p-4 flex justify-between items-center rounded-b-xl group active:bg-orange-50 transition-colors"
+          onClick={() => onNavigate('subordinate-list')}>
           <span className="text-sm font-semibold text-slate-700">renda da equipe</span>
           <div className="flex items-center gap-2">
             <span className="font-bold text-slate-900">{stats.teamIncome.toLocaleString('pt-AO', { minimumFractionDigits: 2 })}</span>
@@ -131,12 +133,12 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
       <main className="px-4 mt-6">
         <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden">
           {[
-            { label: 'recarrega', icon: 'account_balance_wallet', page: 'recharge' },
+            { label: 'recarrega', icon: 'account_balance_wallet', page: 'deposit' },
             { label: 'Converter cupons em dinheiro', icon: 'redeem', page: 'gift-chest' },
             { label: 'Informações de retirada', icon: 'account_balance', page: 'add-bank' },
-            { label: 'Retirar dinheiro', icon: 'payments', page: 'withdraw' },
+            { label: 'Retirar dinheiro', icon: 'retirada', page: 'retirada' },
             { label: 'Convide amigos', icon: 'person_add', page: 'invite-page' },
-            { label: 'Segurança da conta', icon: 'lock', page: 'security-verify' },
+            { label: 'Segurança da conta', icon: 'lock', page: 'change-password' },
             { label: 'Sobre nós', icon: 'info', page: 'about-bp' },
           ].map((item, index) => (
             <button
