@@ -258,31 +258,7 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                 </div>
             </main>
 
-            {/* Fixed Bottom Navigation */}
-            <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#FF6B00] border-t border-white/10 flex items-center justify-around py-3 rounded-t-2xl z-50 shadow-[0_-10px_30px_rgba(0,0,0,0.1)]">
-                <button onClick={() => onNavigate('home')} className="flex flex-col items-center gap-1 text-white/70">
-                    <span className="material-symbols-outlined text-[24px]">home</span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Lar</span>
-                </button>
-                <button onClick={() => onNavigate('tasks')} className="flex flex-col items-center gap-1 text-white/70">
-                    <span className="material-symbols-outlined text-[24px]">receipt_long</span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Tarefa</span>
-                </button>
-                <button className="flex flex-col items-center gap-1 text-white font-black group">
-                    <div className="bg-white/20 rounded-full p-1.5 mb-0.5 shadow-inner">
-                        <span className="material-symbols-outlined text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-                    </div>
-                    <span className="text-[10px] font-black uppercase tracking-wider">Equipe</span>
-                </button>
-                <button onClick={() => onNavigate('shop')} className="flex flex-col items-center gap-1 text-white/70">
-                    <span className="material-symbols-outlined text-[24px]">workspace_premium</span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider">VIP</span>
-                </button>
-                <button onClick={() => onNavigate('profile')} className="flex flex-col items-center gap-1 text-white/70">
-                    <span className="material-symbols-outlined text-[24px]">account_circle</span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider">Meu</span>
-                </button>
-            </nav>
+
 
             <style>{`
                 .no-scrollbar::-webkit-scrollbar { display: none; }
