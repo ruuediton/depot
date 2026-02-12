@@ -24,7 +24,6 @@ export const DEFAULT_APP_TITLE = 'The Home Depot';
 export const PAGES_CONFIG = {
   Home: lazy(() => import('./pages/Home')),
   Shop: lazy(() => import('./pages/ShopPage')),
-  Wallet: lazy(() => import('./pages/Wallet')),
   Profile: lazy(() => import('./pages/Profile')),
   AddBank: lazy(() => import('./pages/AddBank')),
   Recharge: lazy(() => import('./pages/Recharge')),

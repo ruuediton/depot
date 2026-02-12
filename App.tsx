@@ -125,7 +125,6 @@ const App: React.FC = () => {
     const pages: Record<string, any> = {
       'home': PAGES_CONFIG.Home,
       'shop': PAGES_CONFIG.Shop,
-      'wallet': PAGES_CONFIG.Wallet,
       'profile': PAGES_CONFIG.Profile,
       'add-bank': PAGES_CONFIG.AddBank,
       'deposit': PAGES_CONFIG.Recharge,
@@ -181,13 +180,12 @@ const App: React.FC = () => {
       )}
 
       {/* Bottom Navigation */}
-      {session && ['home', 'shop', 'profile', 'tasks', 'wallet', 'gift-chest'].includes(currentPage) && (
+      {session && ['home', 'shop', 'profile', 'tasks', 'gift-chest'].includes(currentPage) && (
         <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white/95 backdrop-blur-lg border-t border-slate-100 px-6 pb-8 pt-4 flex justify-between items-center z-50">
           {[
             { id: 'home', icon: 'grid_view', label: 'Home' },
             { id: 'tasks', icon: 'schedule', label: 'Tarefas' },
             { id: 'shop', icon: 'add', isFab: true },
-            { id: 'wallet', icon: 'account_balance_wallet', label: 'Carteira' },
             { id: 'profile', icon: 'person', label: 'Meu' }
           ].map((item) => (
             item.isFab ? (
