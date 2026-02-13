@@ -213,7 +213,7 @@ const App: React.FC = () => {
         }>
           {renderPage()}
         </Suspense>
-        {session && <FloatingSupportButton />}
+        {/* {session && <FloatingSupportButton />} */}
       </main>
 
 
