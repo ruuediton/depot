@@ -64,7 +64,17 @@ const App: React.FC = () => {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        // Create a timeout promise that rejects after 5 seconds
+        const timeoutPromise = new Promise<{ data: { session: Session | null }; error: any }>((_, reject) => {
+          setTimeout(() => reject(new Error('Initialization timeout')), 5000);
+        });
+
+        // Race between actual session fetch and timeout
+        const { data: { session } } = await Promise.race([
+          supabase.auth.getSession(),
+          timeoutPromise
+        ]);
+
         setSession(session);
 
         if (session) {
@@ -75,8 +85,10 @@ const App: React.FC = () => {
         }
       } catch (err) {
         console.error('Initialization error:', err);
+        // On error or timeout, ensure we don't break the app flow
       } finally {
         setIsAppLoading(false);
+        // Remove the HTML splash screen
         document.body.classList.add('app-loaded');
       }
     };
