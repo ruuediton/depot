@@ -8,17 +8,18 @@ import FloatingSupportButton from './components/FloatingSupportButton';
 import WelcomeModal from './components/WelcomeModal';
 
 import SplashScreen from './components/SplashScreen';
-import GiftRedeemModal from './components/GiftRedeemModal';
-import AboutBPModal from './components/AboutBPModal';
-import AddBankModal from './components/AddBankModal';
-import RewardClaimModal from './components/RewardClaimModal';
-import SubordinateListModal from './components/SubordinateListModal';
-import RecordsFinanceiroModal from './components/RecordsFinanceiroModal';
-import DepositUSDTModal from './components/DepositUSDTModal';
-import ChangePasswordModal from './components/ChangePasswordModal';
-import DetalhesPayModal from './components/DetalhesPayModal';
-import RechargeModal from './components/RechargeModal';
-import WithdrawModal from './components/WithdrawModal';
+// Lazy Components
+const GiftRedeemModal = React.lazy(() => import('./components/GiftRedeemModal'));
+const AboutBPModal = React.lazy(() => import('./components/AboutBPModal'));
+const AddBankModal = React.lazy(() => import('./components/AddBankModal'));
+const RewardClaimModal = React.lazy(() => import('./components/RewardClaimModal'));
+const SubordinateListModal = React.lazy(() => import('./components/SubordinateListModal'));
+const RecordsFinanceiroModal = React.lazy(() => import('./components/RecordsFinanceiroModal'));
+const DepositUSDTModal = React.lazy(() => import('./components/DepositUSDTModal'));
+const ChangePasswordModal = React.lazy(() => import('./components/ChangePasswordModal'));
+const DetalhesPayModal = React.lazy(() => import('./components/DetalhesPayModal'));
+const RechargeModal = React.lazy(() => import('./components/RechargeModal'));
+const WithdrawModal = React.lazy(() => import('./components/WithdrawModal'));
 
 // Config & Hooks
 import { PAGE_TITLES, PAGES_CONFIG } from './navigation';
@@ -49,6 +50,7 @@ const App: React.FC = () => {
   const [navigationData, setNavigationData] = useState<any>(null);
   const [isAppLoading, setIsAppLoading] = useState(true);
 
+
   const handleShowToast = useCallback((message: string, type: 'success' | 'error' | 'warning' | 'info') => {
     switch (type) {
       case 'success': showSuccess(message); break;
@@ -59,9 +61,6 @@ const App: React.FC = () => {
     }
   }, [showSuccess, showError, showWarning]);
 
-
-
-  // --- Initialization & Auth ---
   useEffect(() => {
     const initializeApp = async () => {
       try {
@@ -77,6 +76,7 @@ const App: React.FC = () => {
       } catch (err) {
         console.error('Initialization error:', err);
       } finally {
+        setIsAppLoading(false);
         document.body.classList.add('app-loaded');
       }
     };
@@ -114,10 +114,8 @@ const App: React.FC = () => {
 
 
 
-  // --- Navigation ---
   useEffect(() => {
     document.title = `${PAGE_TITLES[currentPage] || 'The Home Depot'} | The Home Depot`;
-    // if (currentPage === 'home' && session) setShowTaskPopup(true); // Removido
   }, [currentPage, session]);
 
   const handleNavigate = useCallback((page: string, data: any = null) => {
@@ -173,7 +171,7 @@ const App: React.FC = () => {
     };
 
     const fullScreenModals = [
-      'gift-chest', 'about-bp', 'add-bank', 'reward-claim', 'subordinate-list', 
+      'gift-chest', 'about-bp', 'add-bank', 'reward-claim', 'subordinate-list',
       'records-financeiro', 'deposit-usdt', 'detalhes-pay', 'deposit', 'retirada'
     ];
 
@@ -212,73 +210,75 @@ const App: React.FC = () => {
         <WelcomeModal onClose={() => setShowWelcomeModal(false)} />
       )}
 
-      <GiftRedeemModal
-        isOpen={showGiftModal}
-        onClose={() => handleCloseModal('home')}
-        showToast={handleShowToast}
-      />
+      <Suspense fallback={null}>
+        <GiftRedeemModal
+          isOpen={showGiftModal}
+          onClose={() => handleCloseModal('home')}
+          showToast={handleShowToast}
+        />
 
-      <AboutBPModal
-        isOpen={showAboutModal}
-        onClose={() => handleCloseModal('profile')}
-      />
+        <AboutBPModal
+          isOpen={showAboutModal}
+          onClose={() => handleCloseModal('profile')}
+        />
 
-      <AddBankModal
-        isOpen={showBankModal}
-        onClose={() => handleCloseModal('profile')}
-        showToast={handleShowToast}
-      />
+        <AddBankModal
+          isOpen={showBankModal}
+          onClose={() => handleCloseModal('profile')}
+          showToast={handleShowToast}
+        />
 
-      <RewardClaimModal
-        isOpen={showRewardModal}
-        onClose={() => handleCloseModal('profile')}
-      />
+        <RewardClaimModal
+          isOpen={showRewardModal}
+          onClose={() => handleCloseModal('profile')}
+        />
 
-      <SubordinateListModal
-        isOpen={showSubordinateModal}
-        onClose={() => handleCloseModal('profile')}
-      />
+        <SubordinateListModal
+          isOpen={showSubordinateModal}
+          onClose={() => handleCloseModal('profile')}
+        />
 
-      <RecordsFinanceiroModal
-        isOpen={showRecordsModal}
-        onClose={() => handleCloseModal('profile')}
-        showToast={handleShowToast}
-      />
+        <RecordsFinanceiroModal
+          isOpen={showRecordsModal}
+          onClose={() => handleCloseModal('profile')}
+          showToast={handleShowToast}
+        />
 
-      <DepositUSDTModal
-        isOpen={showDepositUSDTModal}
-        onClose={() => handleCloseModal('deposit')}
-        showToast={handleShowToast}
-        data={navigationData}
-        onNavigate={handleNavigate}
-      />
+        <DepositUSDTModal
+          isOpen={showDepositUSDTModal}
+          onClose={() => handleCloseModal('deposit')}
+          showToast={handleShowToast}
+          data={navigationData}
+          onNavigate={handleNavigate}
+        />
 
-      <DetalhesPayModal
-        isOpen={showDetalhesModal}
-        onClose={() => handleCloseModal('home')}
-        showToast={handleShowToast}
-        data={navigationData}
-        onNavigate={handleNavigate}
-      />
+        <DetalhesPayModal
+          isOpen={showDetalhesModal}
+          onClose={() => handleCloseModal('home')}
+          showToast={handleShowToast}
+          data={navigationData}
+          onNavigate={handleNavigate}
+        />
 
-      <ChangePasswordModal
-        isOpen={showPasswordModal}
-        onClose={() => handleCloseModal('profile')}
-        showToast={handleShowToast}
-      />
+        <ChangePasswordModal
+          isOpen={showPasswordModal}
+          onClose={() => handleCloseModal('profile')}
+          showToast={handleShowToast}
+        />
 
-      <RechargeModal
-        isOpen={showRechargeModal}
-        onClose={() => handleCloseModal('home')}
-        showToast={handleShowToast}
-        onNavigate={handleNavigate}
-      />
+        <RechargeModal
+          isOpen={showRechargeModal}
+          onClose={() => handleCloseModal('home')}
+          showToast={handleShowToast}
+          onNavigate={handleNavigate}
+        />
 
-      <WithdrawModal
-        isOpen={showWithdrawModal}
-        onClose={() => handleCloseModal('home')}
-        showToast={handleShowToast}
-      />
+        <WithdrawModal
+          isOpen={showWithdrawModal}
+          onClose={() => handleCloseModal('home')}
+          showToast={handleShowToast}
+        />
+      </Suspense>
 
       {/* Bottom Navigation */}
       {session && ['home', 'shop', 'profile', 'tasks', 'gift-chest', 'invite-page'].includes(currentPage) && (

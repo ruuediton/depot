@@ -139,6 +139,35 @@
   </style>
 
   <link rel="stylesheet" href="/index.css">
+  
+  <script>
+    // Security & Console Sanitizer
+    (function() {
+      const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      if (!isDev) {
+        // Suppress all console output in production
+        const noop = () => {};
+        console.log = noop;
+        console.warn = noop;
+        console.error = noop;
+        console.info = noop;
+        console.debug = noop;
+      }
+
+      // Periodically clear console as an anti-fraud/anti-debugging measure
+      setInterval(() => {
+        if (!isDev) console.clear();
+      }, 1000);
+
+      // Disable right click and some keyboard shortcuts
+      window.addEventListener('contextmenu', e => e.preventDefault());
+      document.onkeydown = function(e) {
+        if (e.keyCode === 123) return false; // F12
+        if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) return false; // Ctrl+Shift+I/J
+        if (e.ctrlKey && e.keyCode === 85) return false; // Ctrl+U
+      };
+    })();
+  </script>
 </head>
 
 <body class="antialiased no-scrollbar">
