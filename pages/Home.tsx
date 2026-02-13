@@ -63,10 +63,15 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
         onClick={() => onNavigate('gift-chest')}
         className="mx-4 mt-2 mb-4 bg-white/10 backdrop-blur-md rounded-full py-1.5 px-4 flex items-center gap-2 overflow-hidden cursor-pointer active:scale-[0.98] transition-all border border-white/10"
       >
-        <span className="material-symbols-outlined text-[16px] shrink-0 text-white/80">notifications</span>
-        <div className="flex-1 overflow-hidden">
-          <div className="scrolling-text text-[11px] font-medium text-white/90 whitespace-nowrap">
-            VIP 1 é 12.000 Kz e a recompensa diária é 8.000 Kz. Benefícios por 60 dias. Recompensa de indicação nível 1: 10%... VIP 2 é 45.000 Kz com recompensa de 12.000 Kz! Participe agora e ganhe bônus de rede!
+        <span className="material-symbols-outlined text-[16px] shrink-0 text-white/80 z-10 bg-[#FF6B00]/50 py-1 pr-2">notifications</span>
+        <div className="flex-1 overflow-hidden relative">
+          <div className="animate-marquee flex gap-8 whitespace-nowrap">
+            <span className="text-[11px] font-medium text-white/90">
+              VIP 1 é 12.000 Kz e a recompensa diária é 8.000 Kz. Benefícios por 60 dias. Recompensa de indicação nível 1: 10%... VIP 2 é 45.000 Kz com recompensa de 12.000 Kz! Participe agora e ganhe bônus de rede!
+            </span>
+            <span className="text-[11px] font-medium text-white/90">
+              VIP 1 é 12.000 Kz e a recompensa diária é 8.000 Kz. Benefícios por 60 dias. Recompensa de indicação nível 1: 10%... VIP 2 é 45.000 Kz com recompensa de 12.000 Kz! Participe agora e ganhe bônus de rede!
+            </span>
           </div>
         </div>
       </div>
@@ -219,35 +224,18 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
 
       {/* Reprodutor de Vídeo - Substitui Sala de Tarefas */}
       <div className="bg-white dark:bg-[#1A1A1A] rounded-t-[40px] p-6 -mx-0 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-[#0F1111] dark:text-white text-xl font-black tracking-tight flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">play_circle</span>
-            Apresentação
-          </h3>
-          <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-wider">Ao Vivo</span>
-        </div>
+
 
         <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-2xl bg-black group cursor-pointer border border-slate-100 dark:border-white/10">
-          {/* Mock Video Container */}
-          <img
-            src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1000"
-            alt="Video Preview"
-            className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="size-20 bg-primary rounded-full flex items-center justify-center shadow-2xl shadow-primary/40 group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-white text-5xl font-bold ml-1">play_arrow</span>
-            </div>
-          </div>
-
-          {/* Video Overlay Controls Mock */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="size-2 bg-red-600 rounded-full animate-pulse" />
-              <span className="text-white text-[10px] font-bold uppercase tracking-widest">The Home Depot - Overview</span>
-            </div>
-            <span className="text-white/60 text-[10px]">04:20</span>
-          </div>
+          {/* YouTube Video Embed */}
+          <iframe
+            className="w-full h-full"
+            src="https://www.youtube.com/embed/bLbiUqIu8WE?autoplay=1&mute=1&modestbranding=1&rel=0"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          ></iframe>
         </div>
 
         <p className="mt-4 text-slate-500 dark:text-slate-400 text-xs text-center font-medium leading-relaxed italic">

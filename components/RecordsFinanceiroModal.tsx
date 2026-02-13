@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../supabase';
-import SpokeSpinner from '../components/SpokeSpinner';
+import SpokeSpinner from './SpokeSpinner';
 
-interface Props {
-    onNavigate: (page: any) => void;
+interface RecordsFinanceiroModalProps {
+    isOpen: boolean;
+    onClose: () => void;
     showToast?: (message: string, type: 'success' | 'error' | 'info' | 'warning') => void;
 }
 
@@ -22,11 +23,26 @@ interface RecordItem {
     subtext?: string;
 }
 
-const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
+const RecordsFinanceiroModal: React.FC<RecordsFinanceiroModalProps> = ({ isOpen, onClose, showToast }) => {
     const [activeTab, setActiveTab] = useState<TabType>('gifts');
     const [loading, setLoading] = useState(false);
     const [records, setRecords] = useState<RecordItem[]>([]);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+    const [shouldRender, setShouldRender] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+            setShouldRender(true);
+            const timer = setTimeout(() => setIsVisible(true), 10);
+            fetchRecords('gifts');
+            return () => clearTimeout(timer);
+        } else {
+            setIsVisible(false);
+            const timer = setTimeout(() => setShouldRender(false), 300);
+            return () => clearTimeout(timer);
+        }
+    }, [isOpen]);
 
     const formatRecord = (source: string, data: any): RecordItem => {
         switch (source) {
@@ -124,10 +140,7 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
         setIsTransitioning(true);
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-                onNavigate('login');
-                return;
-            }
+            if (!user) return;
 
             let combinedRecords: RecordItem[] = [];
 
@@ -138,18 +151,14 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                     .eq('user_id', user.id)
                     .order('data_recebimento', { ascending: false });
 
-                if (bonusData) {
-                    combinedRecords = bonusData.map(d => formatRecord('bonus_transacoes', d));
-                }
+                if (bonusData) combinedRecords = bonusData.map(d => formatRecord('bonus_transacoes', d));
             } else if (tab === 'tasks') {
                 const [tasksRes, purchasesRes] = await Promise.all([
                     supabase.from('tarefas_diarias').select('*').eq('user_id', user.id).order('data_atribuicao', { ascending: false }),
                     supabase.from('historico_compras').select('*').eq('user_id', user.id).order('data_compra', { ascending: false })
                 ]);
-
                 const tasks = (tasksRes.data || []).map(d => formatRecord('tarefas_diarias', d));
                 const purchases = (purchasesRes.data || []).map(d => formatRecord('historico_compras', d));
-
                 combinedRecords = [...tasks, ...purchases].sort((a, b) => b.date.getTime() - a.date.getTime());
             } else if (tab === 'transfers') {
                 const [bankDepRes, usdtDepRes, withdrawRes] = await Promise.all([
@@ -157,11 +166,9 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                     supabase.from('depositos_usdt').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
                     supabase.from('retirada_clientes').select('*').eq('user_id', user.id).order('data_de_criacao', { ascending: false })
                 ]);
-
                 const bankDeps = (bankDepRes.data || []).map(d => formatRecord('depositos_clientes', d));
                 const usdtDeps = (usdtDepRes.data || []).map(d => formatRecord('depositos_usdt', d));
                 const withdraws = (withdrawRes.data || []).map(d => formatRecord('retirada_clientes', d));
-
                 combinedRecords = [...bankDeps, ...usdtDeps, ...withdraws].sort((a, b) => b.date.getTime() - a.date.getTime());
             }
 
@@ -171,77 +178,67 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
             showToast?.(err.message || "Erro ao carregar dados", "error");
         } finally {
             setLoading(false);
-            // Pequeno delay para suavizar a transição visual
             setTimeout(() => setIsTransitioning(false), 300);
         }
-    }, [onNavigate, showToast]);
+    }, [showToast]);
 
     useEffect(() => {
-        fetchRecords(activeTab);
-    }, [activeTab, fetchRecords]);
+        if (isOpen) fetchRecords(activeTab);
+    }, [activeTab, fetchRecords, isOpen]);
 
     const getStatusStyle = (status: string) => {
         const s = status?.toLowerCase() || '';
-        if (['sucedido', 'concluido', 'concluído', 'completo', 'aprovado', 'sucesso', 'processado', 'confirmado'].includes(s)) {
-            return 'bg-green-100 text-green-600';
-        }
-        if (['pendente', 'processando', 'em_andamento', 'revisão', 'em andamento'].includes(s)) {
-            return 'bg-blue-100 text-blue-600';
-        }
-        if (['falha', 'falhou', 'rejeitado', 'rejeitada', 'cancelado', 'expirado'].includes(s)) {
-            return 'bg-red-100 text-red-600';
-        }
+        if (['sucedido', 'concluido', 'concluído', 'completo', 'aprovado', 'sucesso', 'processado', 'confirmado'].includes(s)) return 'bg-green-100 text-green-600';
+        if (['pendente', 'processando', 'em_andamento', 'revisão', 'em andamento'].includes(s)) return 'bg-blue-100 text-blue-600';
+        if (['falha', 'falhou', 'rejeitado', 'rejeitada', 'cancelado', 'expirado'].includes(s)) return 'bg-red-100 text-red-600';
         return 'bg-gray-100 text-gray-500';
     };
 
     const tabs: { id: TabType; label: string; icon: string }[] = [
-        { id: 'gifts', label: 'Brindes', icon: 'redeem' },
-        { id: 'tasks', label: 'Tarefas', icon: 'task' },
-        { id: 'transfers', label: 'Transferências', icon: 'sync_alt' },
+        { id: 'gifts', label: 'brindes', icon: 'redeem' },
+        { id: 'tasks', label: 'tarefas', icon: 'task' },
+        { id: 'transfers', label: 'transferências', icon: 'sync_alt' },
     ];
 
+    if (!shouldRender) return null;
+
     return (
-        <div className="bg-[#f27f0d] flex flex-col min-h-screen font-sans antialiased text-slate-900 overflow-hidden">
-            {/* Header modern with back button */}
+        <div className={`fixed inset-0 z-[110] bg-[#FF6B00] transition-transform duration-300 ease-in-out overflow-y-auto no-scrollbar ${isVisible ? 'translate-x-0' : 'translate-x-full'}`}>
             <header className="px-6 pt-12 pb-8 flex flex-col gap-6">
                 <div className="flex items-center justify-between">
                     <button
-                        onClick={() => onNavigate('profile')}
-                        className="w-10 h-10 bg-white/20 backdrop-blur-lg rounded-xl flex items-center justify-center text-white active:scale-90 transition-all border border-white/10"
+                        onClick={onClose}
+                        className="w-10 h-10 bg-white/20 backdrop-blur-lg rounded-[8px] flex items-center justify-center text-white active:scale-95 transition-all"
                     >
-                        <span className="material-symbols-outlined">arrow_back</span>
+                        <span className="material-symbols-outlined">chevron_left</span>
                     </button>
-                    <h1 className="text-xl font-bold text-white tracking-tight">Registros financeiros</h1>
-                    <button className="w-10 h-10 bg-white/20 backdrop-blur-lg rounded-xl flex items-center justify-center text-white active:scale-90 transition-all border border-white/10">
-                        <span className="material-symbols-outlined">tune</span>
-                    </button>
+                    <h1 className="text-xl font-medium text-white tracking-tight lowercase">registros financeiros</h1>
+                    <div className="w-10"></div>
                 </div>
 
-                {/* Tab Switcher */}
-                <div className="grid grid-cols-3 gap-2 bg-white/10 p-1 rounded-2xl border border-white/5 backdrop-blur-sm">
+                <div className="grid grid-cols-3 gap-2 bg-white/10 p-1 rounded-[8px] border border-white/5 backdrop-blur-sm">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex flex-col items-center justify-center gap-1 py-3 rounded-xl transition-all duration-500 ${activeTab === tab.id
-                                ? 'bg-white text-[#f27f0d]'
+                            className={`flex flex-col items-center justify-center gap-1 py-3 rounded-[8px] transition-all duration-500 ${activeTab === tab.id
+                                ? 'bg-white text-[#FF6B00]'
                                 : 'text-white/60 hover:text-white/80'
                                 }`}
                         >
                             <span className="material-symbols-outlined text-[20px]">{tab.icon}</span>
-                            <span className="text-[10px] font-bold">{tab.label}</span>
+                            <span className="text-[10px] font-medium lowercase">{tab.label}</span>
                         </button>
                     ))}
                 </div>
             </header>
 
-            {/* Content Area */}
-            <main className="flex-1 bg-white rounded-t-[40px] px-6 pt-10 pb-32 overflow-y-auto no-scrollbar relative">
+            <main className="flex-1 bg-white rounded-t-[40px] px-6 pt-10 pb-32 min-h-[60vh]">
                 <div className={`transition-all duration-500 transform ${isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Listagem recente</h2>
+                        <h2 className="text-[11px] font-medium text-slate-400 uppercase tracking-wider lowercase">listagem recente</h2>
                         {!loading && records.length > 0 && (
-                            <span className="text-[10px] font-bold text-[#f27f0d] bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
+                            <span className="text-[10px] font-medium text-[#FF6B00] bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
                                 {records.length} itens
                             </span>
                         )}
@@ -249,42 +246,38 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
 
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-20 gap-4">
-                            <SpokeSpinner size="w-10 h-10" color="text-[#f27f0d]" />
-                            <p className="text-xs text-slate-400 font-medium animate-pulse">Consultando dados...</p>
+                            <SpokeSpinner size="w-10 h-10" color="text-[#FF6B00]" />
+                            <p className="text-xs text-slate-400 font-medium">Consultando dados...</p>
                         </div>
                     ) : records.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-20 text-center opacity-40">
                             <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4">
                                 <span className="material-symbols-outlined text-4xl text-slate-300">inventory_2</span>
                             </div>
-                            <p className="text-sm font-bold text-slate-400">Sem registros</p>
-                            <p className="text-[11px] text-slate-300 mt-1">Nada encontrado nesta categoria.</p>
+                            <p className="text-sm font-medium text-slate-400">Sem registros</p>
                         </div>
                     ) : (
                         <div className="space-y-4">
                             {records.map((item) => (
-                                <div
-                                    key={`${item.source}-${item.id}`}
-                                    className="bg-slate-50 rounded-[24px] p-4 border border-slate-100 flex items-center justify-between active:scale-[0.98] transition-all"
-                                >
+                                <div key={`${item.source}-${item.id}`} className="bg-slate-50 rounded-[8px] p-4 border border-slate-100 flex items-center justify-between">
                                     <div className="flex items-center gap-4">
-                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${item.colorClass}`}>
+                                        <div className={`w-12 h-12 rounded-[8px] flex items-center justify-center ${item.colorClass}`}>
                                             <span className="material-symbols-outlined text-2xl">{item.icon}</span>
                                         </div>
                                         <div>
-                                            <p className="font-bold text-slate-800 text-sm leading-tight">{item.title}</p>
-                                            {item.subtext && <p className="text-[10px] text-slate-400 mt-0.5">{item.subtext}</p>}
+                                            <p className="font-medium text-slate-800 text-sm leading-tight lowercase">{item.title}</p>
+                                            {item.subtext && <p className="text-[10px] text-slate-400 mt-0.5 lowercase">{item.subtext}</p>}
                                             <p className="text-[10px] text-slate-300 mt-1 font-medium">
-                                                {item.date.toLocaleDateString('pt-AO')} às {item.date.toLocaleTimeString('pt-AO', { hour: '2-digit', minute: '2-digit' })}
+                                                {item.date.toLocaleDateString('pt-AO')}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className={`font-black text-sm mb-1.5 ${item.isIncome ? 'text-green-500' : 'text-red-500'}`}>
+                                        <p className={`font-medium text-sm mb-1.5 ${item.isIncome ? 'text-green-500' : 'text-red-500'}`}>
                                             {item.isIncome ? '+' : '-'} {item.amount?.toLocaleString('pt-AO')} kz
                                         </p>
-                                        <span className={`px-2.5 py-1 rounded-full text-[9px] font-bold ${getStatusStyle(item.status)}`}>
-                                            {item.status}
+                                        <span className={`px-2.5 py-1 rounded-full text-[9px] font-medium ${getStatusStyle(item.status)}`}>
+                                            {item.status.toLowerCase()}
                                         </span>
                                     </div>
                                 </div>
@@ -293,16 +286,8 @@ const RecordsFinanceiro: React.FC<Props> = ({ onNavigate, showToast }) => {
                     )}
                 </div>
             </main>
-
-            <style>{`
-                .no-scrollbar::-webkit-scrollbar { display: none; }
-                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-                .material-symbols-outlined {
-                    font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24;
-                }
-            `}</style>
         </div>
     );
 };
 
-export default RecordsFinanceiro;
+export default RecordsFinanceiroModal;

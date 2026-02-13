@@ -8,6 +8,17 @@ import FloatingSupportButton from './components/FloatingSupportButton';
 import WelcomeModal from './components/WelcomeModal';
 
 import SplashScreen from './components/SplashScreen';
+import GiftRedeemModal from './components/GiftRedeemModal';
+import AboutBPModal from './components/AboutBPModal';
+import AddBankModal from './components/AddBankModal';
+import RewardClaimModal from './components/RewardClaimModal';
+import SubordinateListModal from './components/SubordinateListModal';
+import RecordsFinanceiroModal from './components/RecordsFinanceiroModal';
+import DepositUSDTModal from './components/DepositUSDTModal';
+import ChangePasswordModal from './components/ChangePasswordModal';
+import DetalhesPayModal from './components/DetalhesPayModal';
+import RechargeModal from './components/RechargeModal';
+import WithdrawModal from './components/WithdrawModal';
 
 // Config & Hooks
 import { PAGE_TITLES, PAGES_CONFIG } from './navigation';
@@ -23,6 +34,17 @@ const App: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [showGiftModal, setShowGiftModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
+  const [showBankModal, setShowBankModal] = useState(false);
+  const [showRewardModal, setShowRewardModal] = useState(false);
+  const [showSubordinateModal, setShowSubordinateModal] = useState(false);
+  const [showRecordsModal, setShowRecordsModal] = useState(false);
+  const [showDepositUSDTModal, setShowDepositUSDTModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showDetalhesModal, setShowDetalhesModal] = useState(false);
+  const [showRechargeModal, setShowRechargeModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
   const [navigationData, setNavigationData] = useState<any>(null);
   const [isAppLoading, setIsAppLoading] = useState(true);
@@ -99,25 +121,40 @@ const App: React.FC = () => {
   }, [currentPage, session]);
 
   const handleNavigate = useCallback((page: string, data: any = null) => {
-    if (page === currentPage) return;
-    setNavigationData(data);
+    if (page === currentPage && !data) return;
 
+    // Set page for state persistence (useful for reloads)
+    setCurrentPage(page);
+    localStorage.setItem('currentPage', page);
+    if (data) setNavigationData(data);
+
+    // Some basic triggers
     if (page === 'home') {
       setShowWelcomeModal(true);
     }
 
-    localStorage.setItem('currentPage', page);
+    window.scrollTo(0, 0);
+  }, [currentPage]);
 
-    const heavyPages = ['records-financeiro', 'shop'];
-    if (heavyPages.includes(page)) {
-      withLoading(async () => {
-        await new Promise(r => setTimeout(r, 100)); // Perceived performance delay for heavy load
-        setCurrentPage(page);
-      });
-    } else {
-      setCurrentPage(page);
-    }
-  }, [currentPage, withLoading]);
+  // Sync modal states with currentPage (for reloads and browser history)
+  useEffect(() => {
+    // Hide all first (effectively) - simplified by checking specifically
+    setShowGiftModal(currentPage === 'gift-chest');
+    setShowAboutModal(currentPage === 'about-bp');
+    setShowBankModal(currentPage === 'add-bank');
+    setShowRewardModal(currentPage === 'reward-claim');
+    setShowSubordinateModal(currentPage === 'subordinate-list');
+    setShowRecordsModal(currentPage === 'records-financeiro');
+    setShowDepositUSDTModal(currentPage === 'deposit-usdt');
+    setShowPasswordModal(currentPage === 'change-password');
+    setShowDetalhesModal(currentPage === 'detalhes-pay');
+    setShowRechargeModal(currentPage === 'deposit');
+    setShowWithdrawModal(currentPage === 'retirada');
+  }, [currentPage]);
+
+  const handleCloseModal = useCallback((fallbackPage: string = 'home') => {
+    handleNavigate(fallbackPage);
+  }, [handleNavigate]);
 
   // --- Page Rendering ---
   const renderPage = () => {
@@ -126,25 +163,23 @@ const App: React.FC = () => {
     }
 
     const pages: Record<string, any> = {
-      'home': PAGES_CONFIG.Home,
       'shop': PAGES_CONFIG.Shop,
       'profile': PAGES_CONFIG.Profile,
-      'add-bank': PAGES_CONFIG.AddBank,
-      'deposit': PAGES_CONFIG.Recharge,
-      'change-password': PAGES_CONFIG.ChangePassword,
       'register': PAGES_CONFIG.Register,
-      'retirada': PAGES_CONFIG.Withdraw,
       'login': PAGES_CONFIG.Login,
-      'gift-chest': PAGES_CONFIG.GiftChest,
-      'reward-claim': PAGES_CONFIG.RewardClaim,
-      'deposit-usdt': PAGES_CONFIG.DepositUSDT,
-      'subordinate-list': PAGES_CONFIG.SubordinateList,
       'invite-page': PAGES_CONFIG.InvitePage,
       'tasks': PAGES_CONFIG.Tasks,
-      'detalhes-pay': PAGES_CONFIG.DetalhesPay,
-      'records-financeiro': PAGES_CONFIG.RecordsFinanceiro,
-      'about-bp': PAGES_CONFIG.AboutBP,
+      'change-password': PAGES_CONFIG.Profile, // Keep Profile in background for centered modal
     };
+
+    const fullScreenModals = [
+      'gift-chest', 'about-bp', 'add-bank', 'reward-claim', 'subordinate-list', 
+      'records-financeiro', 'deposit-usdt', 'detalhes-pay', 'deposit', 'retirada'
+    ];
+
+    if (fullScreenModals.includes(currentPage)) {
+      return null;
+    }
 
     const Component = pages[currentPage] || PAGES_CONFIG.Home;
     return <Component
@@ -176,6 +211,74 @@ const App: React.FC = () => {
       {showWelcomeModal && session && currentPage === 'home' && (
         <WelcomeModal onClose={() => setShowWelcomeModal(false)} />
       )}
+
+      <GiftRedeemModal
+        isOpen={showGiftModal}
+        onClose={() => handleCloseModal('home')}
+        showToast={handleShowToast}
+      />
+
+      <AboutBPModal
+        isOpen={showAboutModal}
+        onClose={() => handleCloseModal('profile')}
+      />
+
+      <AddBankModal
+        isOpen={showBankModal}
+        onClose={() => handleCloseModal('profile')}
+        showToast={handleShowToast}
+      />
+
+      <RewardClaimModal
+        isOpen={showRewardModal}
+        onClose={() => handleCloseModal('profile')}
+      />
+
+      <SubordinateListModal
+        isOpen={showSubordinateModal}
+        onClose={() => handleCloseModal('profile')}
+      />
+
+      <RecordsFinanceiroModal
+        isOpen={showRecordsModal}
+        onClose={() => handleCloseModal('profile')}
+        showToast={handleShowToast}
+      />
+
+      <DepositUSDTModal
+        isOpen={showDepositUSDTModal}
+        onClose={() => handleCloseModal('deposit')}
+        showToast={handleShowToast}
+        data={navigationData}
+        onNavigate={handleNavigate}
+      />
+
+      <DetalhesPayModal
+        isOpen={showDetalhesModal}
+        onClose={() => handleCloseModal('home')}
+        showToast={handleShowToast}
+        data={navigationData}
+        onNavigate={handleNavigate}
+      />
+
+      <ChangePasswordModal
+        isOpen={showPasswordModal}
+        onClose={() => handleCloseModal('profile')}
+        showToast={handleShowToast}
+      />
+
+      <RechargeModal
+        isOpen={showRechargeModal}
+        onClose={() => handleCloseModal('home')}
+        showToast={handleShowToast}
+        onNavigate={handleNavigate}
+      />
+
+      <WithdrawModal
+        isOpen={showWithdrawModal}
+        onClose={() => handleCloseModal('home')}
+        showToast={handleShowToast}
+      />
 
       {/* Bottom Navigation */}
       {session && ['home', 'shop', 'profile', 'tasks', 'gift-chest', 'invite-page'].includes(currentPage) && (
