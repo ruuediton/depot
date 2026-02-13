@@ -190,9 +190,9 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                 {/* Level Cards Section */}
                 <div className="space-y-4">
                     {[
-                        { level: 1, gradient: 'bg-[#7E3AF2]', comission: '13%', reg: `${stats.total_invited}/0`, earnings: stats.total_earned },
-                        { level: 2, gradient: 'bg-[#3F83F8]', comission: '2%', reg: '0/0', earnings: 0 },
-                        { level: 3, gradient: 'bg-[#1A56DB]', comission: '1%', reg: '0/0', earnings: 0 }
+                        { level: 1, gradient: 'bg-[#7E3AF2]', comission: '10%', reg: `${stats.total_invited}/0`, earnings: stats.total_earned },
+                        { level: 2, gradient: 'bg-[#3F83F8]', comission: '5%', reg: '0/0', earnings: 0 },
+                        { level: 3, gradient: 'bg-[#1A56DB]', comission: '2%', reg: '0/0', earnings: 0 }
                     ].map((lvl) => (
                         <div key={lvl.level} className={`${lvl.gradient} relative overflow-hidden rounded-[24px] p-6 text-white shadow-2xl border border-white/5`}>
                             {/* Star Decoration Background */}
