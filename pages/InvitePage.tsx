@@ -120,36 +120,36 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
 
             <main className="px-4 space-y-5 pt-4">
                 {/* Invite Card */}
-                <div className="bg-white rounded-[24px] p-6 shadow-xl space-y-6">
+                <div className="bg-white rounded-[8px] p-6 shadow-2xl space-y-6">
                     <div className="text-center space-y-5">
-                        <div className="bg-gray-50 rounded-2xl p-5 relative border border-gray-100 flex flex-col items-center">
-                            <p className="text-gray-400 text-[11px] font-bold uppercase tracking-widest mb-1">Código de Convite</p>
-                            <p className="text-4xl font-bold tracking-[0.2em] text-[#FF6B00] font-mono">{inviteCode || '------'}</p>
+                        <div className="bg-slate-50 rounded-[8px] p-6 relative border border-slate-100 flex flex-col items-center">
+                            <p className="text-gray-400 text-[10px] font-medium uppercase tracking-[0.2em] mb-2">Código de Convite</p>
+                            <p className="text-4xl font-semibold tracking-[0.15em] text-[#FF6B00]">{inviteCode || '------'}</p>
                             <button
                                 onClick={handleCopyCode}
-                                className="absolute top-3 right-3 bg-black text-white text-[10px] px-4 py-1.5 rounded-full font-bold uppercase tracking-wider active:scale-90 transition-all"
+                                className="absolute top-3 right-3 bg-[#0F1111] text-white text-[9px] px-4 py-1.5 rounded-[8px] font-bold uppercase tracking-widest active:scale-95 transition-all shadow-lg"
                             >
-                                cópia
+                                COPY
                             </button>
                         </div>
 
-                        <div className="space-y-3">
-                            <p className="text-[11px] text-gray-500 font-bold leading-tight">Compartilhe seu link de indicação e comece a ganhar</p>
-                            <div className="flex items-center justify-between bg-gray-50 p-2.5 rounded-xl gap-3 border border-gray-100 overflow-hidden">
-                                <p className="text-[11px] text-blue-500 truncate font-black flex-1 text-left px-2">
+                        <div className="space-y-4">
+                            <p className="text-[11px] text-gray-500 font-medium leading-relaxed px-4 text-center">Compartilhe seu link de indicação e comece a ganhar</p>
+                            <div className="flex items-center justify-between bg-slate-50 p-2 rounded-[8px] gap-2 border border-slate-100 overflow-hidden">
+                                <p className="text-[10px] text-blue-600 truncate font-semibold flex-1 text-left px-3">
                                     {`https://${inviteLinkBase}/register?ref=${inviteCode || ''}`}
                                 </p>
                                 <button
                                     onClick={handleCopyLink}
-                                    className="bg-black text-white text-[10px] px-4 py-2 rounded-full font-bold uppercase tracking-wider whitespace-nowrap active:scale-90 transition-all"
+                                    className="bg-[#0F1111] text-white text-[9px] px-4 py-2.5 rounded-[8px] font-bold uppercase tracking-widest whitespace-nowrap active:scale-95 transition-all shadow-lg"
                                 >
-                                    cópia
+                                    COPY
                                 </button>
                             </div>
                         </div>
 
                         {/* Social Icons Row */}
-                        <div className="flex justify-between items-center px-2 pt-2 gap-2 overflow-x-auto no-scrollbar grayscale opacity-80">
+                        <div className="flex justify-between items-center px-2 pt-2 gap-3 overflow-x-auto no-scrollbar opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
                             {[
                                 { alt: 'X', src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDhx5-lT7B7E2FVlK97yT3c0q4Ch2pgcxlj80jC1J0tjwYj_t_KeWWGniIkPk503o3aMLeo46n1ZCsI218A23cFZ2dpzE-UnYFlfs-6iUs4xayiraQEfM4zV0jf6xgA20DpRK2PYqvzuFDOa1BHkXKiqi5Lq0X2RIisCbApcuBoEhgYnkfCdsJ0RSko9QWSwXLOjiqBDKRXNb5l7OcR3RhbWtD_PRZ19lifogKv3zAi8StIbzovDXaZvMcH9x1CX7ny8bbIAqiiZhVE' },
                                 { alt: 'FB', src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDx2yBbXF4VxQQiP3XFnFAlEwIukAjFHKFLAEP5Gwb0BUiE71zhNnmtJsL8V_tXFAyPV1WIdgqEDukZnEFmse3nVnD5S1VOJdYlSL8b7kN_6HzZzqFV_OfGkFSuSzq2RmwLSQdkkrrauLk9L2mi4Epb0WMudh1hhlHd06oTKnRtDlm-uTjGFFcTg7YrS__XpclGOU3MvHMnkJunE9vM_IwMgABnh5357jnVCP4fXRCIszZJ6bacF1T__2AOOGUne714IrYzjM0JfGMF' },
@@ -158,74 +158,74 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                                 { alt: 'IG', src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDgipAUaXtaQgfTfe7SYrvQC-h33WNQR4MLqPGK5TLedxqc_q8xst4U57leujrpvtKI540zQK2VgnfQ7AwR548O6LaRiOjaorsMSj-uathzzyaoFWvblIgwgZSf3nJpvNWGXhkZ5E880nTJEyqedHdVwhNpHQfn8BiweFxNKLJguQlqa7qcyLSE9kRzwexeJbc_L2FDkpIsaBOS2LfuMaBg1v609enxnE03Tcu5i4oYAK1nKwtF-uhk64hNue0UDue1pAP8l0WiUPoC' },
                                 { alt: 'TikTok', src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDlAJ0qJOtiRDMY5P4T9B-SiS7cYg70lhS_167Wexx5vQiw7uiJSkZZtEtSEWZijIiVBlNtubv6auocEqd3lFpgJcPC5zJzy-8o3xC0G2r-DOnmT9CcyN_ZrtUOiY8mFo9OUhBTcmR7NJBsOfwdyfGSKqPP53y3qpnPMyFL8rehR8EiuoCPpvsAXYK8Uzk57xvnU7jWQ1LtVXBjqcCF7S7efxDQE-gsob_TLZ8-CJDbHM-woWreZpk-2r4hstzi3UymR-CPFTacBENr' }
                             ].map((icon, idx) => (
-                                <img key={idx} alt={icon.alt} className="w-6 h-6 object-contain" src={icon.src} />
+                                <img key={idx} alt={icon.alt} className="w-5 h-5 object-contain" src={icon.src} />
                             ))}
                         </div>
                     </div>
                 </div>
 
                 {/* Date Filter Label */}
-                <div className="flex items-center gap-2 text-white font-bold text-sm px-2">
-                    <span className="material-symbols-outlined text-[18px]">calendar_today</span>
-                    <span className="uppercase tracking-widest text-[11px]">Período de seleção</span>
+                <div className="flex items-center gap-3 text-white/90 px-2 mt-2">
+                    <span className="material-symbols-outlined text-[20px]">calendar_today</span>
+                    <span className="uppercase tracking-[0.2em] text-[10px] font-bold">Período de seleção</span>
                 </div>
 
                 {/* Team Stats Yellow Card */}
-                <div className="bg-[#FFF9C4] rounded-[24px] p-6 grid grid-cols-3 gap-y-8 text-center border border-white/20 shadow-inner">
+                <div className="bg-[#FFF9C4]/90 backdrop-blur-md rounded-[8px] p-8 grid grid-cols-3 gap-y-8 gap-x-2 text-center shadow-lg">
                     {[
-                        { label: 'Tamanho da equipe', value: stats.total_invited },
-                        { label: 'Recarga da equipe', value: `Kz ${stats.team_recharge.toLocaleString()}` },
-                        { label: 'Retirada da equipe', value: `Kz ${stats.team_withdraw.toLocaleString()}` },
+                        { label: 'Tamanho equipe', value: stats.total_invited },
+                        { label: 'Recarga equipe', value: `Kz ${stats.team_recharge.toLocaleString()}` },
+                        { label: 'Retirada equipe', value: `Kz ${stats.team_withdraw.toLocaleString()}` },
                         { label: 'Novo time', value: stats.new_team },
                         { label: 'Recarga 1ª vez', value: stats.first_recharge },
                         { label: 'Primeira retirada', value: stats.first_withdraw }
                     ].map((item, idx) => (
                         <div key={idx} className="space-y-1">
-                            <p className="text-[9px] text-gray-600 font-bold uppercase leading-tight tracking-tighter px-1">{item.label}</p>
-                            <p className="text-[17px] font-bold text-gray-900 tracking-tight">{item.value}</p>
+                            <p className="text-[9px] text-gray-500 font-semibold uppercase leading-tight tracking-tight">{item.label}</p>
+                            <p className="text-[15px] font-bold text-gray-900 tracking-tight">{item.value}</p>
                         </div>
                     ))}
                 </div>
 
                 {/* Level Cards Section */}
-                <div className="space-y-4">
+                <div className="space-y-5">
                     {[
                         { level: 1, gradient: 'bg-[#7E3AF2]', comission: '10%', reg: `${stats.total_invited}/0`, earnings: stats.total_earned },
                         { level: 2, gradient: 'bg-[#3F83F8]', comission: '5%', reg: '0/0', earnings: 0 },
                         { level: 3, gradient: 'bg-[#1A56DB]', comission: '2%', reg: '0/0', earnings: 0 }
                     ].map((lvl) => (
-                        <div key={lvl.level} className={`${lvl.gradient} relative overflow-hidden rounded-[24px] p-6 text-white shadow-2xl border border-white/5`}>
+                        <div key={lvl.level} className={`${lvl.gradient} relative overflow-hidden rounded-[8px] p-6 text-white shadow-2xl border border-white/10 group`}>
                             {/* Star Decoration Background */}
-                            <div className="absolute top-0 right-0 p-2 opacity-10 pointer-events-none">
-                                <span className="material-symbols-outlined text-8xl rotate-12">grade</span>
+                            <div className="absolute top-0 right-0 p-2 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
+                                <span className="material-symbols-outlined text-9xl rotate-12">grade</span>
                             </div>
 
-                            {/* Tilted Badge */}
-                            <div className="absolute top-0 left-0 bg-white/20 py-1.5 px-10 text-[10px] font-bold uppercase -rotate-45 -translate-x-7 translate-y-2 border-b border-white/30 backdrop-blur-sm z-20">
-                                NÍVEL {lvl.level}
+                            {/* Badge */}
+                            <div className="absolute top-0 left-0 bg-white/20 py-2 px-10 text-[9px] font-bold uppercase -rotate-45 -translate-x-8 translate-y-3 backdrop-blur-md border-b border-white/20 shadow-sm">
+                                LÍVEL {lvl.level}
                             </div>
 
-                            <div className="flex justify-between items-center ml-10 relative z-10 pt-2">
-                                <div className="flex-1 grid grid-cols-2 gap-x-8 gap-y-4">
+                            <div className="flex justify-between items-center ml-8 relative z-10 pt-2">
+                                <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-6">
                                     <div className="text-center">
-                                        <p className="text-[9px] font-semibold opacity-70 uppercase tracking-widest mb-1">Registro/Válido</p>
-                                        <p className="text-xl font-bold">{lvl.reg}</p>
+                                        <p className="text-[9px] font-medium opacity-60 uppercase tracking-[0.1em] mb-1">Registro/Válido</p>
+                                        <p className="text-[17px] font-semibold">{lvl.reg}</p>
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-[9px] font-semibold opacity-70 uppercase tracking-widest mb-1">Comissão</p>
-                                        <p className="text-xl font-bold">{lvl.comission}</p>
+                                        <p className="text-[9px] font-medium opacity-60 uppercase tracking-[0.1em] mb-1">Comissão</p>
+                                        <p className="text-[17px] font-semibold">{lvl.comission}</p>
                                     </div>
-                                    <div className="col-span-2 text-center pt-2">
-                                        <p className="text-[9px] font-semibold opacity-70 uppercase tracking-widest mb-1">Renda total</p>
-                                        <p className="text-2xl font-bold text-yellow-300">Kz {lvl.earnings.toLocaleString()}</p>
+                                    <div className="col-span-2 text-center flex flex-col items-center">
+                                        <p className="text-[9px] font-medium opacity-60 uppercase tracking-[0.1em] mb-1">Renda acumulada</p>
+                                        <p className="text-2xl font-bold text-yellow-300 drop-shadow-sm">Kz {lvl.earnings.toLocaleString()}</p>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={() => onNavigate('subordinate-list')}
-                                    className="bg-black/30 hover:bg-black/50 transition-all text-white text-[11px] font-bold px-5 py-2 rounded-full border border-white/10 uppercase tracking-widest ml-4 shadow-lg active:scale-95"
+                                    className="bg-white/10 hover:bg-white/20 transition-all text-white text-[10px] font-bold px-6 py-2.5 rounded-[8px] border border-white/20 uppercase tracking-widest ml-4 shadow-sm active:scale-95"
                                 >
-                                    Detalhes
+                                    DETALHES
                                 </button>
                             </div>
                         </div>

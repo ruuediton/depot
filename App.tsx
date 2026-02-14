@@ -4,7 +4,6 @@ import { Session } from '@supabase/supabase-js';
 
 // Components
 import SpokeSpinner from './components/SpokeSpinner';
-import FloatingSupportButton from './components/FloatingSupportButton';
 import WelcomeModal from './components/WelcomeModal';
 
 import SplashScreen from './components/SplashScreen';
@@ -213,7 +212,6 @@ const App: React.FC = () => {
         }>
           {renderPage()}
         </Suspense>
-        {/* {session && <FloatingSupportButton />} */}
       </main>
 
 
