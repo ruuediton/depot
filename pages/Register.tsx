@@ -114,41 +114,26 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
       {/* Header laranja com padrão de pontos */}
       <div className="relative w-full bg-[#FF6B1A] overflow-hidden" style={{ height: '280px' }}>
         {/* Padrão de pontos */}
-        <div 
+        <div
           className="absolute inset-0 opacity-30"
           style={{
             backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.4) 2px, transparent 2px)',
             backgroundSize: '20px 20px'
           }}
         />
-        
-        {/* Ícone de suporte no canto superior esquerdo */}
-        <div className="absolute top-5 left-5 z-10">
-          <button className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-            <span className="material-symbols-outlined text-white text-[22px]">headset_mic</span>
-          </button>
-        </div>
-
-        {/* Seletor de idioma no canto superior direito */}
-        <div className="absolute top-5 right-5 z-10">
-          <button className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-sm">
-            <span className="material-symbols-outlined text-white text-[18px]">language</span>
-            <span className="text-white text-sm font-medium">Português</span>
-            <span className="material-symbols-outlined text-white text-[16px]">expand_more</span>
-          </button>
-        </div>
 
         {/* Logo e título centralizados */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          {/* Logo branco */}
-          <div className="mb-3">
-            <svg width="180" height="60" viewBox="0 0 180 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <text x="90" y="35" fontFamily="Arial, sans-serif" fontSize="32" fontWeight="bold" fill="white" textAnchor="middle">
-                THE HOME DEPOT
-              </text>
-            </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+          {/* Logo do Home Depot */}
+          <div className="mb-4">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/TheHomeDepot.svg/2560px-TheHomeDepot.svg.png"
+              alt="The Home Depot"
+              className="w-48 h-auto"
+              style={{ filter: 'brightness(0) invert(1)' }}
+            />
           </div>
-          
+
           {/* Título "THE HOME-VIP" */}
           <h1 className="text-white text-xl font-bold tracking-wider">THE HOME-VIP</h1>
         </div>
@@ -165,20 +150,27 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
           </div>
 
           {/* Formulário */}
-          <form className="px-6 pt-6 pb-8 space-y-4" onSubmit={handleRegister}>
+          <form className="px-6 pt-6 pb-8 space-y-3.5" onSubmit={handleRegister}>
             {/* Campo de telefone */}
             <div>
               <label className="block text-[#2C3E50] font-semibold text-sm mb-2">
                 Número de telefone
               </label>
-              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-14 px-4 gap-2">
-                <span className="text-[#2C3E50] font-medium text-sm">+1</span>
+              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2">
+                <span className="text-[#2C3E50] font-medium text-sm">+244</span>
                 <input
                   type="tel"
                   placeholder="Número de telefone"
                   className="flex-1 bg-transparent outline-none text-[#2C3E50] placeholder:text-[#9CA3AF]"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9]/g, '');
+                    if (value.length <= 9) {
+                      setPhoneNumber(value);
+                    }
+                  }}
+                  maxLength={9}
+                  pattern="[0-9]{9}"
                   required
                 />
               </div>
@@ -189,7 +181,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
               <label className="block text-[#2C3E50] font-semibold text-sm mb-2">
                 Senha
               </label>
-              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-14 px-4 gap-2">
+              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Senha"
@@ -198,8 +190,8 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="text-[#9CA3AF]"
                 >
@@ -215,7 +207,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
               <label className="block text-[#2C3E50] font-semibold text-sm mb-2">
                 Digite novamente a senha
               </label>
-              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-14 px-4 gap-2">
+              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Digite novamente a senha"
@@ -224,8 +216,8 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="text-[#9CA3AF]"
                 >
@@ -241,7 +233,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
               <label className="block text-[#2C3E50] font-semibold text-sm mb-2">
                 Código de Convite
               </label>
-              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-14 px-4">
+              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4">
                 <input
                   type="text"
                   placeholder="Código de Convite"
@@ -262,7 +254,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
             {/* Botão Inscrever-se */}
             <button
               type="submit"
-              className="w-full h-14 bg-[#FF6B1A] text-white font-bold rounded-xl text-base mt-6 hover:brightness-110 active:scale-[0.98] transition-all"
+              className="w-full h-12 bg-[#FF6B1A] text-white font-bold rounded-xl text-base mt-5 hover:brightness-110 active:scale-[0.98] transition-all"
             >
               Inscrever-se
             </button>
@@ -271,7 +263,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
             <button
               type="button"
               onClick={() => onNavigate('login')}
-              className="w-full h-14 bg-white text-[#FF6B1A] border-2 border-[#FF6B1A] font-semibold rounded-xl text-base hover:bg-[#FFF5F0] active:scale-[0.98] transition-all"
+              className="w-full h-12 bg-white text-[#FF6B1A] border-2 border-[#FF6B1A] font-semibold rounded-xl text-base hover:bg-[#FFF5F0] active:scale-[0.98] transition-all"
             >
               Entrar
             </button>
@@ -281,10 +273,10 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
 
       {/* Ícone de suporte flutuante no canto inferior direito */}
       <button className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-xl flex items-center justify-center z-50 overflow-hidden">
-        <img 
-          src="https://ui-avatars.com/api/?name=Support&background=FF6B1A&color=fff&size=56" 
-          className="w-full h-full object-cover" 
-          alt="Support" 
+        <img
+          src="https://ui-avatars.com/api/?name=Support&background=FF6B1A&color=fff&size=56"
+          className="w-full h-full object-cover"
+          alt="Support"
         />
       </button>
     </div>
