@@ -9,7 +9,7 @@ import WelcomeModal from './components/WelcomeModal';
 import SplashScreen from './components/SplashScreen';
 // Lazy Components
 const GiftRedeemModal = React.lazy(() => import('./components/GiftRedeemModal'));
-const AboutBPModal = React.lazy(() => import('./components/AboutBPModal'));
+const AboutheHomeDepotModal = React.lazy(() => import('./components/AboutheHomeDepotModal'));
 const AddBankModal = React.lazy(() => import('./components/AddBankModal'));
 const RewardClaimModal = React.lazy(() => import('./components/RewardClaimModal'));
 const SubordinateListModal = React.lazy(() => import('./components/SubordinateListModal'));
@@ -227,7 +227,7 @@ const App: React.FC = () => {
           showToast={handleShowToast}
         />
 
-        <AboutBPModal
+        <AboutheHomeDepotModal
           isOpen={showAboutModal}
           onClose={() => handleCloseModal('profile')}
         />

@@ -77,9 +77,9 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate, onLogout, profile }) => {
             {/* Logo/Avatar Square */}
             <div className="w-20 h-20 bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden flex items-center justify-center p-1">
               <img
-                src={currentProfile?.avatar_url || "https://lh3.googleusercontent.com/a/default-user=s120-c"}
-                alt="Logo"
-                className="w-full h-full object-cover rounded-lg"
+                src="/logo.semfungo.png"
+                alt="The Depot Logo"
+                className="w-full h-full object-contain rounded-lg"
               />
             </div>
             <div className="flex flex-col justify-center">

@@ -23,7 +23,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
   // Imagens do carrossel
   const carouselImages = [
     {
-      url: "/carousel1.webp",
+      url: "/campanha de perfil3.jpg",
       title: "",
       subtitle: ""
     },
@@ -33,7 +33,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
       subtitle: ""
     },
     {
-      url: "/carousel3.jpg",
+      url: "/campanha de perfil2.png",
       title: "",
       subtitle: ""
     }

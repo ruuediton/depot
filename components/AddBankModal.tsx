@@ -14,7 +14,6 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
     const [bankName, setBankName] = useState('');
     const [holderName, setHolderName] = useState('');
     const [iban, setIban] = useState('');
-    const [expressNum, setExpressNum] = useState('');
     const [loading, setLoading] = useState(false);
     const [existingBank, setExistingBank] = useState<any>(null);
     const [mode, setMode] = useState<'create' | 'view' | 'edit'>('create');
@@ -52,7 +51,6 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                 setBankName(data[0].nome_banco || '');
                 setHolderName(data[0].nome_completo || '');
                 setIban((data[0].iban || '').replace('AO06', ''));
-                setExpressNum(data[0].express_multicaixa || '');
                 setMode('edit');
             }
         } catch (err) {
@@ -103,8 +101,7 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                 const payload = {
                     p_bank_name: bankName,
                     p_holder_name: holderName,
-                    p_iban: finalIban,
-                    p_express_num: expressNum
+                    p_iban: finalIban
                 };
 
                 const { error } = await supabase.rpc(
@@ -175,12 +172,6 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                                         <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">IBAN</span>
                                         <span className="text-sm font-mono font-medium text-slate-800 tracking-wider">AO06 {iban}</span>
                                     </div>
-                                    {expressNum && (
-                                        <div className="flex flex-col gap-1">
-                                            <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Express Multicaixa</span>
-                                            <span className="text-sm font-medium text-slate-800 tracking-wider">{expressNum}</span>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         ) : (
@@ -235,16 +226,6 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                                             type="text"
                                         />
                                     </div>
-
-                                    <div className="relative">
-                                        <input
-                                            value={expressNum}
-                                            onChange={(e) => setExpressNum(e.target.value)}
-                                            className="w-full bg-[#FFF5F0] dark:bg-[#2d2d2d] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 dark:text-white text-[#2C3E50] placeholder-[#9CA3AF] font-semibold transition-all"
-                                            placeholder="Número Express Multicaixa"
-                                            type="text"
-                                        />
-                                    </div>
                                 </div>
 
                                 <div className="bg-[#FFF5F0] dark:bg-zinc-800 rounded-xl p-4 mb-6 border border-orange-100 dark:border-zinc-700">
@@ -256,9 +237,6 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                                         <div className="flex flex-col gap-1">
                                             <p className="text-[#2C3E50] dark:text-gray-300 text-[10px] leading-tight font-medium">
                                                 • Digite apenas os 21 números do seu IBAN.
-                                            </p>
-                                            <p className="text-[#2C3E50] dark:text-gray-300 text-[10px] leading-tight font-medium">
-                                                • O Número Express é obrigatório para retiradas via Multicaixa.
                                             </p>
                                         </div>
                                     </div>

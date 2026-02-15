@@ -21,6 +21,11 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
         first_recharge: 0,
         first_withdraw: 0
     });
+    const [levelStats, setLevelStats] = useState({
+        lvl1: { reg: 0, valid: 0, earnings: 0 },
+        lvl2: { reg: 0, valid: 0, earnings: 0 },
+        lvl3: { reg: 0, valid: 0, earnings: 0 }
+    });
     const [inviteLinkBase, setInviteLinkBase] = useState<string>('vendas-online.vercel.app');
     const [loading, setLoading] = useState(true);
 
@@ -51,10 +56,33 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
             // 3. Buscar ganhos totais do histórico de bônus
             const { data: bonusData } = await supabase
                 .from('bonus_transacoes')
-                .select('valor_recebido')
+                .select('valor_recebido, origem_user_id')
                 .eq('user_id', user.id);
 
             const totalEarned = bonusData?.reduce((acc, curr) => acc + Number(curr.valor_recebido), 0) || 0;
+
+            // Calculate Level Stats
+            const getLevelData = (lvl: number) => {
+                const members = teamData?.filter((m: any) => m.level === lvl) || [];
+                const reg = members.length;
+                const valid = members.filter((m: any) => (m.reloaded_amount || 0) >= 3000).length;
+
+                const memberIds = new Set(members.map((m: any) => m.id));
+                const earnings = bonusData?.reduce((acc: number, curr: any) => {
+                    if (memberIds.has(curr.origem_user_id)) {
+                        return acc + Number(curr.valor_recebido);
+                    }
+                    return acc;
+                }, 0) || 0;
+
+                return { reg, valid, earnings };
+            };
+
+            setLevelStats({
+                lvl1: getLevelData(1),
+                lvl2: getLevelData(2),
+                lvl3: getLevelData(3)
+            });
 
             // 4. Buscar link atualizado do app
             const { data: linkData } = await supabase
@@ -67,17 +95,15 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                 setInviteLinkBase(linkData.link_app_atualizado);
             }
 
-            // Simular outros dados de equipe baseados no teamData para preencher o grid amarelo
-            // Em um cenário real, estas métricas viriam de novas RPCs ou cálculos complexos.
             setStats({
                 total_invited: totalInvited,
                 total_investors: totalInvestors,
                 total_earned: totalEarned,
                 team_recharge: teamData?.reduce((acc: number, m: any) => acc + (m.reloaded_amount || 0), 0) || 0,
-                team_withdraw: 0, // Placeholder
-                new_team: totalInvited, // Placeholder
-                first_recharge: totalInvestors, // Placeholder
-                first_withdraw: 0 // Placeholder
+                team_withdraw: 0,
+                new_team: totalInvited,
+                first_recharge: totalInvestors,
+                first_withdraw: 0
             });
 
         } catch (error) {
@@ -190,9 +216,9 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                 {/* Level Cards Section */}
                 <div className="space-y-5">
                     {[
-                        { level: 1, gradient: 'bg-[#7E3AF2]', comission: '10%', reg: `${stats.total_invited}/0`, earnings: stats.total_earned },
-                        { level: 2, gradient: 'bg-[#3F83F8]', comission: '5%', reg: '0/0', earnings: 0 },
-                        { level: 3, gradient: 'bg-[#1A56DB]', comission: '2%', reg: '0/0', earnings: 0 }
+                        { level: 1, gradient: 'bg-[#7E3AF2]', comission: '10%', stats: levelStats.lvl1 },
+                        { level: 2, gradient: 'bg-[#3F83F8]', comission: '5%', stats: levelStats.lvl2 },
+                        { level: 3, gradient: 'bg-[#1A56DB]', comission: '2%', stats: levelStats.lvl3 }
                     ].map((lvl) => (
                         <div key={lvl.level} className={`${lvl.gradient} relative overflow-hidden rounded-[8px] p-6 text-white shadow-2xl border border-white/10 group`}>
                             {/* Star Decoration Background */}
@@ -202,14 +228,14 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
 
                             {/* Badge */}
                             <div className="absolute top-0 left-0 bg-white/20 py-2 px-10 text-[9px] font-bold uppercase -rotate-45 -translate-x-8 translate-y-3 backdrop-blur-md border-b border-white/20 shadow-sm">
-                                LÍVEL {lvl.level}
+                                NÍVEL {lvl.level}
                             </div>
 
                             <div className="flex justify-between items-center ml-8 relative z-10 pt-2">
                                 <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-6">
                                     <div className="text-center">
                                         <p className="text-[9px] font-medium opacity-60 uppercase tracking-[0.1em] mb-1">Registro/Válido</p>
-                                        <p className="text-[17px] font-semibold">{lvl.reg}</p>
+                                        <p className="text-[17px] font-semibold">{lvl.stats.reg}/{lvl.stats.valid}</p>
                                     </div>
                                     <div className="text-center">
                                         <p className="text-[9px] font-medium opacity-60 uppercase tracking-[0.1em] mb-1">Comissão</p>
@@ -217,7 +243,7 @@ const InvitePage: React.FC<Props> = ({ onNavigate, showToast }) => {
                                     </div>
                                     <div className="col-span-2 text-center flex flex-col items-center">
                                         <p className="text-[9px] font-medium opacity-60 uppercase tracking-[0.1em] mb-1">Renda acumulada</p>
-                                        <p className="text-2xl font-bold text-yellow-300 drop-shadow-sm">Kz {lvl.earnings.toLocaleString()}</p>
+                                        <p className="text-2xl font-bold text-yellow-300 drop-shadow-sm">Kz {lvl.stats.earnings.toLocaleString()}</p>
                                     </div>
                                 </div>
 

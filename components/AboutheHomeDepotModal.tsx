@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-interface AboutBPModalProps {
+interface AboutheHomeDepotModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-const AboutBPModal: React.FC<AboutBPModalProps> = ({ isOpen, onClose }) => {
+const AboutheHomeDepotModal: React.FC<AboutheHomeDepotModalProps> = ({ isOpen, onClose }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [shouldRender, setShouldRender] = useState(false);
 
@@ -46,10 +46,14 @@ const AboutBPModal: React.FC<AboutBPModalProps> = ({ isOpen, onClose }) => {
                     <div className="bg-[#FFF5EE] rounded-[8px] p-8 shadow-xl">
                         <h2 className="text-2xl font-medium text-[#111] mb-6 tracking-tight">perfil de companhia</h2>
 
+                        <img src="/campanha de perfil1.jpg" alt="Home Depot 1" className="w-full rounded-[8px] mb-6 shadow-md" />
+
                         <div className="text-[14px] text-gray-800 leading-relaxed space-y-6 font-medium">
                             <p>
                                 A Home Depot é a maior varejista de materiais de construção e reforma residencial do mundo, com sede em Atlanta, Geórgia, EUA. Fundada em 1978, fornece materiais de construção, artigos de decoração, produtos para gramados e jardins, e atende clientes DIY (faça você mesmo), contratação de terceiros (DIFM) e profissionais. Seus negócios abrangem os Estados Unidos, Canadá e México. É uma ação componente do Índice Dow Jones. Com o slogan "Você consegue, nós podemos ajudar", é um dos gigantes do varejo global. A empresa lançará oficialmente vários projetos específicos no USDT em 2024. A plataforma foi lançada oficialmente hoje, 20 de dezembro de 2025.
                             </p>
+
+                            <img src="/campanha de perfil2.png" alt="Home Depot 2" className="w-full rounded-[8px] my-2 shadow-md" />
 
                             <div className="space-y-4">
                                 <h3 className="text-lg font-medium text-[#111] border-l-4 border-[#FF6B00] pl-3">Perfil da empresa</h3>
@@ -64,6 +68,8 @@ const AboutBPModal: React.FC<AboutBPModalProps> = ({ isOpen, onClose }) => {
                                     <li><strong className="text-black font-medium">Listagem:</strong> O código de ações HD, listado na Bolsa de Valores de Nova York, é um componente do Índice Dow Jones e do Índice S&P 500.</li>
                                 </ul>
                             </div>
+
+                            <img src="/campanha de perfil3.jpg" alt="Home Depot 3" className="w-full rounded-[8px] my-2 shadow-md" />
 
                             <div className="space-y-4">
                                 <h3 className="text-lg font-medium text-[#111] border-l-4 border-[#FF6B00] pl-3">Características principais</h3>
@@ -95,4 +101,4 @@ const AboutBPModal: React.FC<AboutBPModalProps> = ({ isOpen, onClose }) => {
     );
 };
 
-export default AboutBPModal;
+export default AboutheHomeDepotModal;
