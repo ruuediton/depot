@@ -18,8 +18,8 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
     const [securityPassword, setSecurityPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showBankDropdown, setShowBankDropdown] = useState(false);
-    const [method, setMethod] = useState<'IBAN' | 'Multicaixa'>('IBAN');
     const [loading, setLoading] = useState(true);
+    const [userEmail, setUserEmail] = useState<string>('');
 
     const [isVisible, setIsVisible] = useState(false);
     const [shouldRender, setShouldRender] = useState(false);
@@ -37,15 +37,12 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
         }
     }, [isOpen]);
 
-    useEffect(() => {
-        setSelectedBankId('');
-    }, [method]);
-
     const fetchData = async () => {
         setLoading(true);
         try {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
+            setUserEmail(user.email || '');
 
             const { data: profile } = await supabase
                 .from('profiles')
@@ -66,7 +63,7 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
         }
     };
 
-    const getTaxRate = () => method === 'IBAN' ? 0.14 : 0.20;
+    const getTaxRate = () => 0.14;
 
     const calculateTax = () => {
         const val = parseFloat(amount);
@@ -120,22 +117,25 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
         }
 
         if (!securityPassword) {
-            showToast?.("Digite a senha de segurança", "error");
-            return;
-        }
-
-        if (!/^\d{4}$/.test(securityPassword)) {
-            showToast?.("O PIN deve conter exatamente 4 dígitos", "error");
+            showToast?.("Digite sua senha de login", "error");
             return;
         }
 
         try {
             await withLoading(async () => {
+                // Validate password by re-authenticating
+                const { error: authError } = await supabase.auth.signInWithPassword({
+                    email: userEmail,
+                    password: securityPassword
+                });
+
+                if (authError) {
+                    throw new Error("Senha incorreta");
+                }
+
                 const { error } = await supabase.rpc('request_withdrawal', {
                     p_amount: val,
-                    p_pin: securityPassword,
-                    p_bank_id: selectedBankId,
-                    p_method: method
+                    p_bank_id: selectedBankId
                 });
 
                 if (error) throw error;
@@ -196,28 +196,6 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
 
                             {/* Main Form Card */}
                             <div className="bg-white rounded-[8px] p-5 shadow-sm space-y-6">
-                                {/* Método Picker */}
-                                <div>
-                                    <label className="text-[10px] font-medium text-gray-400 lowercase tracking-widest block mb-2 px-1">método de retirada</label>
-                                    <div className="flex gap-2">
-                                        {(['IBAN', 'Multicaixa'] as const).map(m => (
-                                            <button
-                                                key={m}
-                                                onClick={() => setMethod(m)}
-                                                className={`flex-1 h-12 rounded-[8px] font-medium text-xs transition-all border flex items-center justify-center gap-2 ${method === m
-                                                    ? 'bg-[#FF6B00] text-white border-[#FF6B00] shadow-md shadow-orange-100'
-                                                    : 'bg-gray-50 text-gray-400 border-gray-100'
-                                                    }`}
-                                            >
-                                                <span className="material-symbols-outlined text-lg">
-                                                    {m === 'IBAN' ? 'account_balance' : 'credit_card'}
-                                                </span>
-                                                {m}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
                                 {/* Inputs */}
                                 <div className="space-y-4">
                                     <div className="relative">
@@ -227,6 +205,7 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                             className="w-full bg-[#FFF5F0] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 text-[#2C3E50] placeholder:text-[#9CA3AF] font-semibold transition-all"
                                             placeholder="valor (1.000 - 100.000 kz)"
                                             type="number"
+                                            autoComplete="off"
                                         />
                                     </div>
 
@@ -238,8 +217,8 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                         >
                                             <span className={`font-semibold ${selectedBankId ? 'text-[#2C3E50]' : 'text-[#9CA3AF]'}`}>
                                                 {selectedBankId
-                                                    ? bankAccounts.find(b => b.id === selectedBankId)?.bank_name || `Selecione seu ${method}`
-                                                    : `selecione seu ${method} de retirada`}
+                                                    ? bankAccounts.find(b => b.id === selectedBankId)?.bank_name || `Selecione seu banco`
+                                                    : `selecione seu banco de retirada`}
                                             </span>
                                             <span className="material-symbols-outlined text-[#9CA3AF]">
                                                 {showBankDropdown ? 'expand_less' : 'expand_more'}
@@ -274,9 +253,9 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                             value={securityPassword}
                                             onChange={(e) => setSecurityPassword(e.target.value)}
                                             className="w-full bg-[#FFF5F0] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 text-[#2C3E50] placeholder:text-[#9CA3AF] font-semibold transition-all"
-                                            placeholder="senha de segurança (4 dígitos)"
+                                            placeholder="senha de login para confirmar"
                                             type={showPassword ? "text" : "password"}
-                                            maxLength={4}
+                                            autoComplete="new-password"
                                         />
                                         <button
                                             onClick={() => setShowPassword(!showPassword)}
@@ -292,7 +271,7 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                 {/* Tax Summary */}
                                 <div className="p-4 bg-gray-50 rounded-xl space-y-3">
                                     <div className="flex justify-between text-xs">
-                                        <span className="text-gray-400 lowercase font-medium">taxa de desconto ({method === 'IBAN' ? '14%' : '20%'})</span>
+                                        <span className="text-gray-400 lowercase font-medium">taxa de desconto (14%)</span>
                                         <span className="font-semibold text-[#2C3E50]">{calculateTax().toLocaleString('pt-AO')} Kz</span>
                                     </div>
                                     <div className="flex justify-between text-sm pt-2 border-t border-gray-100">

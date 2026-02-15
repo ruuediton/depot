@@ -107,62 +107,48 @@ const DetalhesPayModal: React.FC<DetalhesPayModalProps> = ({ isOpen, onClose, da
         >
             <div className="flex flex-col min-h-screen text-white font-sans antialiased">
                 {/* Header */}
-                <header className="pt-6 px-6 flex justify-between items-center bg-[#FF6B00] sticky top-0 z-10">
+                <header className="py-4 px-6 flex justify-between items-center bg-[#FF6B00] sticky top-0 z-10">
                     <button
                         onClick={onClose}
-                        className="p-2 -ml-2 hover:bg-white/10 rounded-[8px] transition-colors"
+                        className="p-2 -ml-2 hover:bg-white/10 rounded-full transition-colors"
                     >
                         <span className="material-symbols-outlined text-white">chevron_left</span>
                     </button>
-                    <h1 className="text-lg font-medium text-white lowercase">detalhes da transferência</h1>
+                    <h1 className="text-md font-medium text-white lowercase tracking-tight">detalhes da transferência</h1>
                     <button
                         onClick={handleShare}
-                        className="p-2 -mr-2 hover:bg-white/10 rounded-[8px] transition-colors"
+                        className="p-2 -mr-2 hover:bg-white/10 rounded-full transition-colors"
                     >
                         <span className="material-symbols-outlined text-white">share</span>
                     </button>
                 </header>
 
-                <main className="flex-grow px-6 pt-10 pb-32">
-                    {/* Status Header */}
-                    <div className="flex flex-col items-center mb-10">
-                        <div className="w-20 h-20 bg-white/20 rounded-[8px] flex items-center justify-center mb-4 backdrop-blur-sm">
-                            <div className="w-14 h-14 bg-white rounded-[8px] flex items-center justify-center shadow-lg">
-                                <span className="material-symbols-outlined text-[#FF6B00] text-3xl font-bold">check</span>
-                            </div>
-                        </div>
-                        <p className="text-white/90 font-medium mb-1 lowercase tracking-wider text-[10px]">depósito solicitado</p>
-                        <h2 className="text-4xl font-medium text-white tracking-tight">
-                            {amount.toLocaleString('pt-AO')} Kz
-                        </h2>
-                        <p className="text-white/80 text-xs font-medium mt-2">{formatDate(deposit?.created_at)}</p>
-                    </div>
-
-                    {/* Info Card */}
-                    <div className="bg-white rounded-[8px] p-6 shadow-xl text-gray-900">
-                        <div className="space-y-6">
+                <main className="flex-grow px-4 pt-4 pb-28">
+                    {/* Info Card - Improved Positioning */}
+                    <div className="bg-white rounded-[20px] p-5 shadow-2xl text-gray-900 mx-auto max-w-md">
+                        <div className="space-y-5">
                             {/* Recipient Information */}
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                                 <div className="border-b border-gray-100 pb-2">
-                                    <h3 className="text-[10px] font-medium text-[#FF6B00] lowercase tracking-widest">informações do destinatário</h3>
+                                    <h3 className="text-[10px] font-bold text-[#FF6B00] lowercase tracking-widest opacity-80">informações do destinatário</h3>
                                 </div>
 
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-gray-500 text-sm font-medium lowercase">Beneficiário</span>
-                                        <span className="font-medium text-gray-900 text-sm text-right">The Home Depot (SU), LDA</span>
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-start gap-4">
+                                        <span className="text-gray-400 text-xs font-medium lowercase shrink-0 mt-0.5">Beneficiário</span>
+                                        <span className="font-semibold text-gray-900 text-sm text-right leading-tight">The Home Depot (SU), LDA</span>
                                     </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-gray-500 text-sm font-medium lowercase">Banco</span>
-                                        <span className="font-medium text-gray-900 text-sm">{deposit?.nome_banco || 'N/A'}</span>
+                                    <div className="flex justify-between items-center gap-4">
+                                        <span className="text-gray-400 text-xs font-medium lowercase shrink-0">Banco</span>
+                                        <span className="font-semibold text-gray-900 text-sm text-right">{deposit?.nome_banco || 'N/A'}</span>
                                     </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-gray-500 text-sm font-medium lowercase">IBAN</span>
-                                        <div className="flex items-center gap-2">
-                                            <span className="font-mono font-medium text-gray-900 text-[10px] break-all text-right">{deposit?.iban || '...'}</span>
+                                    <div className="flex justify-between items-center gap-2">
+                                        <span className="text-gray-400 text-xs font-medium lowercase shrink-0">IBAN</span>
+                                        <div className="flex items-center gap-1.5 overflow-hidden">
+                                            <span className="font-mono font-bold text-gray-800 text-[11px] truncate">{deposit?.iban || '...'}</span>
                                             <button
                                                 onClick={() => deposit?.iban && handleCopy(deposit.iban)}
-                                                className="bg-[#FF6B00]/10 p-1.5 rounded-[4px] text-[#FF6B00] active:scale-95"
+                                                className="bg-[#FF6B00]/10 p-1.5 rounded-lg text-[#FF6B00] active:scale-90 shrink-0"
                                             >
                                                 <span className="material-symbols-outlined text-[16px]">content_copy</span>
                                             </button>
@@ -172,37 +158,37 @@ const DetalhesPayModal: React.FC<DetalhesPayModalProps> = ({ isOpen, onClose, da
                             </div>
 
                             {/* Transaction Metadata */}
-                            <div className="space-y-4">
-                                <div className="border-b border-gray-100 pb-2 pt-4">
-                                    <h3 className="text-[10px] font-medium text-[#FF6B00] lowercase tracking-widest">dados da transação</h3>
+                            <div className="space-y-3">
+                                <div className="border-b border-gray-100 pb-2 pt-2">
+                                    <h3 className="text-[10px] font-bold text-[#FF6B00] lowercase tracking-widest opacity-80">dados da transação</h3>
                                 </div>
 
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-gray-500 text-sm font-medium lowercase">ID</span>
-                                        <div className="flex items-center gap-2">
-                                            <span className="font-medium text-gray-900 text-sm">{deposit?.id?.substring(0, 12)}...</span>
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center gap-4">
+                                        <span className="text-gray-400 text-xs font-medium lowercase shrink-0">ID Transação</span>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="font-medium text-gray-900 text-xs">#{deposit?.id?.substring(0, 8)}</span>
                                             <button
                                                 onClick={() => deposit?.id && handleCopy(deposit.id)}
-                                                className="bg-[#FF6B00]/10 p-1.5 rounded-[4px] text-[#FF6B00] active:scale-95"
+                                                className="bg-[#FF6B00]/5 p-1 rounded-md text-[#FF6B00]/70 active:scale-90"
                                             >
-                                                <span className="material-symbols-outlined text-[16px]">content_copy</span>
+                                                <span className="material-symbols-outlined text-[14px]">content_copy</span>
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-gray-500 text-sm font-medium lowercase">método</span>
-                                        <span className="font-medium text-gray-900 text-sm lowercase">{deposit?.payment_method === 'USDT' ? 'usdt (trc20)' : 'transferência bancária'}</span>
+                                    <div className="flex justify-between items-center gap-4">
+                                        <span className="text-gray-400 text-xs font-medium lowercase shrink-0">método</span>
+                                        <span className="font-semibold text-gray-900 text-xs lowercase bg-gray-50 px-2 py-0.5 rounded text-right">{deposit?.payment_method === 'USDT' ? 'usdt (trc20)' : 'transferência'}</span>
                                     </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-gray-500 text-sm font-medium lowercase">valor pago</span>
-                                        <span className="font-medium text-[#FF6B00] text-lg">{amount.toLocaleString('pt-AO')} Kz</span>
+                                    <div className="flex justify-between items-center pt-2 border-t border-dashed border-gray-100 mt-2">
+                                        <span className="text-gray-500 text-sm font-bold lowercase">valor pago</span>
+                                        <span className="font-bold text-[#FF6B00] text-xl tracking-tight">{amount.toLocaleString('pt-AO')} Kz</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="mt-8 p-4 bg-orange-50 rounded-[8px] border border-orange-100">
-                                <p className="text-[11px] text-gray-600 font-medium leading-relaxed italic lowercase">
+                            <div className="p-3 bg-orange-50/50 rounded-xl border border-orange-100/50">
+                                <p className="text-[10px] text-gray-500 font-medium leading-relaxed italic text-center lowercase">
                                     por favor, anexe o comprovativo na seção de histórico caso o valor não seja creditado em até 30 minutos.
                                 </p>
                             </div>
@@ -210,12 +196,12 @@ const DetalhesPayModal: React.FC<DetalhesPayModalProps> = ({ isOpen, onClose, da
                     </div>
                 </main>
 
-                <footer className="fixed bottom-0 left-0 right-0 p-6 bg-[#FF6B00] z-10 flex flex-col items-center">
+                <footer className="fixed bottom-0 left-0 right-0 p-4 bg-[#FF6B00] z-20">
                     <button
                         onClick={() => { onClose(); onNavigate('home'); }}
-                        className="w-full bg-white text-[#FF6B00] font-medium py-4 rounded-[8px] flex items-center justify-center gap-2 shadow-lg active:scale-[0.98]"
+                        className="w-full bg-white text-[#FF6B00] font-bold py-4 rounded-2xl flex items-center justify-center gap-2 shadow-2xl active:scale-95 transition-all text-lg"
                     >
-                        <span className="material-symbols-outlined font-medium">check_circle</span>
+                        <span className="material-symbols-outlined font-bold">check_circle</span>
                         <span>Terminar</span>
                     </button>
                 </footer>
