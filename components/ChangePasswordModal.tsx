@@ -94,14 +94,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
             onClick={onClose}
         >
             <div
-                className={`w-full max-w-[340px] bg-white rounded-[8px] overflow-hidden shadow-2xl transition-all duration-200 transform ${isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}
+                className={`w-full max-w-[340px] bg-white rounded-[32px] overflow-hidden shadow-2xl transition-all duration-200 transform ${isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="bg-[#FF6B00] px-5 py-4 flex items-center justify-between text-white">
-                    <h3 className="text-lg font-medium lowercase">alterar a senha</h3>
+                <div className="bg-[#FF6B1A] px-5 py-5 flex items-center justify-between text-white">
+                    <h3 className="text-lg font-bold tracking-tight">Alterar a senha</h3>
                     <button onClick={onClose} className="p-1 hover:bg-white/10 rounded-full transition-colors">
-                        <span className="material-symbols-outlined text-xl">close</span>
+                        <span className="material-symbols-outlined">close</span>
                     </button>
                 </div>
 
@@ -113,16 +113,16 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
                             <input
                                 value={currentPassword}
                                 onChange={(e) => setCurrentPassword(filterInput(e.target.value))}
-                                className="w-full h-12 px-4 pr-10 bg-[#F8F9FA] border border-gray-100 rounded-[8px] text-gray-700 placeholder:text-gray-400 focus:border-[#FF6B00]/30 focus:outline-none transition-all text-sm font-medium"
+                                className="w-full h-12 px-4 pr-10 bg-[#FFF5F0] border border-transparent rounded-xl text-[#2C3E50] placeholder:text-[#9CA3AF] focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 transition-all text-sm font-semibold"
                                 placeholder="senha antiga"
                                 type={showCurrent ? "text" : "password"}
                             />
                             <button
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#FF6B1A] transition-colors"
                                 type="button"
                                 onClick={() => setShowCurrent(!showCurrent)}
                             >
-                                <span className="material-symbols-outlined text-[18px]">
+                                <span className="material-symbols-outlined text-[20px]">
                                     {showCurrent ? 'visibility' : 'visibility_off'}
                                 </span>
                             </button>
@@ -133,16 +133,16 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
                             <input
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(filterInput(e.target.value))}
-                                className="w-full h-12 px-4 pr-10 bg-[#F8F9FA] border border-gray-100 rounded-[8px] text-gray-700 placeholder:text-gray-400 focus:border-[#FF6B00]/30 focus:outline-none transition-all text-sm font-medium"
+                                className="w-full h-12 px-4 pr-10 bg-[#FFF5F0] border border-transparent rounded-xl text-[#2C3E50] placeholder:text-[#9CA3AF] focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 transition-all text-sm font-semibold"
                                 placeholder="nova senha"
                                 type={showNew ? "text" : "password"}
                             />
                             <button
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#FF6B1A] transition-colors"
                                 type="button"
                                 onClick={() => setShowNew(!showNew)}
                             >
-                                <span className="material-symbols-outlined text-[18px]">
+                                <span className="material-symbols-outlined text-[20px]">
                                     {showNew ? 'visibility' : 'visibility_off'}
                                 </span>
                             </button>
@@ -153,16 +153,16 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
                             <input
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(filterInput(e.target.value))}
-                                className="w-full h-12 px-4 pr-10 bg-[#F8F9FA] border border-gray-100 rounded-[8px] text-gray-700 placeholder:text-gray-400 focus:border-[#FF6B00]/30 focus:outline-none transition-all text-sm font-medium"
+                                className="w-full h-12 px-4 pr-10 bg-[#FFF5F0] border border-transparent rounded-xl text-[#2C3E50] placeholder:text-[#9CA3AF] focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 transition-all text-sm font-semibold"
                                 placeholder="confirmar nova senha"
                                 type={showConfirm ? "text" : "password"}
                             />
                             <button
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#FF6B1A] transition-colors"
                                 type="button"
                                 onClick={() => setShowConfirm(!showConfirm)}
                             >
-                                <span className="material-symbols-outlined text-[18px]">
+                                <span className="material-symbols-outlined text-[20px]">
                                     {showConfirm ? 'visibility' : 'visibility_off'}
                                 </span>
                             </button>
@@ -170,7 +170,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ isOpen, onClo
 
                         <div className="pt-2">
                             <button
-                                className="w-full bg-[#FF6B00] text-white font-medium h-12 rounded-[8px] active:scale-[0.98] transition-all flex items-center justify-center shadow-lg shadow-orange-100"
+                                className="w-full h-12 bg-[#FF6B1A] text-white font-bold rounded-xl text-base active:scale-[0.98] transition-all flex items-center justify-center shadow-lg shadow-orange-500/10"
                                 type="submit"
                                 disabled={loading}
                             >

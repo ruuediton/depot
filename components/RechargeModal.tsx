@@ -193,7 +193,7 @@ const RechargeModal: React.FC<RechargeModalProps> = ({ isOpen, onClose, showToas
                     </div>
                 </header>
 
-                <main className="flex-1 px-4 pb-32">
+                <main className="flex-1 px-4 pb-32 max-w-md mx-auto w-full transition-all duration-300">
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-20 gap-4">
                             <SpokeSpinner size="w-8 h-8" color="text-white" />
@@ -201,7 +201,7 @@ const RechargeModal: React.FC<RechargeModalProps> = ({ isOpen, onClose, showToas
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            <div className="bg-white rounded-[8px] p-5 shadow-sm space-y-6">
+                            <div className="bg-white rounded-xl p-5 shadow-sm space-y-6">
                                 {/* Método Picker */}
                                 <div>
                                     <label className="text-[10px] font-medium text-gray-400 lowercase tracking-widest block mb-3 px-1">método de pagamento</label>
@@ -212,10 +212,10 @@ const RechargeModal: React.FC<RechargeModalProps> = ({ isOpen, onClose, showToas
                                                 onClick={() => { setPaymentMethod(m); if (m === 'BANK') setSelectedBank(banks[0]); else setSelectedBank(null); }}
                                                 className="flex items-center gap-3 group transition-all"
                                             >
-                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === m ? 'border-[#FF6B00] bg-[#FF6B00]' : 'border-gray-200'}`}>
+                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${paymentMethod === m ? 'border-[#FF6B1A] bg-[#FF6B1A]' : 'border-gray-200'}`}>
                                                     {paymentMethod === m && <div className="w-1.5 h-1.5 bg-white rounded-full"></div>}
                                                 </div>
-                                                <span className={`text-sm font-medium lowercase ${paymentMethod === m ? 'text-gray-900' : 'text-gray-400'}`}>{m === 'BANK' ? 'banco' : 'usdt'}</span>
+                                                <span className={`text-sm font-semibold lowercase ${paymentMethod === m ? 'text-[#2C3E50]' : 'text-gray-400'}`}>{m === 'BANK' ? 'banco' : 'usdt'}</span>
                                             </button>
                                         ))}
                                     </div>
@@ -224,15 +224,15 @@ const RechargeModal: React.FC<RechargeModalProps> = ({ isOpen, onClose, showToas
                                 {/* Valor Input */}
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-medium text-gray-400 lowercase tracking-widest block px-1">valor do depósito</label>
-                                    <div className="bg-[#FFF5EE] rounded-[8px] px-4 h-14 flex items-center border border-orange-50 focus-within:ring-2 focus-within:ring-[#FF6B00]/10 transition-all">
+                                    <div className="bg-[#FFF5F0] border border-transparent rounded-xl px-4 h-12 flex items-center focus-within:ring-4 focus-within:ring-[#FF6B1A]/10 focus-within:border-[#FF6B1A]/30 transition-all">
                                         <input
                                             type="number"
                                             value={amount}
                                             onChange={(e) => setAmount(e.target.value)}
-                                            className="bg-transparent flex-1 outline-none text-xl font-medium text-gray-900 placeholder:text-gray-300"
+                                            className="bg-transparent flex-1 outline-none text-xl font-semibold text-[#2C3E50] placeholder:text-[#9CA3AF]"
                                             placeholder="0"
                                         />
-                                        <span className="text-sm font-medium text-gray-400">Kz</span>
+                                        <span className="text-sm font-semibold text-gray-400">Kz</span>
                                     </div>
                                     {paymentMethod === 'USDT' && amount && (
                                         <p className="text-[10px] text-gray-400 font-medium px-1 italic">≈ {usdtAmount} usdt</p>
@@ -245,8 +245,8 @@ const RechargeModal: React.FC<RechargeModalProps> = ({ isOpen, onClose, showToas
                                         <button
                                             key={val}
                                             onClick={() => setAmount(val.toString())}
-                                            className={`h-10 rounded-[8px] text-xs font-medium transition-all ${amount === val.toString()
-                                                ? 'bg-[#FF6B00] text-white shadow-md shadow-orange-100'
+                                            className={`h-10 rounded-xl text-xs font-semibold transition-all ${amount === val.toString()
+                                                ? 'bg-[#FF6B1A] text-white shadow-lg shadow-orange-500/10'
                                                 : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
                                                 }`}
                                         >
@@ -264,13 +264,13 @@ const RechargeModal: React.FC<RechargeModalProps> = ({ isOpen, onClose, showToas
                                                 <button
                                                     key={bank.id}
                                                     onClick={() => setSelectedBank(bank)}
-                                                    className={`w-full flex items-center gap-3 p-4 rounded-[8px] border transition-all ${selectedBank?.id === bank.id
-                                                        ? 'bg-orange-50 border-[#FF6B00] text-[#FF6B00]'
+                                                    className={`w-full flex items-center gap-3 p-4 rounded-xl border transition-all ${selectedBank?.id === bank.id
+                                                        ? 'bg-orange-50 border-[#FF6B1A] text-[#FF6B1A]'
                                                         : 'bg-gray-50 border-gray-100 text-gray-500'
                                                         }`}
                                                 >
                                                     <span className="material-symbols-outlined text-lg">account_balance</span>
-                                                    <span className="text-sm font-medium flex-1 text-left lowercase">{bank.nome_do_banco}</span>
+                                                    <span className="text-sm font-semibold flex-1 text-left lowercase">{bank.nome_do_banco}</span>
                                                     {selectedBank?.id === bank.id && <span className="material-symbols-outlined text-sm">check_circle</span>}
                                                 </button>
                                             ))}
@@ -281,13 +281,13 @@ const RechargeModal: React.FC<RechargeModalProps> = ({ isOpen, onClose, showToas
                                 <button
                                     onClick={handleConfirm}
                                     disabled={!isValid}
-                                    className="w-full h-14 bg-[#FF6B00] text-white font-medium rounded-[8px] text-lg transition-all disabled:opacity-40 shadow-lg shadow-orange-100 active:scale-[0.98]"
+                                    className="w-full h-12 bg-[#FF6B1A] text-white font-bold rounded-xl text-base transition-all disabled:opacity-40 shadow-lg shadow-orange-500/10 active:scale-[0.98]"
                                 >
                                     confirmar recarga
                                 </button>
                             </div>
 
-                            <div className="bg-white/10 rounded-[8px] p-6 border border-white/20">
+                            <div className="bg-white/10 rounded-xl p-6 border border-white/20">
                                 <div className="space-y-4 text-[11px] leading-relaxed text-white/80 font-medium italic">
                                     <p className="font-bold text-white lowercase">ℹ️ observações:</p>
                                     <p>• mínimo via banco: 8.500 Kz | máximo: 1.000.000 Kz</p>

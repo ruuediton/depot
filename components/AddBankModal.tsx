@@ -192,7 +192,7 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                                         <select
                                             value={bankName}
                                             onChange={(e) => setBankName(e.target.value)}
-                                            className="w-full bg-[#FDF4EE] dark:bg-[#2d2d2d] border-none rounded-[8px] px-4 py-4 text-sm focus:ring-2 focus:ring-[#FF6B00]/20 dark:text-white text-gray-700 appearance-none cursor-pointer font-medium"
+                                            className="w-full bg-[#FFF5F0] dark:bg-[#2d2d2d] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 dark:text-white text-[#2C3E50] appearance-none cursor-pointer font-semibold transition-all"
                                         >
                                             <option value="">Selecione o banco</option>
                                             <option value="Banco BAI">Banco BAI</option>
@@ -211,7 +211,7 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                                         <input
                                             value={holderName}
                                             onChange={(e) => setHolderName(e.target.value)}
-                                            className="w-full bg-[#FDF4EE] dark:bg-[#2d2d2d] border-none rounded-[8px] px-4 py-4 text-sm focus:ring-2 focus:ring-[#FF6B00]/20 dark:text-white placeholder-gray-400 font-medium"
+                                            className="w-full bg-[#FFF5F0] dark:bg-[#2d2d2d] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 dark:text-white text-[#2C3E50] placeholder-[#9CA3AF] font-semibold transition-all"
                                             placeholder="Nome completo do titular"
                                             type="text"
                                         />
@@ -222,18 +222,18 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                                             value={iban}
                                             onChange={handleIbanChange}
                                             maxLength={21}
-                                            className="w-full bg-[#FDF4EE] dark:bg-[#2d2d2d] border-none rounded-[8px] px-4 py-4 text-sm focus:ring-2 focus:ring-[#FF6B00]/20 dark:text-white placeholder-gray-400 font-mono font-medium"
+                                            className="w-full bg-[#FFF5F0] dark:bg-[#2d2d2d] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 dark:text-white text-[#2C3E50] placeholder-[#9CA3AF] font-mono font-semibold transition-all"
                                             placeholder="IBAN (21 dígitos)"
                                             type="text"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="bg-[#FFF9F0] dark:bg-zinc-800 rounded-[8px] p-4 mb-6 border border-orange-100 dark:border-zinc-700">
+                                <div className="bg-[#FFF5F0] dark:bg-zinc-800 rounded-xl p-4 mb-6 border border-orange-100 dark:border-zinc-700">
                                     <div className="flex items-start gap-3">
-                                        <span className="material-symbols-outlined text-[#FF6B00] text-xl mt-0.5">info</span>
+                                        <span className="material-symbols-outlined text-[#FF6B1A] text-xl mt-0.5">info</span>
                                         <div className="flex-1">
-                                            <p className="text-gray-700 dark:text-gray-300 text-xs leading-relaxed font-medium">
+                                            <p className="text-[#2C3E50] dark:text-gray-300 text-xs leading-relaxed font-semibold">
                                                 Importante: Digite apenas os 21 números do seu IBAN, sem o prefixo "AO06".
                                             </p>
                                         </div>
@@ -243,7 +243,7 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                                 <button
                                     onClick={handleSaveBank}
                                     disabled={loading}
-                                    className="w-full bg-[#FF6B00] text-white py-4 rounded-[8px] font-medium text-lg active:scale-[0.98] transition-all disabled:opacity-50"
+                                    className="w-full h-12 bg-[#FF6B1A] text-white font-bold rounded-xl text-base active:scale-[0.98] transition-all disabled:opacity-50 shadow-lg shadow-orange-500/10"
                                 >
                                     {loading ? 'Salvando...' : existingBank ? 'Atualizar dados' : 'Salvar dados'}
                                 </button>
@@ -251,10 +251,10 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                         )}
 
                         {mode !== 'edit' && (
-                            <div className="bg-white dark:bg-zinc-900 rounded-[8px] p-6 shadow-sm">
-                                <div className="space-y-2 text-xs leading-relaxed text-gray-500 font-medium">
-                                    <p>O IBAN deve ter exatamente 21 dígitos numéricos.</p>
-                                    <p>Todos os seus ganhos serão transferidos para esta conta.</p>
+                            <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-sm border border-gray-50 dark:border-zinc-800">
+                                <div className="space-y-2 text-xs leading-relaxed text-gray-500 font-medium italic">
+                                    <p>• O IBAN deve ter exatamente 21 dígitos numéricos.</p>
+                                    <p>• Todos os seus ganhos serão transferidos para esta conta.</p>
                                 </div>
                             </div>
                         )}

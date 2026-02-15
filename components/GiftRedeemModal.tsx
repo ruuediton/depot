@@ -69,49 +69,49 @@ const GiftRedeemModal: React.FC<GiftRedeemModalProps> = ({ isOpen, onClose, show
             onClick={onClose}
         >
             <div
-                className={`w-full max-w-[320px] bg-white rounded-[8px] overflow-hidden shadow-2xl transition-all duration-200 transform ${isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}
+                className={`w-full max-w-[320px] bg-white rounded-[32px] overflow-hidden shadow-2xl transition-all duration-200 transform ${isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Compact Header */}
-                <div className="bg-[#FF6B00] p-4 text-center relative">
+                <div className="bg-[#FF6B1A] p-5 text-center relative">
                     <button
                         onClick={onClose}
-                        className="absolute top-3 right-3 text-white/80 hover:text-white transition-colors"
+                        className="absolute top-4 right-4 text-white hover:text-white transition-colors"
                     >
-                        <span className="material-symbols-outlined text-[20px]">close</span>
+                        <span className="material-symbols-outlined text-[24px]">close</span>
                     </button>
-                    <div className="w-12 h-12 bg-white/20 rounded-[8px] flex items-center justify-center mx-auto mb-2 backdrop-blur-md">
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-2 backdrop-blur-md">
                         <span className="material-symbols-outlined text-white text-2xl">redeem</span>
                     </div>
-                    <h3 className="text-white font-medium text-lg leading-tight">Resgatar presente</h3>
+                    <h3 className="text-white font-bold text-lg leading-tight tracking-tight">Resgatar presente</h3>
                 </div>
 
                 {/* Compact Content */}
-                <div className="p-5">
-                    <p className="text-gray-400 text-center text-[10px] font-medium tracking-wide mb-4">
+                <div className="p-6">
+                    <p className="text-[#2C3E50] text-center text-[11px] font-semibold tracking-wide mb-6">
                         Insira o seu código da sorte
                     </p>
 
-                    <div className="space-y-3">
-                        <div className="bg-gray-50 rounded-[8px] h-10 flex items-center px-3 gap-2 border border-gray-100 focus-within:border-[#FF6B00] focus-within:ring-2 focus-within:ring-[#FF6B00]/10 transition-all">
-                            <span className="material-symbols-outlined text-[#FF6B00] text-[18px]">confirmation_number</span>
+                    <div className="space-y-4">
+                        <div className="bg-[#FFF5F0] rounded-xl h-12 flex items-center px-4 gap-2 border border-transparent focus-within:ring-4 focus-within:ring-[#FF6B1A]/10 focus-within:border-[#FF6B1A]/30 transition-all">
+                            <span className="material-symbols-outlined text-[#FF6B1A] text-[20px]">confirmation_number</span>
                             <input
                                 type="text"
                                 placeholder="Digite o código"
                                 value={promoCode}
                                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                                 disabled={loading}
-                                className="bg-transparent flex-1 h-full outline-none text-[#111] font-medium placeholder:text-gray-300 text-xs tracking-wider"
+                                className="bg-transparent flex-1 h-full outline-none text-[#2C3E50] font-semibold placeholder:text-[#9CA3AF] text-sm tracking-wider"
                             />
                         </div>
 
                         <button
                             onClick={handleRedeem}
                             disabled={loading}
-                            className={`w-full h-10 rounded-[8px] font-medium text-white transition-all shadow-md flex items-center justify-center text-sm
-                                ${loading ? 'bg-gray-200 grayscale cursor-not-allowed' : 'bg-[#FF6B00] shadow-[#FF6B00]/20 active:scale-[0.98] hover:brightness-105'}`}
+                            className={`w-full h-12 rounded-xl font-bold text-white transition-all shadow-lg flex items-center justify-center text-base
+                                ${loading ? 'bg-gray-200 grayscale cursor-not-allowed' : 'bg-[#FF6B1A] shadow-orange-500/10 active:scale-[0.98] hover:brightness-105'}`}
                         >
-                            {loading ? <SpokeSpinner size="w-4 h-4" color="text-gray-400" /> : 'Receber'}
+                            {loading ? <SpokeSpinner size="w-5 h-5" color="text-white" /> : 'Receber'}
                         </button>
                     </div>
                 </div>

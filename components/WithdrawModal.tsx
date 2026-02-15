@@ -224,7 +224,7 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                         <input
                                             value={amount}
                                             onChange={(e) => setAmount(e.target.value)}
-                                            className="w-full bg-[#FFF5EE] border-none rounded-[8px] px-4 py-4 text-sm focus:ring-2 focus:ring-[#FF6B00]/10 text-gray-900 placeholder:text-gray-400 font-medium"
+                                            className="w-full bg-[#FFF5F0] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 text-[#2C3E50] placeholder:text-[#9CA3AF] font-semibold transition-all"
                                             placeholder="valor (1.000 - 100.000 kz)"
                                             type="number"
                                         />
@@ -234,20 +234,20 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                         <button
                                             type="button"
                                             onClick={() => setShowBankDropdown(!showBankDropdown)}
-                                            className="w-full bg-[#FFF5EE] border-none rounded-[8px] px-4 py-4 text-sm focus:ring-2 focus:ring-[#FF6B00]/10 text-left flex items-center justify-between"
+                                            className="w-full bg-[#FFF5F0] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 text-left flex items-center justify-between transition-all"
                                         >
-                                            <span className={`font-medium ${selectedBankId ? 'text-gray-800' : 'text-gray-400'}`}>
+                                            <span className={`font-semibold ${selectedBankId ? 'text-[#2C3E50]' : 'text-[#9CA3AF]'}`}>
                                                 {selectedBankId
                                                     ? bankAccounts.find(b => b.id === selectedBankId)?.bank_name || `Selecione seu ${method}`
                                                     : `selecione seu ${method} de retirada`}
                                             </span>
-                                            <span className="material-symbols-outlined text-gray-400">
+                                            <span className="material-symbols-outlined text-[#9CA3AF]">
                                                 {showBankDropdown ? 'expand_less' : 'expand_more'}
                                             </span>
                                         </button>
 
                                         {showBankDropdown && (
-                                            <div className="absolute z-50 w-full mt-2 bg-white rounded-[8px] shadow-xl border border-orange-50 overflow-hidden">
+                                            <div className="absolute z-50 w-full mt-2 bg-white rounded-xl shadow-xl border border-orange-50 overflow-hidden">
                                                 {bankAccounts.length > 0 ? (
                                                     bankAccounts.map((bank) => (
                                                         <button
@@ -256,14 +256,14 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                                                 setSelectedBankId(bank.id);
                                                                 setShowBankDropdown(false);
                                                             }}
-                                                            className="w-full px-4 py-4 text-left hover:bg-orange-50 text-sm border-b border-gray-50 last:border-0 transition-colors"
+                                                            className="w-full px-4 py-4 text-left hover:bg-[#FFF5F0] text-sm border-b border-gray-50 last:border-0 transition-colors"
                                                         >
-                                                            <div className="font-medium text-gray-800 lowercase">{bank.bank_name}</div>
+                                                            <div className="font-semibold text-[#2C3E50] lowercase">{bank.bank_name}</div>
                                                             <div className="text-[10px] text-gray-400 font-mono mt-0.5">{bank.iban}</div>
                                                         </button>
                                                     ))
                                                 ) : (
-                                                    <div className="p-4 text-center text-xs text-gray-400 font-medium">Nenhuma conta vinculada</div>
+                                                    <div className="p-4 text-center text-xs text-gray-400 font-medium font-semibold italic">Nenhuma conta vinculada</div>
                                                 )}
                                             </div>
                                         )}
@@ -273,14 +273,14 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                         <input
                                             value={securityPassword}
                                             onChange={(e) => setSecurityPassword(e.target.value)}
-                                            className="w-full bg-[#FFF5EE] border-none rounded-[8px] px-4 py-4 text-sm focus:ring-2 focus:ring-[#FF6B00]/10 text-gray-900 placeholder:text-gray-400 font-medium"
+                                            className="w-full bg-[#FFF5F0] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 text-[#2C3E50] placeholder:text-[#9CA3AF] font-semibold transition-all"
                                             placeholder="senha de segurança (4 dígitos)"
                                             type={showPassword ? "text" : "password"}
                                             maxLength={4}
                                         />
                                         <button
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 focus:outline-none"
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#FF6B1A] transition-colors"
                                         >
                                             <span className="material-symbols-outlined text-[20px]">
                                                 {showPassword ? 'visibility_off' : 'visibility'}
@@ -290,27 +290,27 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                 </div>
 
                                 {/* Tax Summary */}
-                                <div className="p-4 bg-gray-50 rounded-[8px] space-y-3">
+                                <div className="p-4 bg-gray-50 rounded-xl space-y-3">
                                     <div className="flex justify-between text-xs">
                                         <span className="text-gray-400 lowercase font-medium">taxa de desconto ({method === 'IBAN' ? '14%' : '20%'})</span>
-                                        <span className="font-medium text-gray-700">{calculateTax().toLocaleString('pt-AO')} Kz</span>
+                                        <span className="font-semibold text-[#2C3E50]">{calculateTax().toLocaleString('pt-AO')} Kz</span>
                                     </div>
                                     <div className="flex justify-between text-sm pt-2 border-t border-gray-100">
                                         <span className="text-gray-600 font-medium lowercase">receberá na conta</span>
-                                        <span className="font-medium text-[#FF6B00]">{calculateReceived().toLocaleString('pt-AO')} Kz</span>
+                                        <span className="font-bold text-[#FF6B1A]">{calculateReceived().toLocaleString('pt-AO')} Kz</span>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={handleWithdraw}
-                                    className="w-full bg-[#FF6B00] text-white py-4 rounded-[8px] font-medium text-lg active:scale-[0.98] transition-all shadow-lg shadow-orange-100"
+                                    className="w-full h-12 bg-[#FF6B1A] text-white font-bold rounded-xl text-base active:scale-[0.98] transition-all shadow-lg shadow-orange-500/10"
                                 >
                                     confirmar retirada
                                 </button>
                             </div>
 
                             {/* Rules Card */}
-                            <div className="bg-white/10 rounded-[8px] p-6 border border-white/20">
+                            <div className="bg-white/10 rounded-xl p-6 border border-white/20">
                                 <div className="space-y-4 text-xs leading-relaxed text-white/80 font-medium italic">
                                     <p>• valor mínimo: 1.000 Kz | máximo: 100.000 Kz</p>
                                     <p>• horário de processamento: 10:00 às 16:00 horas</p>

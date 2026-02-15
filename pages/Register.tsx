@@ -59,13 +59,14 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (phoneNumber.length < 9) {
-      showToast?.("Número de telefone inválido.", "error");
+    if (phoneNumber.length !== 9) {
+      showToast?.("O número de telefone deve ter exatamente 9 dígitos.", "error");
       return;
     }
 
-    if (password.length < 6) {
-      showToast?.("A senha deve ter pelo menos 6 caracteres.", "error");
+    const passwordRegex = /^[a-zA-Z0-9]{6,8}$/;
+    if (!passwordRegex.test(password)) {
+      showToast?.("A senha deve ser alfanumérica (letras e números) e ter entre 6 e 8 caracteres.", "error");
       return;
     }
 
@@ -110,9 +111,9 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col items-center">
       {/* Header laranja com padrão de pontos */}
-      <div className="relative w-full bg-[#FF6B1A] overflow-hidden" style={{ height: '280px' }}>
+      <div className="relative w-full max-w-md bg-[#FF6B1A] overflow-hidden shrink-0" style={{ height: '280px' }}>
         {/* Padrão de pontos */}
         <div
           className="absolute inset-0 opacity-30"
@@ -127,10 +128,9 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
           {/* Logo do Home Depot */}
           <div className="mb-4">
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/TheHomeDepot.svg/2560px-TheHomeDepot.svg.png"
+              src="/logo.semfungo.png"
               alt="The Home Depot"
-              className="w-48 h-auto"
-              style={{ filter: 'brightness(0) invert(1)' }}
+              className="w-32 h-auto"
             />
           </div>
 
@@ -140,8 +140,8 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
       </div>
 
       {/* Card de formulário com tab arredondada */}
-      <div className="flex-1 px-4 -mt-8 relative z-10">
-        <div className="bg-white rounded-t-[32px] shadow-lg overflow-hidden">
+      <div className="w-full max-w-md px-4 -mt-8 relative z-10 flex-1 flex flex-col mx-auto transition-all duration-300">
+        <div className="bg-white rounded-t-[32px] shadow-lg overflow-hidden flex-1">
           {/* Tab "Cadastre-se por telefone" */}
           <div className="relative">
             <div className="inline-block bg-[#FFD4B8] rounded-tr-[24px] rounded-tl-[24px] px-6 py-3">
@@ -150,18 +150,18 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
           </div>
 
           {/* Formulário */}
-          <form className="px-6 pt-6 pb-8 space-y-3.5" onSubmit={handleRegister}>
+          <form className="px-6 pt-6 pb-8 space-y-4" onSubmit={handleRegister}>
             {/* Campo de telefone */}
             <div>
               <label className="block text-[#2C3E50] font-semibold text-sm mb-2">
                 Número de telefone
               </label>
-              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2">
+              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2 border border-transparent focus-within:border-[#FF6B1A]/30 focus-within:ring-4 focus-within:ring-[#FF6B1A]/10 transition-all">
                 <span className="text-[#2C3E50] font-medium text-sm">+244</span>
                 <input
                   type="tel"
                   placeholder="Número de telefone"
-                  className="flex-1 bg-transparent outline-none text-[#2C3E50] placeholder:text-[#9CA3AF]"
+                  className="flex-1 bg-transparent outline-none text-[#2C3E50] font-semibold placeholder:text-[#9CA3AF]"
                   value={phoneNumber}
                   onChange={(e) => {
                     const value = e.target.value.replace(/[^0-9]/g, '');
@@ -169,8 +169,7 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
                       setPhoneNumber(value);
                     }
                   }}
-                  maxLength={9}
-                  pattern="[0-9]{9}"
+                  autoComplete="off"
                   required
                 />
               </div>
@@ -179,21 +178,27 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
             {/* Campo de senha */}
             <div>
               <label className="block text-[#2C3E50] font-semibold text-sm mb-2">
-                Senha
+                Senha (6-8 letras e números)
               </label>
-              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2">
+              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2 border border-transparent focus-within:border-[#FF6B1A]/30 focus-within:ring-4 focus-within:ring-[#FF6B1A]/10 transition-all">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Senha"
-                  className="flex-1 bg-transparent outline-none text-[#2C3E50] placeholder:text-[#9CA3AF]"
+                  className="flex-1 bg-transparent outline-none text-[#2C3E50] font-semibold placeholder:text-[#9CA3AF]"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                    if (value.length <= 8) {
+                      setPassword(value);
+                    }
+                  }}
+                  autoComplete="new-password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-[#9CA3AF]"
+                  className="text-[#9CA3AF] hover:text-[#FF6B1A] transition-colors"
                 >
                   <span className="material-symbols-outlined text-[22px]">
                     {showPassword ? 'visibility' : 'visibility_off'}
@@ -207,19 +212,25 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
               <label className="block text-[#2C3E50] font-semibold text-sm mb-2">
                 Digite novamente a senha
               </label>
-              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2">
+              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2 border border-transparent focus-within:border-[#FF6B1A]/30 focus-within:ring-4 focus-within:ring-[#FF6B1A]/10 transition-all">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Digite novamente a senha"
-                  className="flex-1 bg-transparent outline-none text-[#2C3E50] placeholder:text-[#9CA3AF]"
+                  placeholder="Repita a senha"
+                  className="flex-1 bg-transparent outline-none text-[#2C3E50] font-semibold placeholder:text-[#9CA3AF]"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                    if (value.length <= 8) {
+                      setConfirmPassword(value);
+                    }
+                  }}
+                  autoComplete="new-password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="text-[#9CA3AF]"
+                  className="text-[#9CA3AF] hover:text-[#FF6B1A] transition-colors"
                 >
                   <span className="material-symbols-outlined text-[22px]">
                     {showConfirmPassword ? 'visibility' : 'visibility_off'}
@@ -233,52 +244,46 @@ const Register: React.FC<Props> = ({ onNavigate, showToast }) => {
               <label className="block text-[#2C3E50] font-semibold text-sm mb-2">
                 Código de Convite
               </label>
-              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4">
+              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 border border-transparent focus-within:border-[#FF6B1A]/30 focus-within:ring-4 focus-within:ring-[#FF6B1A]/10 transition-all">
                 <input
                   type="text"
                   placeholder="Código de Convite"
-                  className="flex-1 bg-transparent outline-none text-[#2C3E50] placeholder:text-[#9CA3AF]"
+                  className="flex-1 bg-transparent outline-none text-[#2C3E50] font-semibold placeholder:text-[#9CA3AF]"
                   value={invitationCode}
                   onChange={(e) => {
+                    const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
                     const urlParams = new URLSearchParams(window.location.search);
                     if (!urlParams.get('ref')) {
-                      setInvitationCode(e.target.value);
+                      setInvitationCode(value);
                     }
                   }}
                   readOnly={!!(new URLSearchParams(window.location.search)).get('ref')}
+                  autoComplete="off"
                   required
                 />
               </div>
             </div>
 
-            {/* Botão Inscrever-se */}
-            <button
-              type="submit"
-              className="w-full h-12 bg-[#FF6B1A] text-white font-bold rounded-xl text-base mt-5 hover:brightness-110 active:scale-[0.98] transition-all"
-            >
-              Inscrever-se
-            </button>
+            {/* Botões de Ação */}
+            <div className="pt-4 space-y-3">
+              <button
+                type="submit"
+                className="w-full h-12 bg-[#FF6B1A] text-white font-bold rounded-xl text-base hover:brightness-105 active:scale-[0.98] transition-all shadow-lg shadow-orange-500/20"
+              >
+                Inscrever-se
+              </button>
 
-            {/* Botão Entrar */}
-            <button
-              type="button"
-              onClick={() => onNavigate('login')}
-              className="w-full h-12 bg-white text-[#FF6B1A] border-2 border-[#FF6B1A] font-semibold rounded-xl text-base hover:bg-[#FFF5F0] active:scale-[0.98] transition-all"
-            >
-              Entrar
-            </button>
+              <button
+                type="button"
+                onClick={() => onNavigate('login')}
+                className="w-full h-12 bg-white text-[#FF6B1A] border-2 border-[#FF6B1A] font-bold rounded-xl text-base hover:bg-[#FFF5F0] active:scale-[0.98] transition-all"
+              >
+                Entrar
+              </button>
+            </div>
           </form>
         </div>
       </div>
-
-      {/* Ícone de suporte flutuante no canto inferior direito */}
-      <button className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-xl flex items-center justify-center z-50 overflow-hidden">
-        <img
-          src="https://ui-avatars.com/api/?name=Support&background=FF6B1A&color=fff&size=56"
-          className="w-full h-full object-cover"
-          alt="Support"
-        />
-      </button>
     </div>
   );
 };

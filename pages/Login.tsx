@@ -2,7 +2,6 @@
 import { supabase } from '../supabase';
 import { useNetwork } from '../contexts/NetworkContext';
 import { useLoading } from '../contexts/LoadingContext';
-import OptimizedButton from '../components/OptimizedButton';
 
 interface Props {
   onNavigate: (page: any) => void;
@@ -16,46 +15,43 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
 
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const cleanPhone = phoneNumber.replace(/\D/g, '');
-    const cleanPassword = password.trim();
-
-    if (!cleanPhone || cleanPhone.length < 9) {
-      showToast?.("Número de telefone inválido.", "error");
+    if (phoneNumber.length !== 9) {
+      showToast?.("O número de telefone 9 dígitos.", "error");
       return;
     }
 
-    if (!cleanPassword || cleanPassword.length < 6 || cleanPassword.length > 8) {
-      showToast?.("A senha deve ter entre 6 e 8 caracteres.", "error");
+    const passwordRegex = /^[a-zA-Z0-9]{6,8}$/;
+    if (!passwordRegex.test(password)) {
+      showToast?.("A senha deve ser alfanumérica (letras e números) e ter entre 6 e 8 caracteres.", "error");
       return;
     }
 
     try {
       await withLoading(async () => {
         const { data: status, error: statusError } = await supabase.rpc('check_login_status', {
-          phone_input: cleanPhone
+          phone_input: phoneNumber
         });
 
         if (!statusError && status?.blocked) {
           throw new Error(status.message);
         }
 
-        const email = `${cleanPhone}@bpcommerce.user`;
+        const email = `${phoneNumber}@bpcommerce.user`;
 
         const { error: loginError } = await runWithTimeout(() => supabase.auth.signInWithPassword({
           email,
-          password: cleanPassword,
+          password: password,
         }));
 
         if (loginError) {
-          await supabase.rpc('register_failed_attempt', { phone_input: cleanPhone });
+          await supabase.rpc('register_failed_attempt', { phone_input: phoneNumber });
           throw new Error("Credenciais inválidas");
         }
 
-        await supabase.rpc('reset_login_attempts', { phone_input: cleanPhone });
+        await supabase.rpc('reset_login_attempts', { phone_input: phoneNumber });
       }, "Login sucedido!");
 
       onNavigate('home');
@@ -65,82 +61,107 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
   };
 
   return (
-    <div className="bg-[#FFF8F5] min-h-screen font-sans text-[#27153E] flex flex-col antialiased relative">
-      {/* Header laranja com padrão de bolinhas */}
-      <div className="w-full relative overflow-hidden flex flex-col items-center justify-start pt-12 pb-24" style={{
-        backgroundColor: '#F96302',
-        backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.2) 1.5px, transparent 1.5px)`,
-        backgroundSize: '18px 18px',
-        backgroundPosition: '0 0'
-      }}>
+    <div className="min-h-screen bg-white flex flex-col items-center">
+      {/* Header laranja com padrão de pontos */}
+      <div className="relative w-full max-w-md bg-[#FF6B1A] overflow-hidden shrink-0" style={{ height: '280px' }}>
+        {/* Padrão de pontos */}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.4) 2px, transparent 2px)',
+            backgroundSize: '20px 20px'
+          }}
+        />
 
-
-        {/* Logo e Título */}
-        <div className="relative z-10 flex flex-col items-center mt-6">
-          <div className="mb-6 drop-shadow-2xl">
-            {/* Logo The Home Depot Style */}
-            <div className="w-[110px] h-[110px] bg-[#F96302] border-[3px] border-white relative shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-2">
-                <span className="text-white font-[1000] italic text-[11px] leading-[0.8] tracking-tighter w-full text-left ml-4 -mb-1">THE</span>
-                <span className="text-white font-[1000] text-[30px] leading-[0.8] tracking-[-0.05em] w-full text-center">HOME</span>
-                <span className="text-white font-[1000] italic text-[19px] leading-[0.8] tracking-tighter w-full text-right mr-4 mt-1">DEPOT</span>
-              </div>
-            </div>
+        {/* Logo e título centralizados */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+          {/* Logo do Home Depot */}
+          <div className="mb-4">
+            <img
+              src="/logo.semfungo.png"
+              alt="The Home Depot"
+              className="w-32 h-auto"
+            />
           </div>
-          <h1 className="text-[26px] font-semibold text-white tracking-[0.05em] uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">THE HOME-VIP</h1>
+
+          {/* Título "THE HOME-VIP" */}
+          <h1 className="text-white text-xl font-bold tracking-wider">THE HOME-VIP</h1>
         </div>
       </div>
 
-      {/* Card de login que sobrepõe o header */}
-      <div className="w-full px-0 -mt-10 relative z-30 flex-1">
-        <div className="bg-white rounded-t-[40px] min-h-full shadow-[0_-15px_50px_rgba(0,0,0,0.08)] flex flex-col">
-          {/* Sessão de Tab/Título do formulário */}
-          <div className="flex justify-end pt-8 pr-12 pb-2">
-            <span className="text-[#27153E] font-semibold text-[18px]">Login do telefone</span>
+      {/* Card de formulário com tab arredondada */}
+      <div className="w-full max-w-md px-4 -mt-8 relative z-10 flex-1 flex flex-col mx-auto transition-all duration-300">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden flex-1">
+          {/* Tab "Login do telefone" */}
+          <div className="relative">
+            <div className="inline-block bg-[#FFD4B8] rounded-tr-[24px] rounded-tl-[24px] px-6 py-3">
+              <span className="text-[#2C3E50] font-semibold text-[15px]">Login do telefone</span>
+            </div>
           </div>
 
-          <form className="px-10 pt-4 pb-12 flex flex-col gap-7" onSubmit={handleLogin}>
-            {/* Campo Número de telefone */}
-            <div className="space-y-3.5">
-              <label className="text-[17px] font-semibold text-[#27153E]">Número de telefone</label>
-              <div className="bg-[#FFF6F0] rounded-[20px] h-[64px] flex items-center px-6 gap-4 border border-[#FDEEE7]">
-                <span className="text-[#27153E] font-semibold text-[18px] opacity-80">+244</span>
+          {/* Formulário */}
+          <form className="px-6 pt-6 pb-8 space-y-4" onSubmit={handleLogin}>
+            {/* Campo de telefone */}
+            <div>
+              <label className="block text-[#2C3E50] font-semibold text-sm mb-2">
+                Número de telefone
+              </label>
+              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2 border border-transparent focus-within:border-[#FF6B1A]/30 focus-within:ring-4 focus-within:ring-[#FF6B1A]/10 transition-all">
+                <span className="text-[#2C3E50] font-medium text-sm">+244</span>
                 <input
                   type="tel"
                   placeholder="Número de telefone"
-                  className="bg-transparent flex-1 h-full outline-none text-[#27153E] font-semibold placeholder:text-[#27153E]/20 text-[17px]"
+                  className="flex-1 bg-transparent outline-none text-[#2C3E50] font-semibold placeholder:text-[#9CA3AF]"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^0-9]/g, '');
+                    if (value.length <= 9) {
+                      setPhoneNumber(value);
+                    }
+                  }}
+                  autoComplete="username"
                   required
                 />
               </div>
             </div>
 
-            {/* Campo Senha */}
+            {/* Campo de senha */}
             <div className="space-y-3.5">
-              <label className="text-[17px] font-semibold text-[#27153E]">Senha</label>
-              <div className="bg-[#FFF6F0] rounded-[20px] h-[64px] flex items-center px-6 gap-4 border border-[#FDEEE7]">
+              <label className="block text-[#2C3E50] font-semibold text-sm mb-2">
+                Senha (6-8 letras e números)
+              </label>
+              <div className="flex items-center bg-[#FFF5F0] rounded-xl h-12 px-4 gap-2 border border-transparent focus-within:border-[#FF6B1A]/30 focus-within:ring-4 focus-within:ring-[#FF6B1A]/10 transition-all">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Senha"
-                  className="bg-transparent flex-1 h-full outline-none text-[#27153E] font-semibold placeholder:text-[#27153E]/20 text-[17px]"
+                  className="flex-1 bg-transparent outline-none text-[#2C3E50] font-semibold placeholder:text-[#9CA3AF]"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                    if (value.length <= 8) {
+                      setPassword(value);
+                    }
+                  }}
+                  autoComplete="current-password"
                   required
                 />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#27153E]/40">
-                  <span className="material-symbols-outlined text-[26px]">
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-[#9CA3AF] hover:text-[#FF6B1A] transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[22px]">
                     {showPassword ? 'visibility' : 'visibility_off'}
                   </span>
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-col gap-5 mt-10">
+            <div className="flex flex-col gap-4 mt-8">
               {/* Botão Entrar */}
               <button
                 type="submit"
-                className="w-full h-[64px] bg-[#F96302] text-white font-bold rounded-[22px] text-[19px] shadow-[0_12px_30px_rgba(249,99,2,0.25)] hover:brightness-110 active:scale-[0.98] transition-all"
+                className="w-full h-12 bg-[#FF6B1A] text-white font-bold rounded-xl text-base hover:brightness-105 active:scale-[0.98] transition-all shadow-lg shadow-orange-500/20"
               >
                 Entrar
               </button>
@@ -149,7 +170,7 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
               <button
                 type="button"
                 onClick={() => onNavigate('register')}
-                className="w-full h-[64px] bg-white text-[#F96302] border-2 border-[#FDEEE7] font-semibold rounded-[22px] text-[19px] hover:bg-[#FFF6F0] active:scale-[0.98] transition-all"
+                className="w-full h-12 bg-white text-[#FF6B1A] border-2 border-[#FF6B1A] font-bold rounded-xl text-base hover:bg-[#FFF5F0] active:scale-[0.98] transition-all"
               >
                 Inscrever-se
               </button>
@@ -157,16 +178,7 @@ const Login: React.FC<Props> = ({ onNavigate, showToast }) => {
           </form>
         </div>
       </div>
-
-      {/* Floating Support - Circular com imagem real */}
-      <button className="fixed bottom-8 right-8 z-[200] w-16 h-16 rounded-full shadow-2xl overflow-hidden border-2 border-white active:scale-95 transition-all">
-        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=128"
-          className="w-full h-full object-cover"
-          alt="Support" />
-      </button>
-
     </div>
-
   );
 };
 

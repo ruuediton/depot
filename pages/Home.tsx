@@ -23,19 +23,19 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
   // Imagens do carrossel
   const carouselImages = [
     {
-      url: "/carousel1.png",
-      title: "THE HOME DEPOT",
-      subtitle: "YOUR HOME IMPROVEMENT STORE"
+      url: "/carousel1.webp",
+      title: "",
+      subtitle: ""
     },
     {
-      url: "/carousel2.png",
-      title: "NATIONWIDE EXPANSION",
-      subtitle: "COMING SUMMER 2025"
+      url: "/homr.jpg",
+      title: "",
+      subtitle: ""
     },
     {
-      url: "/carousel3.png",
-      title: "QUALITY PRODUCTS",
-      subtitle: "EVERYTHING YOU NEED"
+      url: "/carousel3.jpg",
+      title: "",
+      subtitle: ""
     }
   ];
 
@@ -79,8 +79,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
       {/* Carrossel de Banners */}
       <div className="px-4">
         <div className="rounded-2xl overflow-hidden shadow-2xl mb-5 bg-white relative border border-white/10">
-          {/* Container do carrossel - Aumentado conforme solicitado */}
-          <div className="relative h-56 overflow-hidden">
+          {/* Container do carrossel - Aumentado para ver tabelas sem cortes */}
+          <div className="relative h-64 overflow-hidden bg-gray-100">
             {carouselImages.map((slide, index) => (
               <div
                 key={index}
@@ -92,23 +92,11 @@ const Home: React.FC<HomeProps> = ({ onNavigate, profile }) => {
                   }`}
               >
                 <img
-                  alt={slide.title}
-                  className="w-full h-full object-contain bg-gray-100"
+                  alt={`Slide ${index + 1}`}
+                  className="w-full h-full object-contain"
                   src={slide.url}
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4">
-                  <h2 className="text-2xl font-bold italic tracking-tighter text-white">
-                    {slide.title.split(' ').map((word, i) =>
-                      word === 'FROM' ? (
-                        <span key={i} className="text-primary font-bold"> {word} </span>
-                      ) : (
-                        <span key={i}>{word} </span>
-                      )
-                    )}
-                  </h2>
-                  <p className="text-[10px] text-white/80">{slide.subtitle}</p>
-                </div>
               </div>
             ))}
           </div>
