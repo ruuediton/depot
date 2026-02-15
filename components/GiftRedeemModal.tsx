@@ -65,7 +65,7 @@ const GiftRedeemModal: React.FC<GiftRedeemModalProps> = ({ isOpen, onClose, show
 
     return (
         <div
-            className={`fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+            className={`fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/40 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
             onClick={onClose}
         >
             <div

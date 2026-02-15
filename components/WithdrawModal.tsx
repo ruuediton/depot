@@ -7,9 +7,10 @@ interface WithdrawModalProps {
     isOpen: boolean;
     onClose: () => void;
     showToast?: (message: string, type: 'success' | 'error' | 'warning' | 'info') => void;
+    onNavigate: (page: string) => void;
 }
 
-const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToast }) => {
+const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToast, onNavigate }) => {
     const { withLoading } = useLoading();
     const [balance, setBalance] = useState(0);
     const [bankAccounts, setBankAccounts] = useState<any[]>([]);
@@ -55,6 +56,11 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
             const { data: banks } = await supabase.rpc('get_my_bank_accounts');
             if (banks && banks.length > 0) {
                 setBankAccounts(banks);
+            } else {
+                showToast?.("Você precisa vincular uma conta bancária. Redirecionando...", "warning");
+                setTimeout(() => {
+                    onNavigate('add-bank');
+                }, 4000);
             }
         } catch (error) {
             console.error(error);
@@ -201,10 +207,15 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                     <div className="relative">
                                         <input
                                             value={amount}
-                                            onChange={(e) => setAmount(e.target.value)}
+                                            onChange={(e) => {
+                                                // Aceita apenas números
+                                                const value = e.target.value.replace(/[^0-9]/g, '');
+                                                setAmount(value);
+                                            }}
                                             className="w-full bg-[#FFF5F0] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 text-[#2C3E50] placeholder:text-[#9CA3AF] font-semibold transition-all"
                                             placeholder="valor (1.000 - 100.000 kz)"
-                                            type="number"
+                                            type="text"
+                                            inputMode="numeric"
                                             autoComplete="off"
                                         />
                                     </div>
@@ -251,7 +262,11 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({ isOpen, onClose, showToas
                                     <div className="relative">
                                         <input
                                             value={securityPassword}
-                                            onChange={(e) => setSecurityPassword(e.target.value)}
+                                            onChange={(e) => {
+                                                // Aceita apenas letras e números, sem espaços ou símbolos
+                                                const value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                                                setSecurityPassword(value);
+                                            }}
                                             className="w-full bg-[#FFF5F0] border border-transparent rounded-xl px-4 h-12 text-sm focus:ring-4 focus:ring-[#FF6B1A]/10 focus:border-[#FF6B1A]/30 text-[#2C3E50] placeholder:text-[#9CA3AF] font-semibold transition-all"
                                             placeholder="senha de login para confirmar"
                                             type={showPassword ? "text" : "password"}

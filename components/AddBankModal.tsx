@@ -18,6 +18,8 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
     const [loading, setLoading] = useState(false);
     const [existingBank, setExistingBank] = useState<any>(null);
     const [mode, setMode] = useState<'create' | 'view' | 'edit'>('create');
+    const [isVisible, setIsVisible] = useState(false);
+    const [shouldRender, setShouldRender] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
@@ -271,26 +273,7 @@ const AddBankModal: React.FC<AddBankModalProps> = ({ isOpen, onClose, showToast 
                                 </button>
                             </div>
                         )}
-                                <div className="bg-[#FFF5F0] dark:bg-zinc-800 rounded-xl p-4 mb-6 border border-orange-100 dark:border-zinc-700">
-                                    <div className="flex items-start gap-3">
-                                        <span className="material-symbols-outlined text-[#FF6B1A] text-xl mt-0.5">info</span>
-                                        <div className="flex-1">
-                                            <p className="text-[#2C3E50] dark:text-gray-300 text-xs leading-relaxed font-semibold">
-                                                Importante: Digite apenas os 21 números do seu IBAN, sem o prefixo "AO06".
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <button
-                                    onClick={handleSaveBank}
-                                    disabled={loading}
-                                    className="w-full h-12 bg-[#FF6B1A] text-white font-bold rounded-xl text-base active:scale-[0.98] transition-all disabled:opacity-50 shadow-lg shadow-orange-500/10"
-                                >
-                                    {loading ? 'Salvando...' : existingBank ? 'Atualizar dados' : 'Salvar dados'}
-                                </button>
-                            </div>
-                        )}
 
                         {mode !== 'edit' && (
                             <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-sm border border-gray-50 dark:border-zinc-800">
